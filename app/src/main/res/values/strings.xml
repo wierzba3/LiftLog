@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">LiftLog</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="button_add_lift">Add Lift</string>
+    <string name="button_view_log">View Log</string>
+    <string name="button_exercise_database">Exercise Database</string>
+    <string name="button_view_statistics">View Statistics</string>
+</resources>
