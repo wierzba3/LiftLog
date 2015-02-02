@@ -3,8 +3,27 @@
 
     <string name="app_name">LiftLog</string>
     <string name="action_settings">Settings</string>
+
+    <!-- Main activity strings -->
     <string name="button_add_lift">Add Lift</string>
     <string name="button_view_log">View Log</string>
     <string name="button_exercise_database">Exercise Database</string>
     <string name="button_view_statistics">View Statistics</string>
+
+    <!-- Add lift activity strings -->
+    <string name="title_activity_add_lift">AddLift</string>
+    <string name="lbl_day">Day</string>
+    <string name="lbl_exercise">Exercise</string>
+    <string name="lbl_weight">Weight</string>
+    <string name="lbl_reps">Reps</string>
+    <string name="lbl_sets">Sets</string>
+    <string name="exercise_add_item">Add new...</string>
+    <string-array name="arr_exercises">
+        <item>Squat</item>
+        <item>Bench</item>
+        <item>Deadlift</item>
+        <item>Press</item>
+        <item>@string/exercise_add_item</item>
+    </string-array>
+
 </resources>
