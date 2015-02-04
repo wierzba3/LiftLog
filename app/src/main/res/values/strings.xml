@@ -17,7 +17,7 @@
     <string name="lbl_weight">Weight</string>
     <string name="lbl_reps">Reps</string>
     <string name="lbl_sets">Sets</string>
-    <string name="exercise_add_item">Add new...</string>
+    <string name="exercise_add_item">Add new..</string>
     <string-array name="arr_exercises">
         <item>Squat</item>
         <item>Bench</item>
