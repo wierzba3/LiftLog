@@ -59,7 +59,6 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="Warm-up"
-                android:gravity="top"
                 />
 
             <RadioButton
@@ -67,7 +66,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Work set"
-                android:gravity="top"/>
+                android:checked="true"/>
         </RadioGroup>
 
     </LinearLayout>
@@ -127,8 +126,23 @@
             android:layout_height="wrap_content"
             android:id="@+id/text_reps"    />
 
-</LinearLayout>
+    </LinearLayout>
 
+    <RelativeLayout
+        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_weight="1"
+        >
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Submit"
+            />
+
+    </RelativeLayout>
 
 
 

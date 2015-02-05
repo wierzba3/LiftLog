@@ -44,4 +44,9 @@ public class MainActivity extends ActionBarActivity {
         this.startActivity(intent);
     }
 
+    private void loadLocalUserData(){
+
+    }
+
+
 }
