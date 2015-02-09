@@ -7,6 +7,8 @@ import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
+import wierzba.james.liftlog.models.Exercise;
+
 
 public class AddLift extends ActionBarActivity {
 
@@ -43,8 +45,14 @@ public class AddLift extends ActionBarActivity {
 
     private void createContents(){
         Spinner spinner = (Spinner) findViewById(R.id.spn_exercise);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                this, R.array.arr_exercises, android.R.layout.simple_spinner_dropdown_item);
+
+        String[] staticExercises = {
+                Exercise.Squat().getName(),
+                Exercise.BenchPress().getName(),
+                Exercise.Deadlift().getName(),
+                Exercise.Press().getName()
+        };
+        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, staticExercises);
         adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         spinner.setAdapter(adapter);
     }
