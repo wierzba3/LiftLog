@@ -5,21 +5,21 @@ package wierzba.james.liftlog.models;
  */
 public class Lift {
 
-    public Lift(String exercise, int sets, int reps){
+    public Lift(Exercise exercise, int sets, int reps){
         this.exercise = exercise;
         this.sets = sets;
         this.reps = reps;
     }
 
-    private String exercise;
+    private Exercise exercise;
     private int sets;
     private int reps;
 
-    public String getExercise() {
+    public Exercise getExercise() {
         return exercise;
     }
 
-    public void setExercise(String exercise) {
+    public void setExercise(Exercise exercise) {
         this.exercise = exercise;
     }
 
@@ -38,4 +38,8 @@ public class Lift {
     public void setReps(int reps) {
         this.reps = reps;
     }
+
+
+
+
 }
