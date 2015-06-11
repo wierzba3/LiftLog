@@ -15,10 +15,18 @@
         android:layout_weight="1">
 
         <TextView
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/lbl_day"
             android:layout_gravity="center"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_day"
+            />
+
 
     </LinearLayout>
 
@@ -53,9 +61,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-           >
+            >
             <RadioButton
-                android:id="@+id/radio_warmup"
+                android:id="@+id/rbtn_warmup"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:text="Warm-up"
@@ -86,7 +94,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/text_weight"    />
+            android:id="@+id/txt_weight"    />
 
     </LinearLayout>
 
@@ -105,7 +113,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/text_sets"    />
+            android:id="@+id/txt_sets"    />
 
     </LinearLayout>
 
@@ -124,7 +132,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/text_reps"    />
+            android:id="@+id/txt_reps"    />
 
     </LinearLayout>
 
@@ -140,6 +148,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="Submit"
+            android:onClick="doSubmit"
             />
 
     </RelativeLayout>
