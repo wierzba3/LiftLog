@@ -12,20 +12,27 @@
         android:orientation="horizontal"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        >
 
-        <TextView
+        <!--<TextView-->
 
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/lbl_day"
-            android:layout_gravity="center"/>
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="@string/lbl_day"-->
+            <!--android:layout_gravity="center"/>-->
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/txt_day"
-            />
+        <!--<EditText-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:id="@+id/txt_day"-->
+            <!--android:minEms="10"-->
+            <!--/>-->
+
+        <!--<DatePicker-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content" />-->
+
 
 
     </LinearLayout>
@@ -86,34 +93,18 @@
         android:layout_weight="1"
         >
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/lbl_weight"/>
+        <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="@string/lbl_weight"/>-->
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/txt_weight"    />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_weight="1"
-        >
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/lbl_sets"/>
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/txt_sets"    />
+        <!--<EditText-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:id="@+id/txt_weight"-->
+            <!--android:minEms="4"-->
+            <!--android:minWidth="10px"-->
+            <!--/>-->
 
     </LinearLayout>
 
@@ -124,15 +115,106 @@
         android:layout_weight="1"
         >
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/lbl_reps"/>
+        <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="@string/lbl_sets"/>-->
 
-        <EditText
-            android:layout_width="match_parent"
+        <!--<EditText-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:id="@+id/txt_sets"-->
+            <!--android:minWidth="10px"-->
+            <!--android:minEms="4"-->
+            <!--/>-->
+
+
+
+    </LinearLayout>
+
+
+
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_weight="1"
+        >
+
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_height="wrap_content"
-            android:id="@+id/txt_reps"    />
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Weight"
+                android:layout_gravity="center"
+                />
+
+            <NumberPicker
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/pck_weight"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Reps"
+                android:layout_gravity="center"
+                />
+
+
+            <NumberPicker
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/pck_reps"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            >
+
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sets"
+                android:layout_gravity="center"
+                />
+
+            <NumberPicker
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/pck_sets"
+                />
+
+        </LinearLayout>
+
+
+
+
+
+
 
     </LinearLayout>
 
@@ -150,6 +232,8 @@
             android:text="Submit"
             android:onClick="doSubmit"
             />
+
+
 
     </RelativeLayout>
 
