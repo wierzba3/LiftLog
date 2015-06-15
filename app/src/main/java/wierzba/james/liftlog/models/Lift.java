@@ -5,22 +5,37 @@ package wierzba.james.liftlog.models;
  */
 public class Lift {
 
-    public Lift(Exercise exercise, int sets, int reps){
-        this.exercise = exercise;
+    public Lift() { }
+
+    public Lift(int day, String exerciseName, int weight, int sets, int reps, Unit unit)
+    {
+        this.time = day;
+        this.exerciseName = exerciseName;
+        this.weight = weight;
         this.sets = sets;
         this.reps = reps;
+        this.unit = unit;
     }
 
-    private Exercise exercise;
+    public enum Unit
+    {
+        LB,
+        KG;
+    }
+    /** The time the lift was performed. Value is number of days since the epoch. */
+    private long time;
+    private String exerciseName;
+    private int weight;
+    private Unit unit;
     private int sets;
     private int reps;
 
-    public Exercise getExercise() {
-        return exercise;
+    public String getExerciseName() {
+        return exerciseName;
     }
 
-    public void setExercise(Exercise exercise) {
-        this.exercise = exercise;
+    public void setExerciseName(String exerciseName) {
+        this.exerciseName = exerciseName;
     }
 
     public int getSets() {
@@ -39,7 +54,27 @@ public class Lift {
         this.reps = reps;
     }
 
+    public Unit getUnit() {
+        return unit;
+    }
 
+    public void setUnit(Unit unit) {
+        this.unit = unit;
+    }
 
+    public int getWeight() {
+        return weight;
+    }
 
+    public void setWeight(int weight) {
+        this.weight = weight;
+    }
+
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(int time) {
+        this.time = time;
+    }
 }
