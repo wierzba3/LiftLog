@@ -20,13 +20,14 @@
     <Button
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/button_view_log"
+        android:text="View Sessions"
+        android:onClick="startBrowseSessions"
         />
 
     <Button
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/button_exercise_database"
+        android:text="Exercises"
         />
 
     <Button

@@ -15,24 +15,18 @@
         android:layout_weight="1"
         >
 
-        <!--<TextView-->
+        <TextView
 
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="@string/lbl_day"-->
-            <!--android:layout_gravity="center"/>-->
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/lbl_day" />
 
-        <!--<EditText-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:id="@+id/txt_day"-->
-            <!--android:minEms="10"-->
-            <!--/>-->
-
-        <!--<DatePicker-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content" />-->
-
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="date"
+            android:ems="10"
+            android:id="@+id/txt_day" />
 
 
     </LinearLayout>
@@ -85,55 +79,6 @@
         </RadioGroup>
 
     </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_weight="1"
-        >
-
-        <!--<TextView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="@string/lbl_weight"/>-->
-
-        <!--<EditText-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:id="@+id/txt_weight"-->
-            <!--android:minEms="4"-->
-            <!--android:minWidth="10px"-->
-            <!--/>-->
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_weight="1"
-        >
-
-        <!--<TextView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="@string/lbl_sets"/>-->
-
-        <!--<EditText-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:id="@+id/txt_sets"-->
-            <!--android:minWidth="10px"-->
-            <!--android:minEms="4"-->
-            <!--/>-->
-
-
-
-    </LinearLayout>
-
-
-
 
     <LinearLayout
         android:orientation="horizontal"

@@ -23,12 +23,21 @@ public class Lift {
         KG;
     }
     /** The time the lift was performed. Value is number of days since the epoch. */
+    private int sessionId;
     private long time;
     private String exerciseName;
     private int weight;
     private Unit unit;
     private int sets;
     private int reps;
+
+    public int getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(int sessionId) {
+        this.sessionId = sessionId;
+    }
 
     public String getExerciseName() {
         return exerciseName;
@@ -74,7 +83,7 @@ public class Lift {
         return time;
     }
 
-    public void setTime(int time) {
+    public void setTime(long time) {
         this.time = time;
     }
 }
