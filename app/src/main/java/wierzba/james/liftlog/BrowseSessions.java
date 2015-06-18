@@ -1,28 +1,51 @@
 package wierzba.james.liftlog;
 
+import android.database.Cursor;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.content.Intent;
+import android.widget.ListView;
 
-public class MainActivity extends ActionBarActivity {
+import wierzba.james.liftlog.models.DataAccessObject;
 
-    public static final String LOG_TAG = "LiftLog";
+
+public class BrowseSessions extends ActionBarActivity {
+
+    ListView listSessions;
+
+    DataAccessObject dao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+
+        createContents();
+
+        setContentView(R.layout.activity_browse_sessions);
+    }
+
+    private void createContents()
+    {
+        listSessions = (ListView) findViewById(R.id.list_sessions);
+
+        Cursor cursor = dao.getData();
+        boolean next = cursor.moveToFirst();
+        while(next)
+        {
+
+            next = cursor.moveToNext();
+        }
+
+
+
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_browse_sessions, menu);
         return true;
     }
 
@@ -40,31 +63,4 @@ public class MainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-    /**
-     * Start the activity to add a lift
-     * @param view
-     */
-    public void startAddLift(View view)
-    {
-        Intent intent = new Intent(this, AddLift.class);
-        this.startActivity(intent);
-    }
-
-    /**
-     * Start the activity to browse previous workout sessions
-     * @param view
-     */
-    public void startBrowseSessions(View view)
-    {
-        Intent intent = new Intent(this, BrowseSessions.class);
-        this.startActivity(intent);
-    }
-
-    private void loadLocalUserData()
-    {
-
-    }
-
-
 }

@@ -1,5 +1,6 @@
 package wierzba.james.liftlog;
 
+import android.app.DatePickerDialog;
 import android.database.Cursor;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.RadioButton;
 import android.widget.Spinner;
@@ -18,20 +20,27 @@ import wierzba.james.liftlog.models.DataAccessObject;
 import wierzba.james.liftlog.models.Exercise;
 import wierzba.james.liftlog.models.Lift;
 
-
+/**
+ * TODO
+ * - Launch DatePickerDialog onClick of the date textbox
+ */
 public class AddLift extends ActionBarActivity {
 
     public static final String LOG_TAG = "LiftLog";
 
+    private int sessionId = 1;
+
     private DataAccessObject dao;
 
-    private double weightIncrement = 1.0;
+    private double weightIncrement = 5.0;
 
     Spinner spnExercise;
     RadioButton rbtnWarmup;
     NumberPicker pckWeight;
     NumberPicker pckReps;
     NumberPicker pckSets;
+
+    EditText txtDay;
 
 
     @Override
@@ -89,7 +98,7 @@ public class AddLift extends ActionBarActivity {
         pckWeight = (NumberPicker) findViewById(R.id.pck_weight);
         pckReps = (NumberPicker) findViewById(R.id.pck_reps);
         pckSets = (NumberPicker) findViewById(R.id.pck_sets);
-
+        txtDay = (EditText) findViewById(R.id.txt_day);
 
         int numValues = 400;
         String[] weightValues = new String[numValues];
@@ -125,7 +134,7 @@ public class AddLift extends ActionBarActivity {
 
         try {
 
-            int day = 3;//Integer.parseInt(txtDay.getText().toString());
+            int day = Integer.parseInt(txtDay.getText().toString());
             String exercise = spnExercise.getSelectedItem().toString();
             boolean isWarmup = rbtnWarmup.isSelected();
             int weight = pckWeight.getValue();
@@ -134,6 +143,7 @@ public class AddLift extends ActionBarActivity {
 
 
             Lift lift = new Lift();
+            lift.setSessionId(sessionId);
             lift.setTime(day);
             lift.setExerciseName(exercise);
             lift.setWeight(weight);

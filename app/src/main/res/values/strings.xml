@@ -16,6 +16,10 @@
     <string name="lbl_exercise">Exercise</string>
     <string name="lbl_reps">Weight x Reps x Sets</string>
     <string name="exercise_add_item">Add new..</string>
+
+    <!-- Browse Sessions activity strings -->
+    <string name="title_activity_browse_sessions">BrowseSessions</string>
+
     <string-array name="arr_exercises">
         <item>Squat</item>
         <item>Bench</item>
@@ -23,5 +27,6 @@
         <item>Press</item>
         <item>@string/exercise_add_item</item>
     </string-array>
+
 
 </resources>
