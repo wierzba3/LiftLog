@@ -5,12 +5,17 @@ package wierzba.james.liftlog.models;
  */
 public class Lift {
 
-    public Lift() { }
-
-    public Lift(int day, String exerciseName, int weight, int sets, int reps, Unit unit)
+    public Lift()
     {
-        this.time = day;
-        this.exerciseName = exerciseName;
+
+    }
+
+    public Lift(long id, int exerciseId, int sessionId, int day, int weight, int sets, int reps, Unit unit)
+    {
+        this.id = id;
+        this.exerciseId = exerciseId;
+        this.sessionId = sessionId;
+        this.date = day;
         this.weight = weight;
         this.sets = sets;
         this.reps = reps;
@@ -22,10 +27,11 @@ public class Lift {
         LB,
         KG;
     }
-    /** The time the lift was performed. Value is number of days since the epoch. */
+    /** The date the lift was performed. Value is number of days since the epoch. */
+    private long id;
+    private int exerciseId;
     private int sessionId;
-    private long time;
-    private String exerciseName;
+    private long date;
     private int weight;
     private Unit unit;
     private int sets;
@@ -39,12 +45,20 @@ public class Lift {
         this.sessionId = sessionId;
     }
 
-    public String getExerciseName() {
-        return exerciseName;
+    public int getExerciseId() {
+        return exerciseId;
     }
 
-    public void setExerciseName(String exerciseName) {
-        this.exerciseName = exerciseName;
+    public void setExerciseId(int exerciseId) {
+        this.exerciseId = exerciseId;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public int getSets() {
@@ -79,11 +93,11 @@ public class Lift {
         this.weight = weight;
     }
 
-    public long getTime() {
-        return time;
+    public long getDate() {
+        return date;
     }
 
-    public void setTime(long time) {
-        this.time = time;
+    public void setDate(long date) {
+        this.date = date;
     }
 }
