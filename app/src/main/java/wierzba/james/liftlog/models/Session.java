@@ -13,8 +13,17 @@ public class Session {
         lifts = new ArrayList<Lift>();
     }
 
-    private List<Lift> lifts;
+    private long id;
     private int date;
+    private List<Lift> lifts;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public List<Lift> getLifts() {
         return lifts;
