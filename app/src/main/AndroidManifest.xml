@@ -28,6 +28,10 @@
             android:name=".BrowseSessions"
             android:label="@string/title_activity_browse_sessions" >
         </activity>
+        <activity
+            android:name=".ViewSession"
+            android:label="@string/title_activity_view_session" >
+        </activity>
     </application>
 
 </manifest>
