@@ -1,6 +1,5 @@
 package wierzba.james.liftlog;
 
-import android.app.DatePickerDialog;
 import android.database.Cursor;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -26,7 +25,7 @@ import wierzba.james.liftlog.models.Lift;
  */
 public class AddLift extends ActionBarActivity {
 
-    public static final String LOG_TAG = "LiftLog";
+    public static final String LOG_TAG = "LiftLog.AddLift";
 
     private int sessionId = 1;
 
@@ -47,6 +46,7 @@ public class AddLift extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_lift);
+        dao = new DataAccessObject(this);
 
         createContents();
     }
@@ -89,7 +89,7 @@ public class AddLift extends ActionBarActivity {
         spinner.setAdapter(adapter);
 
         openOrCreateDatabase(DataAccessObject.DB_NAME, MODE_PRIVATE, null);
-        dao = new DataAccessObject(this);
+
 
         //initialize control references
         spnExercise = (Spinner) findViewById(R.id.spn_exercise);
@@ -141,38 +141,20 @@ public class AddLift extends ActionBarActivity {
             int reps = pckReps.getValue();
             int sets = pckSets.getValue();
 
+            //TODO get actual id
+            int exerciseId = 5;
 
             Lift lift = new Lift();
+            lift.setExerciseId(exerciseId);
             lift.setSessionId(sessionId);
-            lift.setTime(day);
-            lift.setExerciseName(exercise);
+            lift.setDate(day);
             lift.setWeight(weight);
             lift.setSets(sets);
             lift.setReps(reps);
 
-            dao.insert(lift);
+            long id = dao.insert(lift);
 
-            Cursor cursor = dao.getData();
-            cursor.moveToFirst();
-            int i = 1;
-            do
-            {
-                //TODO get time from user
-                long time = System.currentTimeMillis();
-                String l = cursor.getString(cursor.getColumnIndex(DataAccessObject.LIFT_COLUMN_LIFT_NAME));
-                String w = cursor.getString(cursor.getColumnIndex(DataAccessObject.LIFT_COLUMN_WEIGHT));
-                String s = cursor.getString(cursor.getColumnIndex(DataAccessObject.LIFT_COLUMN_SETS));
-                String r = cursor.getString(cursor.getColumnIndex(DataAccessObject.LIFT_COLUMN_REPS));
-                Log.d(LOG_TAG, "-------------\n record " + i);
-                Date d = new Date(time);
-                Log.d(LOG_TAG, d.toString());
-                Log.d(LOG_TAG, l);
-                Log.d(LOG_TAG, w);
-                Log.d(LOG_TAG, s);
-                Log.d(LOG_TAG, r);
-                i++;
-            }
-            while(cursor.moveToNext());
+            Log.d(LOG_TAG, "inserted lift object, id=" + id);
         } catch (Exception e) {
             e.printStackTrace();
             Log.d(LOG_TAG, e.getMessage());

@@ -28,5 +28,7 @@
         <item>@string/exercise_add_item</item>
     </string-array>
 
+    <string name="title_activity_view_session">ViewSession</string>
+    <string name="hello_world">Hello world!</string>
 
 </resources>
