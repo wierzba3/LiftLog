@@ -1,6 +1,6 @@
 package wierzba.james.liftlog;
 
-import android.database.Cursor;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,9 +13,6 @@ import android.widget.NumberPicker;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 
-import java.util.Date;
-
-import wierzba.james.liftlog.models.DataAccessObject;
 import wierzba.james.liftlog.models.Exercise;
 import wierzba.james.liftlog.models.Lift;
 
@@ -25,9 +22,20 @@ import wierzba.james.liftlog.models.Lift;
  */
 public class AddLift extends ActionBarActivity {
 
-    public static final String LOG_TAG = "LiftLog.AddLift";
+    private static final String LOG_TAG = "LiftLog.AddLift";
 
-    private int sessionId = 1;
+
+    /**
+     * The key for this intent's extended data: the id of the lift (-1 if new instance)
+     */
+    public static final String LIFT_ID_KEY = "lift_id";
+    /**
+     * The key for this intent's extended data: the id of this session
+     */
+    public static final String SESSION_ID_KEY = "session_id";
+
+    private long sessionId = -1;
+    private long liftId = -1;
 
     private DataAccessObject dao;
 
@@ -48,8 +56,33 @@ public class AddLift extends ActionBarActivity {
         setContentView(R.layout.activity_add_lift);
         dao = new DataAccessObject(this);
 
+        Intent intent = this.getIntent();
+        String liftIdString = intent.getStringExtra(LIFT_ID_KEY);
+        String sessionIdString = intent.getStringExtra(SESSION_ID_KEY);
+        try
+        {
+            liftId = Long.parseLong(liftIdString);
+            sessionId = Long.parseLong(sessionIdString);
+        }
+        catch(Exception ex)
+        {
+            liftId = -1;
+            Log.d(LOG_TAG, "AddLift intent extended data is badly formatted: session_id");
+        }
+
+
+
+        Log.d(LOG_TAG, "LIFT_ID_KEY=" + liftIdString);
+
         createContents();
+        loadLift(liftId);
     }
+
+    private void loadLift(long id)
+    {
+
+    }
+
 
 
     @Override
@@ -134,7 +167,7 @@ public class AddLift extends ActionBarActivity {
 
         try {
 
-            int day = Integer.parseInt(txtDay.getText().toString());
+//            int day = Integer.parseInt(txtDay.getText().toString());
             String exercise = spnExercise.getSelectedItem().toString();
             boolean isWarmup = rbtnWarmup.isSelected();
             int weight = pckWeight.getValue();
@@ -147,7 +180,7 @@ public class AddLift extends ActionBarActivity {
             Lift lift = new Lift();
             lift.setExerciseId(exerciseId);
             lift.setSessionId(sessionId);
-            lift.setDate(day);
+//            lift.setDate(day);
             lift.setWeight(weight);
             lift.setSets(sets);
             lift.setReps(reps);

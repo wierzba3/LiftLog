@@ -8,6 +8,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.content.Intent;
 
+import wierzba.james.liftlog.wierzba.james.liftlog.utils.Util;
+
 public class MainActivity extends ActionBarActivity {
 
     public static final String LOG_TAG = "LiftLog";
@@ -16,6 +18,8 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+//        Util.copyDbFile();
     }
 
 

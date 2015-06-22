@@ -1,5 +1,9 @@
 package wierzba.james.liftlog.models;
 
+import android.database.Cursor;
+
+import wierzba.james.liftlog.DataAccessObject;
+
 /**
  * Created by James Wierzba on 2/4/2015.
  */
@@ -27,29 +31,29 @@ public class Lift {
         LB,
         KG;
     }
-    /** The date the lift was performed. Value is number of days since the epoch. */
+    /** Primary Key ID */
     private long id;
-    private int exerciseId;
-    private int sessionId;
+    private long exerciseId;
+    private long sessionId;
     private long date;
     private int weight;
     private Unit unit;
     private int sets;
     private int reps;
 
-    public int getSessionId() {
+    public long getSessionId() {
         return sessionId;
     }
 
-    public void setSessionId(int sessionId) {
+    public void setSessionId(long sessionId) {
         this.sessionId = sessionId;
     }
 
-    public int getExerciseId() {
+    public long getExerciseId() {
         return exerciseId;
     }
 
-    public void setExerciseId(int exerciseId) {
+    public void setExerciseId(long exerciseId) {
         this.exerciseId = exerciseId;
     }
 
@@ -93,11 +97,15 @@ public class Lift {
         this.weight = weight;
     }
 
-    public long getDate() {
-        return date;
-    }
+//    public long getDate() {
+//        return date;
+//    }
+//
+//    public void setDate(long date) {
+//        this.date = date;
+//    }
 
-    public void setDate(long date) {
-        this.date = date;
-    }
+
+
+
 }
