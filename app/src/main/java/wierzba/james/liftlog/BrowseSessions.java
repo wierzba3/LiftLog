@@ -1,25 +1,20 @@
 package wierzba.james.liftlog;
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.database.DataSetObserver;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import wierzba.james.liftlog.models.DataAccessObject;
 import wierzba.james.liftlog.models.Session;
 
 
@@ -45,8 +40,7 @@ public class BrowseSessions extends ActionBarActivity {
 
     private void createContents()
     {
-        try {
-            insertDummySessions();
+            dao.insertDummySessions();
 
             listSessions = (ListView) findViewById(R.id.list_sessions);
             List<Session> sessions = dao.selectSessions();
@@ -57,7 +51,6 @@ public class BrowseSessions extends ActionBarActivity {
             for (Session session : sessions) sessionLabels.add(String.valueOf(session.getDate()));
 
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, sessionLabels);
-
             listSessions.setAdapter(adapter);
 
             listSessions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -66,15 +59,11 @@ public class BrowseSessions extends ActionBarActivity {
                                         long id) {
                     Intent intent = new Intent(BrowseSessions.this, ViewSession.class);
                     String text = ((TextView)view).getText().toString();
-                    intent.putExtra(ViewSession.ID_ARGUMENT_KEY, text);
+                    intent.putExtra(ViewSession.SESSION_ID_KEY, text);
                     startActivity(intent);
                 }
             });
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
+
 
 
     }
@@ -103,16 +92,6 @@ public class BrowseSessions extends ActionBarActivity {
     }
 
 
-    private void insertDummySessions()
-    {
-        dao.clearSessionTable();
 
-        for(int i = 0; i < 10; i++)
-        {
-            Session session = new Session();
-            session.setDate(i + 1);
-            dao.insert(session);
-        }
-    }
 
 }
