@@ -14,18 +14,6 @@ public class Lift {
 
     }
 
-    public Lift(long id, int exerciseId, int sessionId, int day, int weight, int sets, int reps, Unit unit)
-    {
-        this.id = id;
-        this.exerciseId = exerciseId;
-        this.sessionId = sessionId;
-        this.date = day;
-        this.weight = weight;
-        this.sets = sets;
-        this.reps = reps;
-        this.unit = unit;
-    }
-
     public enum Unit
     {
         LB,
@@ -35,11 +23,12 @@ public class Lift {
     private long id;
     private long exerciseId;
     private long sessionId;
-    private long date;
+//    private long date;
     private int weight;
     private Unit unit;
     private int sets;
     private int reps;
+    private boolean isWarmup;
 
     public long getSessionId() {
         return sessionId;
@@ -97,7 +86,15 @@ public class Lift {
         this.weight = weight;
     }
 
-//    public long getDate() {
+    public boolean isWarmup() {
+        return isWarmup;
+    }
+
+    public void setWarmup(boolean isWarmup) {
+        this.isWarmup = isWarmup;
+    }
+
+    //    public long getDate() {
 //        return date;
 //    }
 //
