@@ -80,7 +80,7 @@ public class AddLift extends ActionBarActivity {
 
     private void loadLift(long id)
     {
-
+        Lift lift = dao.selectLift(id);
     }
 
 
