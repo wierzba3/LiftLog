@@ -2,13 +2,10 @@ package wierzba.james.liftlog;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.content.Intent;
-
-import wierzba.james.liftlog.wierzba.james.liftlog.utils.Util;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -51,7 +48,7 @@ public class MainActivity extends ActionBarActivity {
      */
     public void startAddLift(View view)
     {
-        Intent intent = new Intent(this, AddLift.class);
+        Intent intent = new Intent(this, ViewLift.class);
         this.startActivity(intent);
     }
 

@@ -71,7 +71,7 @@ public class DataAccessObject extends SQLiteOpenHelper
 
     public DataAccessObject(Context context)
     {
-        super(context, DB_NAME , null, 10);
+        super(context, DB_NAME , null, 11);
     }
 
     @Override
@@ -160,8 +160,8 @@ public class DataAccessObject extends SQLiteOpenHelper
     public Session selectSession(long id)
     {
         //column alias' to eliminate ambiguity in the join
-        String liftDateAlias = "lift_date";
-        String sessionDateAlias = "session_date";
+//        String liftDateAlias = "lift_date";
+//        String sessionDateAlias = "session_date";
 
         //TODO: this query throws an error
         /*
@@ -172,12 +172,14 @@ public class DataAccessObject extends SQLiteOpenHelper
          */
         String qry  = "SELECT " +
                 "b." + LIFT_COLUMN_PK + ", " +
+                "b." + LIFT_COLUMN_SESSION_FK + ", " +
                 "b." + LIFT_COLUMN_EXERCISE_FK + ", " +
 //                "b." + LIFT_COLUMN_DATE + " as " + liftDateAlias + ", " +
                 "b." + LIFT_COLUMN_WEIGHT + ", " +
                 "b." + LIFT_COLUMN_REPS + ", " +
                 "b." + LIFT_COLUMN_SETS + ", " +
-                "a." + SESSION_COLUMN_DATE + " as " + sessionDateAlias +
+                "b." + LIFT_COLUMN_WARMUP + ", " +
+                "a." + SESSION_COLUMN_DATE + //" as " + sessionDateAlias +
                 "" +
                 " FROM " + SESSION_TABLE_NAME + " as a," + LIFT_TABLE_NAME + " as b" +
                 " WHERE a." + SESSION_COLUMN_PK + " = b." + LIFT_COLUMN_SESSION_FK +
@@ -201,7 +203,7 @@ public class DataAccessObject extends SQLiteOpenHelper
         boolean hasNext = cursor.moveToFirst();
         while(hasNext)
         {
-            sessionDate = cursor.getInt(cursor.getColumnIndex(sessionDateAlias));
+            sessionDate = cursor.getInt(cursor.getColumnIndex(SESSION_COLUMN_DATE));
 
             Lift lift = new Lift();
 
@@ -304,6 +306,9 @@ public class DataAccessObject extends SQLiteOpenHelper
             Lift lift = new Lift();
             lift.setSessionId(3);
             lift.setExerciseId(i);
+            lift.setWeight(315);
+            lift.setSets(3);
+            lift.setReps(5);
             insert(lift);
         }
     }
