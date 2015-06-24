@@ -20,7 +20,7 @@ import wierzba.james.liftlog.models.Lift;
  * TODO
  * - Launch DatePickerDialog onClick of the date textbox
  */
-public class AddLift extends ActionBarActivity {
+public class ViewLift extends ActionBarActivity {
 
     private static final String LOG_TAG = "LiftLog.AddLift";
 
@@ -47,13 +47,13 @@ public class AddLift extends ActionBarActivity {
     NumberPicker pckReps;
     NumberPicker pckSets;
 
-    EditText txtDay;
+//    EditText txtDay;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_lift);
+        setContentView(R.layout.activity_view_lift);
         dao = new DataAccessObject(this);
 
         Intent intent = this.getIntent();
@@ -81,6 +81,17 @@ public class AddLift extends ActionBarActivity {
     private void loadLift(long id)
     {
         Lift lift = dao.selectLift(id);
+        pckWeight.setValue(lift.getWeight());
+        pckReps.setValue(lift.getReps());
+        pckSets.setValue(lift.getSets());
+        rbtnWarmup.setChecked(lift.isWarmup());
+        /*
+            Spinner spnExercise;
+    RadioButton rbtnWarmup;
+    NumberPicker pckWeight;
+    NumberPicker pckReps;
+    NumberPicker pckSets;
+         */
     }
 
 
@@ -131,7 +142,7 @@ public class AddLift extends ActionBarActivity {
         pckWeight = (NumberPicker) findViewById(R.id.pck_weight);
         pckReps = (NumberPicker) findViewById(R.id.pck_reps);
         pckSets = (NumberPicker) findViewById(R.id.pck_sets);
-        txtDay = (EditText) findViewById(R.id.txt_day);
+//        txtDay = (EditText) findViewById(R.id.txt_day);
 
         int numValues = 400;
         String[] weightValues = new String[numValues];

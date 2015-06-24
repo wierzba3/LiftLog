@@ -20,7 +20,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".AddLift"
+            android:name=".ViewLift"
             android:label="@string/title_activity_add_lift"
             android:parentActivityName=".MainActivity" >
             <meta-data

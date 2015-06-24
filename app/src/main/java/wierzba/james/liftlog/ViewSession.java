@@ -63,9 +63,26 @@ public class ViewSession extends ActionBarActivity {
 
     private void createContents()
     {
+        listLifts = (ListView) findViewById(R.id.list_lifts);
+
+        listLifts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position,
+                                    long id) {
+                Intent intent = new Intent(ViewSession.this, ViewLift.class);
+                String text = ((TextView)view).getText().toString();
+                intent.putExtra(ViewLift.LIFT_ID_KEY, text);
+                intent.putExtra(ViewLift.SESSION_ID_KEY, sessionId);
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void loadSession(long id)
+    {
         dao.insertDummyLifts();
 
-        listLifts = (ListView) findViewById(R.id.list_lifts);
+
         Session session = dao.selectSession(sessionId);
 
 
@@ -82,23 +99,6 @@ public class ViewSession extends ActionBarActivity {
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, liftLabels);
         listLifts.setAdapter(adapter);
-
-        listLifts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position,
-                                    long id) {
-                Intent intent = new Intent(ViewSession.this, AddLift.class);
-                String text = ((TextView)view).getText().toString();
-                intent.putExtra(AddLift.LIFT_ID_KEY, text);
-                intent.putExtra(AddLift.SESSION_ID_KEY, sessionId);
-                startActivity(intent);
-            }
-        });
-    }
-
-    private void loadSession(long id)
-    {
-
     }
 
 
