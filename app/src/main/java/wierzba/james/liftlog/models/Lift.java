@@ -102,7 +102,13 @@ public class Lift {
 //        this.date = date;
 //    }
 
-
+    @Override
+    public String toString()
+    {
+        if(id == -1) return "< Add New >";
+        Exercise exercise = DataAccessObject.exerciseMap.get(exerciseId);
+        return (exercise != null ? exercise.getName() : "?") + " " + weight + " x " + reps + " x " + sets;
+    }
 
 
 }

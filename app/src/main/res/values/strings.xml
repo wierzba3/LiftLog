@@ -11,7 +11,7 @@
     <string name="button_view_statistics">View Statistics</string>
 
     <!-- Add lift activity strings -->
-    <string name="title_activity_add_lift">AddLift</string>
+    <string name="title_activity_add_lift">ViewLift</string>
     <string name="lbl_day">Day</string>
     <string name="lbl_exercise">Exercise</string>
     <string name="lbl_reps">Weight x Reps x Sets</string>

@@ -1,5 +1,7 @@
 package wierzba.james.liftlog;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -8,18 +10,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.RadioButton;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import wierzba.james.liftlog.models.Exercise;
 import wierzba.james.liftlog.models.Lift;
 
-/**
- * TODO
- * - Launch DatePickerDialog onClick of the date textbox
- */
+
 public class ViewLift extends ActionBarActivity {
 
     private static final String LOG_TAG = "LiftLog.AddLift";
@@ -43,9 +44,12 @@ public class ViewLift extends ActionBarActivity {
 
     Spinner spnExercise;
     RadioButton rbtnWarmup;
-    NumberPicker pckWeight;
+    //    NumberPicker pckWeight;
+    EditText txtWeight;
     NumberPicker pckReps;
     NumberPicker pckSets;
+
+    Button btnSave;
 
 //    EditText txtDay;
 
@@ -66,7 +70,6 @@ public class ViewLift extends ActionBarActivity {
         }
         catch(Exception ex)
         {
-            liftId = -1;
             Log.d(LOG_TAG, "AddLift intent extended data is badly formatted: session_id");
         }
 
@@ -80,18 +83,21 @@ public class ViewLift extends ActionBarActivity {
 
     private void loadLift(long id)
     {
-        Lift lift = dao.selectLift(id);
-        pckWeight.setValue(lift.getWeight());
-        pckReps.setValue(lift.getReps());
-        pckSets.setValue(lift.getSets());
-        rbtnWarmup.setChecked(lift.isWarmup());
-        /*
-            Spinner spnExercise;
-    RadioButton rbtnWarmup;
-    NumberPicker pckWeight;
-    NumberPicker pckReps;
-    NumberPicker pckSets;
-         */
+        if(id < 0)
+        {
+            txtWeight.setText(String.valueOf(0));
+            pckReps.setValue(5);
+            pckSets.setValue(5);
+            rbtnWarmup.setChecked(false);
+        }
+        else {
+            Lift lift = dao.selectLift(id);
+            txtWeight.setText(String.valueOf(lift.getWeight()));
+            pckReps.setValue(lift.getReps());
+            pckSets.setValue(lift.getSets());
+            rbtnWarmup.setChecked(lift.isWarmup());
+        }
+
     }
 
 
@@ -139,23 +145,26 @@ public class ViewLift extends ActionBarActivity {
         spnExercise = (Spinner) findViewById(R.id.spn_exercise);
         pckSets = (NumberPicker) findViewById(R.id.pck_sets);
         rbtnWarmup = (RadioButton) findViewById(R.id.rbtn_warmup);
-        pckWeight = (NumberPicker) findViewById(R.id.pck_weight);
+//        pckWeight = (NumberPicker) findViewById(R.id.pck_weight);
+        txtWeight = (EditText) findViewById(R.id.txt_weight);
         pckReps = (NumberPicker) findViewById(R.id.pck_reps);
         pckSets = (NumberPicker) findViewById(R.id.pck_sets);
-//        txtDay = (EditText) findViewById(R.id.txt_day);
+        btnSave = (Button) findViewById(R.id.btn_save);
 
-        int numValues = 400;
-        String[] weightValues = new String[numValues];
-        double weightValue = 0;
-        for(int i = 0; i < numValues; i++)
-        {
-            weightValue += weightIncrement;
-            weightValues[i] = String.valueOf(weightValue);
-        }
-        pckWeight.setMinValue(1);
-        pckWeight.setMaxValue(numValues);
-        pckWeight.setWrapSelectorWheel(false);
-        pckWeight.setDisplayedValues(weightValues);
+//        txtDay = (EditText) findViewById(R.id.txt_day);
+//
+//        int numValues = 400;
+//        String[] weightValues = new String[numValues];
+//        double weightValue = 0;
+//        for(int i = 0; i < numValues; i++)
+//        {
+//            weightValue += weightIncrement;
+//            weightValues[i] = String.valueOf(weightValue);
+//        }
+//        pckWeight.setMinValue(1);
+//        pckWeight.setMaxValue(numValues);
+//        pckWeight.setWrapSelectorWheel(false);
+//        pckWeight.setDisplayedValues(weightValues);
 
         pckReps.setMinValue(0);
         pckReps.setMaxValue(100);
@@ -171,41 +180,76 @@ public class ViewLift extends ActionBarActivity {
 
     /**
      * Handle Submit button onClick
+     * @param view
      */
-    public void doSubmit(View view)
+    public void doSave(View view)
     {
+        String exercise = spnExercise.getSelectedItem().toString();
+        boolean isWarmup = rbtnWarmup.isChecked();
+        int weight = Integer.parseInt(txtWeight.getText().toString());
 
+        int reps = pckReps.getValue();
+        int sets = pckSets.getValue();
 
-        try {
+        //TODO get actual id
+        int exerciseId = 5;
 
-//            int day = Integer.parseInt(txtDay.getText().toString());
-            String exercise = spnExercise.getSelectedItem().toString();
-            boolean isWarmup = rbtnWarmup.isSelected();
-            int weight = pckWeight.getValue();
-            int reps = pckReps.getValue();
-            int sets = pckSets.getValue();
+        Lift lift = new Lift();
+        lift.setExerciseId(exerciseId);
+        lift.setSessionId(sessionId);
+        lift.setWeight(weight);
+        lift.setSets(sets);
+        lift.setReps(reps);
+        lift.setWarmup(isWarmup);
 
-            //TODO get actual id
-            int exerciseId = 5;
-
-            Lift lift = new Lift();
-            lift.setExerciseId(exerciseId);
-            lift.setSessionId(sessionId);
-//            lift.setDate(day);
-            lift.setWeight(weight);
-            lift.setSets(sets);
-            lift.setReps(reps);
-
-            long id = dao.insert(lift);
-
-            Log.d(LOG_TAG, "inserted lift object, id=" + id);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.d(LOG_TAG, e.getMessage());
+        if(liftId == -1)
+        {
+            //insert new Lift
+            dao.insert(lift);
+        }
+        else
+        {
+            //update existing lift
+            lift.setId(liftId);
+            boolean ret =  dao.update(lift);
+            Log.d(LOG_TAG, "" + ret);
         }
 
+        this.finish();
 
 
+    }
+
+    /**
+     * Handle Delete button click
+     * @param view
+     */
+    public void doDelete(View view)
+    {
+        new AlertDialog.Builder(this)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle("Deleting Lift")
+                .setMessage("Are you sure you want to delete this lift?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (liftId == -1)
+                        {
+                            Toast.makeText(ViewLift.this, "Can't delete. This Lift has not been created yet.", Toast.LENGTH_LONG);
+                            return;
+                        }
+                        if(!dao.deleteLift(liftId))
+                        {
+                            Toast.makeText(ViewLift.this, "Error deleting lift.", Toast.LENGTH_LONG);
+                            return;
+                        }
+                        //successfully deleted
+                        finish();
+                    }
+
+                })
+                .setNegativeButton("No", null)
+                .show();
     }
 
 
