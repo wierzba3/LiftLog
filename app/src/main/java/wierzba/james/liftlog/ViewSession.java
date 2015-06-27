@@ -69,38 +69,61 @@ public class ViewSession extends ActionBarActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position,
                                     long id) {
+                Lift lift = (Lift) parent.getItemAtPosition(position);
                 Intent intent = new Intent(ViewSession.this, ViewLift.class);
-                String text = ((TextView)view).getText().toString();
-                intent.putExtra(ViewLift.LIFT_ID_KEY, text);
-                intent.putExtra(ViewLift.SESSION_ID_KEY, sessionId);
+//                String text = ((TextView)view).getText().toString();
+                intent.putExtra(ViewLift.LIFT_ID_KEY, String.valueOf(lift.getId()));
+                intent.putExtra(ViewLift.SESSION_ID_KEY, String.valueOf(sessionId));
+
                 startActivity(intent);
             }
         });
+
+
     }
 
     private void loadSession(long id)
     {
-        dao.insertDummyLifts();
+//        dao.insertDummyLifts();
+//        dao.clearLiftsTable();
+
+//        if(sessionId == -1)
+//        {
+//            //this should never happen
+//            Toast.makeText(this, "Error creating new session", Toast.LENGTH_LONG);
+//            return;
+//        }
 
 
         Session session = dao.selectSession(sessionId);
 
+//        if(session == null)
+//        {
+//            Toast.makeText(this, "Error loading session data", Toast.LENGTH_LONG);
+//            return;
+//        }
 
+        ArrayList<Lift> lifts;
         if(session == null)
         {
-            Toast.makeText(this, "error loading training session data", Toast.LENGTH_LONG);
+            lifts = new ArrayList<Lift>();
+        }
+        else
+        {
+            lifts = session.getLifts();
         }
 
-        List<Lift> lifts = session.getLifts();
+        //dummy lift for < Add New > option
+        Lift emptyLift = new Lift();
+        emptyLift.setId(-1);
+        lifts.add(0, emptyLift);
 
-        ArrayList<String> liftLabels = new ArrayList<String>();
+//        ArrayList<String> liftLabels = new ArrayList<String>();
+//        for(Lift lift : lifts) liftLabels.add("" + lift.getId());
 
-        for(Lift lift : lifts) liftLabels.add("" + lift.getId());
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, liftLabels);
+        ArrayAdapter<Lift> adapter = new ArrayAdapter<Lift>(this, android.R.layout.simple_list_item_1, lifts);
         listLifts.setAdapter(adapter);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -108,6 +131,36 @@ public class ViewSession extends ActionBarActivity {
         getMenuInflater().inflate(R.menu.menu_view_session, menu);
         return true;
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle bundle) {
+        super.onSaveInstanceState(bundle);
+        bundle.putString(SESSION_ID_KEY, String.valueOf(sessionId));
+    }
+
+    protected void onRestoreInstanceState(Bundle bundle) {
+        super.onSaveInstanceState(bundle);
+        String idString = bundle.getString(SESSION_ID_KEY, String.valueOf(sessionId));
+        if(idString == null || idString.isEmpty())
+        {
+            Toast.makeText(this, "Error restoring session.", Toast.LENGTH_SHORT);
+            finish();
+            return;
+        }
+        sessionId = Long.parseLong(idString);
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        if(sessionId > -1)
+        {
+            loadSession(sessionId);
+        }
+    }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

@@ -22,7 +22,7 @@
         <activity
             android:name=".ViewLift"
             android:label="@string/title_activity_add_lift"
-            android:parentActivityName=".MainActivity" >
+            android:parentActivityName=".ViewSession" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="wierzba.james.liftlog.MainActivity" />
@@ -33,7 +33,9 @@
         </activity>
         <activity
             android:name=".ViewSession"
-            android:label="@string/title_activity_view_session" >
+            android:label="@string/title_activity_view_session"
+            android:launchMode="singleTop"
+            android:parentActivityName=".BrowseSessions">
         </activity>
     </application>
 

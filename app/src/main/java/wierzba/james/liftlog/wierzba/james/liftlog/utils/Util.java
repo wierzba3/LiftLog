@@ -42,4 +42,13 @@ public class Util {
         }
     }
 
+//    /**
+//     * Get current date represented as seconds since the epoch.
+//     * @return The current date
+//     */
+//    public static int now()
+//    {
+//        return (int)(System.currentTimeMillis() / 1000);
+//    }
+
 }

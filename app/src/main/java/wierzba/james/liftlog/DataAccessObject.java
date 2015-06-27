@@ -3,16 +3,20 @@ package wierzba.james.liftlog;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import wierzba.james.liftlog.models.Exercise;
 import wierzba.james.liftlog.models.Lift;
 import wierzba.james.liftlog.models.Session;
+import wierzba.james.liftlog.wierzba.james.liftlog.utils.Util;
 
 /**
  * Created by jwierzba on 6/8/2015.
@@ -21,7 +25,7 @@ public class DataAccessObject extends SQLiteOpenHelper
 {
 
     //TODO
-    public static Map<Integer, Exercise> exerciseMap;
+    public static Map<Integer, Exercise> exerciseMap = new HashMap<>();
 
     public static final String DB_NAME = "LiftLog.db";
 
@@ -95,7 +99,7 @@ public class DataAccessObject extends SQLiteOpenHelper
         ContentValues values = new ContentValues();
         values.put(LIFT_COLUMN_EXERCISE_FK, lift.getExerciseId());
         values.put(LIFT_COLUMN_SESSION_FK, lift.getSessionId());
-        values.put(LIFT_COLUMN_DATE_CREATED, now());
+        values.put(LIFT_COLUMN_DATE_CREATED, System.currentTimeMillis());
 //        values.put(LIFT_COLUMN_DATE, lift.getDate());
         values.put(LIFT_COLUMN_WEIGHT, lift.getWeight());
         values.put(LIFT_COLUMN_REPS, lift.getReps());
@@ -110,10 +114,33 @@ public class DataAccessObject extends SQLiteOpenHelper
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(SESSION_COLUMN_DATE, session.getDate());
-        values.put(SESSION_COLUMN_DATE_CREATED, now());
+        values.put(SESSION_COLUMN_DATE_CREATED, System.currentTimeMillis());
         long id = db.insert(SESSION_TABLE_NAME, null, values);
         return id;
     }
+
+    public boolean update(Lift lift)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String qry = "UPDATE " + LIFT_TABLE_NAME +
+                " SET " + LIFT_COLUMN_WEIGHT + " = " + lift.getWeight() + ", " +
+                LIFT_COLUMN_REPS + " = " + lift.getReps() + ", " +
+                LIFT_COLUMN_SETS + " = " + lift.getSets() + ", " +
+                LIFT_COLUMN_WARMUP + " = " + (lift.isWarmup() ? "1" : "0") +
+                " WHERE " + LIFT_COLUMN_PK + " = " + lift.getId();
+        try
+        {
+            db.execSQL(qry);
+        }
+        catch(SQLException e)
+        {
+            Log.d(LOG_TAG, e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
 
 
     /**
@@ -145,7 +172,7 @@ public class DataAccessObject extends SQLiteOpenHelper
         {
             Session session = new Session();
             long id = cursor.getInt(cursor.getColumnIndex(SESSION_COLUMN_PK));
-            int date = cursor.getInt(cursor.getColumnIndex(SESSION_COLUMN_DATE));
+            long date = cursor.getLong(cursor.getColumnIndex(SESSION_COLUMN_DATE));
             session.setId(id);
             session.setDate(date);
 
@@ -159,22 +186,23 @@ public class DataAccessObject extends SQLiteOpenHelper
 
     public Session selectSession(long id)
     {
-        //column alias' to eliminate ambiguity in the join
-//        String liftDateAlias = "lift_date";
-//        String sessionDateAlias = "session_date";
+        SQLiteDatabase db = this.getReadableDatabase();
+        String qrySession = "SELECT * FROM " + SESSION_TABLE_NAME;
+        Cursor cursorSession =  db.rawQuery(qrySession, null);
+        if(cursorSession == null || cursorSession.getCount() < 1)
+        {
+            return null;
+        }
 
-        //TODO: this query throws an error
-        /*
-        SELECT (b.id, b.exercise_id, b.date as lift_date, b.weight, b.reps, b.sets, a.date as session_date)
-        FROM sessions as a,
-        lifts as b
-        WHERE a.id = b.session_id AND a.id = 1
-         */
-        String qry  = "SELECT " +
+        cursorSession.moveToFirst();
+        Session result = new Session();
+        result.setId(id);
+        result.setDate(cursorSession.getInt(cursorSession.getColumnIndex(SESSION_COLUMN_DATE)));
+
+        String qryLifts  = "SELECT " +
                 "b." + LIFT_COLUMN_PK + ", " +
                 "b." + LIFT_COLUMN_SESSION_FK + ", " +
                 "b." + LIFT_COLUMN_EXERCISE_FK + ", " +
-//                "b." + LIFT_COLUMN_DATE + " as " + liftDateAlias + ", " +
                 "b." + LIFT_COLUMN_WEIGHT + ", " +
                 "b." + LIFT_COLUMN_REPS + ", " +
                 "b." + LIFT_COLUMN_SETS + ", " +
@@ -185,30 +213,30 @@ public class DataAccessObject extends SQLiteOpenHelper
                 " WHERE a." + SESSION_COLUMN_PK + " = b." + LIFT_COLUMN_SESSION_FK +
                 " AND a." + SESSION_COLUMN_PK + " = " + id;
 
-        SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursor = null;
         try {
-            cursor = db.rawQuery(qry, null);
+            cursor = db.rawQuery(qryLifts, null);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        int cnt = cursor.getCount();
-        if(cursor == null || cursor.getCount() == 0) return null;
+//        int cnt = cursor.getCount();
+//        if(cursor == null || cursor.getCount() == 0)
+//        {
+//            return null;
+//        }
 
-        Session result = new Session();
-        int sessionDate = -1;
+
+//        int sessionDate = -1;
 
         boolean hasNext = cursor.moveToFirst();
         while(hasNext)
         {
-            sessionDate = cursor.getInt(cursor.getColumnIndex(SESSION_COLUMN_DATE));
 
             Lift lift = new Lift();
 
             long liftId = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_PK));
-//            int date = cursor.getInt(cursor.getColumnIndex(liftDateAlias));
             long exerciseId = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_EXERCISE_FK));
             long sessionId = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_SESSION_FK));
             int weight = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_WEIGHT));
@@ -229,9 +257,6 @@ public class DataAccessObject extends SQLiteOpenHelper
             hasNext = cursor.moveToNext();
         }
 
-        result.setId(id);
-        result.setDate(sessionDate);
-
         return result;
     }
 
@@ -240,13 +265,27 @@ public class DataAccessObject extends SQLiteOpenHelper
         Lift result = new Lift();
 
         SQLiteDatabase db = this.getReadableDatabase();
-        String qry = "SELECT * FROM " + LIFT_TABLE_NAME;
+        String qry = "SELECT * FROM " + LIFT_TABLE_NAME +
+                " WHERE " + LIFT_COLUMN_PK + " = " + id;
         Cursor cursor = db.rawQuery(qry, null);
         if(cursor == null || cursor.getCount() < 1) return null;
 
         cursor.moveToFirst();
 
+        long exerciseId = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_EXERCISE_FK));
+        long sessionId = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_SESSION_FK));
+        int weight = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_WEIGHT));
+        int sets = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_SETS));
+        int reps = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_REPS));
+        int warmup = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_WARMUP));
 
+        result.setId(id);
+        result.setExerciseId(exerciseId);
+        result.setSessionId(sessionId);
+        result.setWeight(weight);
+        result.setSets(sets);
+        result.setReps(reps);
+        result.setWarmup(warmup == 1 ? true : false);
 
         return result;
     }
@@ -257,6 +296,43 @@ public class DataAccessObject extends SQLiteOpenHelper
         SQLiteDatabase db = this.getWritableDatabase();
         String qry = "DELETE FROM " + LIFT_TABLE_NAME;
         db.execSQL(qry);
+    }
+
+    public boolean deleteLift(long id)
+    {
+        String qry = "DELETE FROM " + LIFT_TABLE_NAME +
+                " WHERE " + LIFT_COLUMN_PK + " = " + id;
+        try {
+            this.getWritableDatabase().execSQL(qry);
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+            Log.d(LOG_TAG, "Error removing session id=" + id + ":" + e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    public boolean deleteSession(long id)
+    {
+        String qrySessions = "DELETE FROM " + SESSION_TABLE_NAME +
+                " WHERE " + SESSION_COLUMN_PK + " = " + id;
+        String qryLifts = "DELETE FROM " + LIFT_TABLE_NAME +
+                " WHERE " + LIFT_COLUMN_SESSION_FK + " = " + id;
+        try
+        {
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.execSQL(qrySessions);
+            db.execSQL(qryLifts);
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+            Log.d(LOG_TAG, "Error removing session id=" + id + ":" + e.getMessage());
+            return false;
+        }
+        return true;
     }
 
     public void clearExerciseTable()
@@ -273,25 +349,18 @@ public class DataAccessObject extends SQLiteOpenHelper
         db.execSQL(qry);
     }
 
-    /**
-     * Get current date represented as seconds since the epoch.
-     * @return The current date
-     */
-    private int now()
-    {
-        return (int)(System.currentTimeMillis() / 1000);
-    }
+
 
 
     //tester method
     public void insertDummySessions()
     {
         clearSessionsTable();
-
+        final long millisPerDay = 86400000;
         for(int i = 0; i < 10; i++)
         {
             Session session = new Session();
-            session.setDate(i + 1);
+            session.setDate(System.currentTimeMillis() - (millisPerDay * i));
             insert(session);
         }
     }
@@ -300,6 +369,7 @@ public class DataAccessObject extends SQLiteOpenHelper
     public void insertDummyLifts()
     {
         clearLiftsTable();
+
 
         for(int i = 0; i < 20; i++)
         {
@@ -316,29 +386,8 @@ public class DataAccessObject extends SQLiteOpenHelper
     //tester method
     public void test()
     {
-        String qryLift = "SELECT * FROM " + LIFT_TABLE_NAME;
-        String qrySession = "SELECT * FROM " + SESSION_TABLE_NAME;
-
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        Cursor cursorLift = db.rawQuery(qryLift, null);
-        Cursor cursorSession = db.rawQuery(qrySession, null);
-
-        int liftCnt = cursorLift.getCount();
-        int sessionCnt = cursorSession.getCount();
-
-        boolean hasNext;
-        hasNext = cursorLift.moveToFirst();
-        while(hasNext)
-        {
-            int exerciseId = cursorLift.getInt(cursorLift.getColumnIndex(LIFT_COLUMN_EXERCISE_FK));
-        }
-
-        hasNext = cursorSession.moveToFirst();
-        while(hasNext)
-        {
-            int id = cursorSession.getInt(cursorSession.getColumnIndex(SESSION_COLUMN_PK));
-        }
+        String qry = "DELETE FROM " + SESSION_TABLE_NAME + " WHERE " + SESSION_COLUMN_DATE + " < 1000";
+        this.getWritableDatabase().execSQL(qry);
 
     }
 

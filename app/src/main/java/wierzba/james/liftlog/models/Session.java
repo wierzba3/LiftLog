@@ -3,6 +3,7 @@ package wierzba.james.liftlog.models;
 import android.database.Cursor;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import wierzba.james.liftlog.DataAccessObject;
@@ -18,8 +19,8 @@ public class Session {
     }
 
     private long id;
-    private int date;
-    private List<Lift> lifts;
+    private long date;
+    private ArrayList<Lift> lifts;
 
     public long getId() {
         return id;
@@ -29,22 +30,29 @@ public class Session {
         this.id = id;
     }
 
-    public List<Lift> getLifts() {
+    public ArrayList<Lift> getLifts() {
         return lifts;
     }
 
-    public void setLifts(List<Lift> lifts) {
+    public void setLifts(ArrayList<Lift> lifts) {
         this.lifts = lifts;
     }
 
-    public int getDate() {
+    public long getDate() {
         return date;
     }
 
-    public void setDate(int date) {
+    public void setDate(long date) {
         this.date = date;
     }
 
+    @Override
+    public String toString()
+    {
+        if(id < 0) return "< New Session >";
+        Date dateObj = new Date(date);
+        return dateObj.toString();
+    }
 
 
 }

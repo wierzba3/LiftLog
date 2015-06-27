@@ -11,11 +11,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import wierzba.james.liftlog.models.Session;
+import wierzba.james.liftlog.wierzba.james.liftlog.utils.Util;
 
 
 public class BrowseSessions extends ActionBarActivity {
@@ -34,38 +36,59 @@ public class BrowseSessions extends ActionBarActivity {
         dao = new DataAccessObject(this);
 
         createContents();
-
-
+        loadSessions();
     }
 
     private void createContents()
     {
-            dao.insertDummySessions();
+        listSessions = (ListView) findViewById(R.id.list_sessions);
 
-            listSessions = (ListView) findViewById(R.id.list_sessions);
-            List<Session> sessions = dao.selectSessions();
-            Log.d(LOG_TAG, "sessions.size()=" + sessions.size());
 
-            ArrayList<String> sessionLabels = new ArrayList<String>();
 
-            for (Session session : sessions) sessionLabels.add(String.valueOf(session.getDate()));
-
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, sessionLabels);
-            listSessions.setAdapter(adapter);
-
-            listSessions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position,
-                                        long id) {
-                    Intent intent = new Intent(BrowseSessions.this, ViewSession.class);
-                    String text = ((TextView)view).getText().toString();
-                    intent.putExtra(ViewSession.SESSION_ID_KEY, text);
-                    startActivity(intent);
+        listSessions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position,
+                                    long id) {
+                Intent intent = new Intent(BrowseSessions.this, ViewSession.class);
+                Session session = (Session) parent.getItemAtPosition(position);
+                long sessionId = session.getId();
+                if(sessionId == -1)
+                {
+                    //TODO prompt user for date option to create new session
+                    long now = System.currentTimeMillis();
+                    session.setDate(now);
+                    sessionId = dao.insert(session);
+                    if(sessionId == -1)
+                    {
+                        Toast.makeText(BrowseSessions.this, "", Toast.LENGTH_LONG);
+                        Log.d(LOG_TAG, "Error inserting new session.");
+                        return;
+                    }
                 }
-            });
+                intent.putExtra(ViewSession.SESSION_ID_KEY, String.valueOf(sessionId));
+                startActivity(intent);
+            }
+        });
 
 
 
+    }
+
+    private void loadSessions()
+    {
+//            dao.insertDummySessions();
+        dao.test();
+
+        List<Session> sessions = dao.selectSessions();
+        Session dummySession = new Session();
+        dummySession.setId(-1);
+        sessions.add(0, dummySession);
+
+//            ArrayList<String> sessionLabels = new ArrayList<String>();
+//            for (Session session : sessions) sessionLabels.add(String.valueOf(session.getDate()));
+
+        ArrayAdapter<Session> adapter = new ArrayAdapter<Session>(this, android.R.layout.simple_list_item_1, sessions);
+        listSessions.setAdapter(adapter);
     }
 
 
@@ -77,7 +100,8 @@ public class BrowseSessions extends ActionBarActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -92,6 +116,12 @@ public class BrowseSessions extends ActionBarActivity {
     }
 
 
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        loadSessions();
+    }
 
 
 }

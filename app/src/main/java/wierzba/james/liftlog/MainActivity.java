@@ -7,6 +7,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.content.Intent;
 
+/**
+ *
+ * Application TODO
+ * - Relevant labels for Lift and Session ListView
+ * - New Session option
+ * - Exercise table in db
+ * - Change passing of ids from String to long
+ */
+
 public class MainActivity extends ActionBarActivity {
 
     public static final String LOG_TAG = "LiftLog";
