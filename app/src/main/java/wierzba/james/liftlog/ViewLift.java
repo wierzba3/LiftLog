@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,8 +21,8 @@ import android.widget.Toast;
 import wierzba.james.liftlog.models.Exercise;
 import wierzba.james.liftlog.models.Lift;
 
-
-public class ViewLift extends ActionBarActivity {
+//public class ViewLift extends Activity {
+public class ViewLift extends AppCompatActivity {
 
     private static final String LOG_TAG = "LiftLog.AddLift";
 
@@ -105,27 +106,35 @@ public class ViewLift extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_add_lift, menu);
+        getMenuInflater().inflate(R.menu.menu_view_lift, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id)
+        {
+            case R.id.action_delete:
+                doDelete(this.getCurrentFocus());
+                break;
+            case R.id.home:
+                break;
+            case R.id.action_settings:
+                break;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
 
-    private void createContents(){
+    private void createContents()
+    {
         Spinner spinner = (Spinner) findViewById(R.id.spn_exercise);
 
         String[] staticExercises = {
@@ -139,7 +148,6 @@ public class ViewLift extends ActionBarActivity {
         spinner.setAdapter(adapter);
 
         openOrCreateDatabase(DataAccessObject.DB_NAME, MODE_PRIVATE, null);
-
 
         //initialize control references
         spnExercise = (Spinner) findViewById(R.id.spn_exercise);
@@ -226,6 +234,11 @@ public class ViewLift extends ActionBarActivity {
      */
     public void doDelete(View view)
     {
+        if (liftId == -1)
+        {
+            Toast.makeText(ViewLift.this, "Can't delete. This Lift has not been created yet.", Toast.LENGTH_SHORT).show();
+            return;
+        }
         new AlertDialog.Builder(this)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setTitle("Deleting Lift")
@@ -233,14 +246,9 @@ public class ViewLift extends ActionBarActivity {
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (liftId == -1)
-                        {
-                            Toast.makeText(ViewLift.this, "Can't delete. This Lift has not been created yet.", Toast.LENGTH_LONG);
-                            return;
-                        }
-                        if(!dao.deleteLift(liftId))
-                        {
-                            Toast.makeText(ViewLift.this, "Error deleting lift.", Toast.LENGTH_LONG);
+
+                        if (!dao.deleteLift(liftId)) {
+                            Toast.makeText(ViewLift.this, "Error deleting lift.", Toast.LENGTH_LONG).show();
                             return;
                         }
                         //successfully deleted
@@ -250,6 +258,15 @@ public class ViewLift extends ActionBarActivity {
                 })
                 .setNegativeButton("No", null)
                 .show();
+    }
+
+    /**
+     * Handle Cancel button click
+     * @param view
+     */
+    public void doCancel(View view)
+    {
+        finish();
     }
 
 

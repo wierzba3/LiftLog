@@ -1,10 +1,18 @@
 package wierzba.james.liftlog;
 
+import android.app.ActionBar;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
+//import android.support.v7.app.ActionBar;
+//import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -19,8 +27,8 @@ import java.util.List;
 import wierzba.james.liftlog.models.Lift;
 import wierzba.james.liftlog.models.Session;
 
-
-public class ViewSession extends ActionBarActivity {
+public class ViewSession extends AppCompatActivity {
+//public class ViewSession extends Activity {
 
     /**
      * The key for this intent's extended data: the id of the session (-1 if new instance)
@@ -63,6 +71,16 @@ public class ViewSession extends ActionBarActivity {
 
     private void createContents()
     {
+        ActionBar actionBar = this.getActionBar();
+//        if(actionBar == null) actionBar =
+        if(actionBar != null)
+        {
+            actionBar.setDisplayUseLogoEnabled(false);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.show();
+        }
+
+
         listLifts = (ListView) findViewById(R.id.list_lifts);
 
         listLifts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -126,13 +144,6 @@ public class ViewSession extends ActionBarActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_view_session, menu);
-        return true;
-    }
-
-    @Override
     protected void onSaveInstanceState(Bundle bundle) {
         super.onSaveInstanceState(bundle);
         bundle.putString(SESSION_ID_KEY, String.valueOf(sessionId));
@@ -143,12 +154,44 @@ public class ViewSession extends ActionBarActivity {
         String idString = bundle.getString(SESSION_ID_KEY, String.valueOf(sessionId));
         if(idString == null || idString.isEmpty())
         {
-            Toast.makeText(this, "Error restoring session.", Toast.LENGTH_SHORT);
+            Toast.makeText(this, "Error restoring session.", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
         sessionId = Long.parseLong(idString);
     }
+
+    private void doDelete()
+    {
+        if(sessionId == -1)
+        {
+            //this should never happen
+            Toast.makeText(this, "Error attempting to delete session.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        new AlertDialog.Builder(this)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle("Deleting Lift")
+                .setMessage("Are you sure you want to delete this Session? All associated Lifts will also be deleted.")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        if(!dao.deleteSession(sessionId))
+                        {
+                            Toast.makeText(ViewSession.this, "Error deleting session.", Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        //successfully deleted
+                        finish();
+                    }
+
+                })
+                .setNegativeButton("No", null)
+                .show();
+    }
+
 
     @Override
     protected void onResume()
@@ -160,7 +203,15 @@ public class ViewSession extends ActionBarActivity {
         }
     }
 
-
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        MenuInflater inflater = getMenuInflater();
+//       inflater.inflate(R.menu.menu_view_session, menu);
+        inflater.inflate(R.menu.menu_view_session, menu);
+        return true;
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -169,9 +220,15 @@ public class ViewSession extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id)
+        {
+            case R.id.action_delete:
+                doDelete();
+                break;
+            case R.id.home:
+                break;
+            case R.id.action_settings:
+                break;
         }
 
         return super.onOptionsItemSelected(item);

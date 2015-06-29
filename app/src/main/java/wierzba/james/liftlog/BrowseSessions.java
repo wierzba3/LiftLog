@@ -1,8 +1,10 @@
 package wierzba.james.liftlog;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,7 +22,7 @@ import wierzba.james.liftlog.models.Session;
 import wierzba.james.liftlog.wierzba.james.liftlog.utils.Util;
 
 
-public class BrowseSessions extends ActionBarActivity {
+public class BrowseSessions extends AppCompatActivity {
 
     ListView listSessions;
 
@@ -60,7 +62,7 @@ public class BrowseSessions extends ActionBarActivity {
                     sessionId = dao.insert(session);
                     if(sessionId == -1)
                     {
-                        Toast.makeText(BrowseSessions.this, "", Toast.LENGTH_LONG);
+                        Toast.makeText(BrowseSessions.this, "", Toast.LENGTH_LONG).show();
                         Log.d(LOG_TAG, "Error inserting new session.");
                         return;
                     }
@@ -77,7 +79,8 @@ public class BrowseSessions extends ActionBarActivity {
     private void loadSessions()
     {
 //            dao.insertDummySessions();
-        dao.test();
+//        dao.test();
+//        dao.clearSessionsTable();
 
         List<Session> sessions = dao.selectSessions();
         Session dummySession = new Session();
