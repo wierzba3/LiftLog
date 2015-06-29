@@ -2,10 +2,12 @@ package wierzba.james.liftlog;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.content.Intent;
+//import android.support.v7.app.AppCompatActivity;
 
 /**
  *
@@ -16,12 +18,13 @@ import android.content.Intent;
  * - Change passing of ids from String to long
  */
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
 
     public static final String LOG_TAG = "LiftLog";
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -30,14 +33,16 @@ public class MainActivity extends ActionBarActivity {
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -68,6 +73,17 @@ public class MainActivity extends ActionBarActivity {
     public void startBrowseSessions(View view)
     {
         Intent intent = new Intent(this, BrowseSessions.class);
+        this.startActivity(intent);
+    }
+
+
+    /**
+     * Start the activity to browse previous workout sessions
+     * @param view
+     */
+    public void startBrowseExercises(View view)
+    {
+        Intent intent = new Intent(this, BrowseExercises.class);
         this.startActivity(intent);
     }
 

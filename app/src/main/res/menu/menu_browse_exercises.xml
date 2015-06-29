@@ -1,15 +1,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="wierzba.james.liftlog.ViewSession">
+    tools:context="wierzba.james.liftlog.BrowseExercises">
 
     <!--<item android:id="@+id/action_settings" android:title="@string/action_settings"-->
         <!--android:orderInCategory="100" app:showAsAction="never" />-->
 
-    <item
-        android:id="@+id/action_delete"
-        app:showAsAction="always"
-        android:icon="@drawable/ic_delete_black_24dp"
-        android:title="Delete"/>
+    <!-- create Add menu button -->
 
 </menu>

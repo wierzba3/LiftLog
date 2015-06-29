@@ -105,7 +105,7 @@ public class Lift {
     @Override
     public String toString()
     {
-        if(id == -1) return "< Add New >";
+        if(id == -1) return "< Add Lift >";
         Exercise exercise = DataAccessObject.exerciseMap.get(exerciseId);
         return (exercise != null ? exercise.getName() : "?") + " " + weight + " x " + reps + " x " + sets;
     }

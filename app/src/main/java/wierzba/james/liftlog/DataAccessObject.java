@@ -33,7 +33,6 @@ public class DataAccessObject extends SQLiteOpenHelper
     public static final String LIFT_COLUMN_PK = "id";
     public static final String LIFT_COLUMN_SESSION_FK = "session_id";
     public static final String LIFT_COLUMN_EXERCISE_FK = "exercise_id";
-//    public static final String LIFT_COLUMN_DATE = "date";
     /** The date created. Represented as seconds since epoch. */
     public static final String LIFT_COLUMN_DATE_CREATED = "date_created";
     public static final String LIFT_COLUMN_WEIGHT = "weight";
@@ -56,6 +55,7 @@ public class DataAccessObject extends SQLiteOpenHelper
                     + LIFT_COLUMN_WARMUP + " INTEGER"
                     +  ")";
 
+
     public static final String SESSION_TABLE_NAME = "sessions";
     public static final String SESSION_COLUMN_PK = "id";
     public static final String SESSION_COLUMN_DATE = "date";
@@ -68,14 +68,28 @@ public class DataAccessObject extends SQLiteOpenHelper
                     + SESSION_COLUMN_DATE_CREATED + " INTEGER"
                     +  ")";
 
+
     //TODO
     public static final String EXERCISE_TABLE_NAME = "exercises";
+    public static final String EXERCISE_COLUMN_PK = "id";
+    public static final String EXERCISE_COLUMN_NAME = "name";
+    public static final String EXERCISE_COLUMN_DESCRIPTION = "description";
+    public static final String EXERCISE_COLUMN_DATE = "date";
+    public static final String EXERCISE_TABLE_CREATE_QUERY =
+            "CREATE TABLE " + EXERCISE_TABLE_NAME
+                    + " ("
+                    + EXERCISE_COLUMN_PK + " INTEGER PRIMARY KEY, "
+                    + EXERCISE_COLUMN_NAME + " TEXT, "
+                    + EXERCISE_COLUMN_DESCRIPTION + " TEXT, "
+                    + EXERCISE_COLUMN_DATE + " INTEGER"
+                    +  ")";
+
 
     private static final String LOG_TAG = "liftlog.DataAccessObject";
 
     public DataAccessObject(Context context)
     {
-        super(context, DB_NAME , null, 11);
+        super(context, DB_NAME , null, 12);
     }
 
     @Override
@@ -83,6 +97,7 @@ public class DataAccessObject extends SQLiteOpenHelper
     {
         db.execSQL(LIFT_TABLE_CREATE_QUERY);
         db.execSQL(SESSION_TABLE_CREATE_QUERY);
+        db.execSQL(EXERCISE_TABLE_CREATE_QUERY);
     }
 
     @Override
@@ -90,6 +105,7 @@ public class DataAccessObject extends SQLiteOpenHelper
     {
         db.execSQL("DROP TABLE IF EXISTS " + LIFT_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + SESSION_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + EXERCISE_TABLE_NAME);
         onCreate(db);
     }
 
@@ -100,7 +116,6 @@ public class DataAccessObject extends SQLiteOpenHelper
         values.put(LIFT_COLUMN_EXERCISE_FK, lift.getExerciseId());
         values.put(LIFT_COLUMN_SESSION_FK, lift.getSessionId());
         values.put(LIFT_COLUMN_DATE_CREATED, System.currentTimeMillis());
-//        values.put(LIFT_COLUMN_DATE, lift.getDate());
         values.put(LIFT_COLUMN_WEIGHT, lift.getWeight());
         values.put(LIFT_COLUMN_REPS, lift.getReps());
         values.put(LIFT_COLUMN_SETS, lift.getSets());
@@ -314,6 +329,11 @@ public class DataAccessObject extends SQLiteOpenHelper
         return true;
     }
 
+    /**
+     * Delete the Session matching the id. Also, delete all Lifts related to the Session.
+     * @param id The id of the session
+     * @return True on success
+     */
     public boolean deleteSession(long id)
     {
         String qrySessions = "DELETE FROM " + SESSION_TABLE_NAME +

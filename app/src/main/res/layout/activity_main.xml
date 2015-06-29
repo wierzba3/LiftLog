@@ -10,12 +10,12 @@
     <!--<TextView android:text="@string/hello_world" android:layout_width="wrap_content"-->
         <!--android:layout_height="wrap_content" />-->
 
-    <Button
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/button_add_lift"
-        android:onClick="startAddLift"
-        />
+    <!--<Button-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="@string/button_add_lift"-->
+        <!--android:onClick="startAddLift"-->
+        <!--/>-->
 
     <Button
         android:layout_width="fill_parent"
@@ -28,12 +28,13 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:text="Exercises"
+        android:onClick="startBrowseExercises"
         />
 
-    <Button
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/button_view_statistics"
-        />
+    <!--<Button-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="@string/button_view_statistics"-->
+        <!--/>-->
 
 </LinearLayout>
