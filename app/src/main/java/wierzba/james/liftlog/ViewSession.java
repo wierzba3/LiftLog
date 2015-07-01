@@ -44,7 +44,8 @@ public class ViewSession extends AppCompatActivity {
     private long sessionId = -1;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_session);
 
@@ -88,12 +89,7 @@ public class ViewSession extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position,
                                     long id) {
                 Lift lift = (Lift) parent.getItemAtPosition(position);
-                Intent intent = new Intent(ViewSession.this, ViewLift.class);
-//                String text = ((TextView)view).getText().toString();
-                intent.putExtra(ViewLift.LIFT_ID_KEY, String.valueOf(lift.getId()));
-                intent.putExtra(ViewLift.SESSION_ID_KEY, String.valueOf(sessionId));
-
-                startActivity(intent);
+                doAdd(lift.getId());
             }
         });
 
@@ -161,6 +157,19 @@ public class ViewSession extends AppCompatActivity {
         sessionId = Long.parseLong(idString);
     }
 
+    /**
+     * Add a new Lift
+     * @param liftId The id of the lift (-1 for a new Lift)
+     */
+    private void doAdd(long liftId)
+    {
+        Intent intent = new Intent(ViewSession.this, ViewLift.class);
+        intent.putExtra(ViewLift.LIFT_ID_KEY, String.valueOf(liftId));
+        intent.putExtra(ViewLift.SESSION_ID_KEY, String.valueOf(sessionId));
+        startActivity(intent);
+    }
+
+
     private void doDelete()
     {
         if(sessionId == -1)
@@ -224,6 +233,9 @@ public class ViewSession extends AppCompatActivity {
         {
             case R.id.action_delete:
                 doDelete();
+                break;
+            case R.id.action_add_lift:
+                doAdd(-1);
                 break;
             case R.id.home:
                 break;

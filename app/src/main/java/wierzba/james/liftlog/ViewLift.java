@@ -27,6 +27,7 @@ public class ViewLift extends AppCompatActivity {
     private static final String LOG_TAG = "LiftLog.AddLift";
 
 
+
     /**
      * The key for this intent's extended data: the id of the lift (-1 if new instance)
      */

@@ -156,6 +156,35 @@ public class DataAccessObject extends SQLiteOpenHelper
         return true;
     }
 
+    public List<Exercise> selectExercises()
+    {
+        ArrayList<Exercise> result = new ArrayList<Exercise>();
+        String qry = "SELECT * FROM " + EXERCISE_TABLE_NAME;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(qry, null);
+
+        if(cursor == null || cursor.getCount() < 1)
+        {
+            return null;
+        }
+
+        boolean hasNext = cursor.moveToFirst();
+        while(hasNext)
+        {
+            Exercise exercise = new Exercise();
+
+            String name = cursor.getString(cursor.getColumnIndex(EXERCISE_COLUMN_NAME));
+            String desc = cursor.getString(cursor.getColumnIndex(EXERCISE_COLUMN_DESCRIPTION));
+
+            exercise.setName(name);
+            exercise.setDescription(desc);
+
+            result.add(exercise);
+
+            hasNext = cursor.moveToNext();
+        }
+        return result;
+    }
 
 
     /**

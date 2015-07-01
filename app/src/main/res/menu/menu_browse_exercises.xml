@@ -8,4 +8,10 @@
 
     <!-- create Add menu button -->
 
+    <item
+        android:id="@+id/action_add_exercise"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_add_circle_outline_black_24dp"
+        android:title="Add Exercise"/>
+
 </menu>
