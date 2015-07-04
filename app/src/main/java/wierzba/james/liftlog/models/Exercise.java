@@ -20,6 +20,14 @@ public class Exercise {
     private String name;
     private String description;
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
@@ -74,5 +82,13 @@ public class Exercise {
         Exercise result = new Exercise(-1, name, desc);
         return result;
     }
+
+    @Override
+    public String toString()
+    {
+        return name;
+    }
+
+
 
 }
