@@ -12,10 +12,10 @@ import android.content.Intent;
 /**
  *
  * Application TODO
- * - Relevant labels for Lift and Session ListView
- * - New Session option
- * - Exercise table in db
  * - Change passing of ids from String to long
+ * - Remove exerciseMap. I think its a poor decision to manage a static map in addition to db table
+ * - Erorr on updating exercise
+ *
  */
 
 public class MainActivity extends AppCompatActivity {

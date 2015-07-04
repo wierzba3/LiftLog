@@ -31,5 +31,6 @@
     <string name="title_activity_view_session">ViewSession</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_browse_exercises">BrowseExercises</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

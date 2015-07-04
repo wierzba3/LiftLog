@@ -2,6 +2,7 @@ package wierzba.james.liftlog.models;
 
 import android.database.Cursor;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -50,8 +51,10 @@ public class Session {
     public String toString()
     {
         if(id < 0) return "< New Session >";
+
         Date dateObj = new Date(date);
-        return dateObj.toString();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("E, MMM dd yyyy");
+        return dateFormat.format(dateObj);
     }
 
 
