@@ -1,20 +1,33 @@
 package wierzba.james.liftlog;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.content.Intent;
-//import android.support.v7.app.AppCompatActivity;
 
 /**
+ *  TODO
  *
- * Application TODO
- * - Change passing of ids from String to long
- * - Remove exerciseMap. I think its a poor decision to manage a static map in addition to db table
- * - Erorr on updating exercise
+ * Implement now:
+ * - Add increment set button on the lifts ListView on ViewSession
+ * - Sort Lifts in ViewSession by Lift name, then by weight
+ * - Better layout for Save/Cancel/Delete buttons on add exercise dialog
+ * - Tabular view of lifts
+ * - Decide what to do when the user deletes an exercise that is referenced by 1 or more lifts
+ *      I think the best option would be to not delete it, but change the name to "undefined" or something
+ *      and offer the user the choice to re-define it when it is shown as "undefined"
+ *
+ * Bugs:
+ * - Remove "delete" button on ExerciseInputDialog when the user is entering a new exercise
+ *
+ *
+ * Implement in the future:
+ * - Programmable training routines. Define rules that the user can set for an exercise.
+ *      Display planned lifts separately from the completed lifts in the sessions.
+ *      e.g. repeat selected lift every M/W/F, increase weight each day/week
+ * - Hi-scores. Users can submit their video of lifts to be reviewed and then entered in high scores.
  *
  */
 

@@ -24,7 +24,7 @@ import wierzba.james.liftlog.wierzba.james.liftlog.utils.Util;
 public class DataAccessObject extends SQLiteOpenHelper
 {
 
-    public static Map<Long, Exercise> exerciseMap = new HashMap<>();
+//    public static Map<Long, Exercise> exerciseMap = new HashMap<>();
 
     public static final String DB_NAME = "LiftLog.db";
 
@@ -101,9 +101,20 @@ public class DataAccessObject extends SQLiteOpenHelper
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
     {
-        List<Session> sessions = selectSessions(db, 0, Integer.MAX_VALUE);
-        List<Lift> lifts = selectLifts(db);
-        List<Exercise> exercises = selectExercises(db);
+        List<Session> sessions = null;
+        List<Lift> lifts = null;
+        Map<Long, Exercise> exercises = null;
+        try
+        {
+            sessions = selectSessions(db, 0, Integer.MAX_VALUE);
+            lifts = selectLifts(db);
+            exercises = selectExercises(db);
+        }
+        catch(Exception ex)
+        {
+            ex.printStackTrace();
+            Log.d(LOG_TAG, ex.getMessage());
+        }
 
         db.execSQL("DROP TABLE IF EXISTS " + LIFT_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + SESSION_TABLE_NAME);
@@ -112,7 +123,7 @@ public class DataAccessObject extends SQLiteOpenHelper
 
         if(sessions != null) for(Session session : sessions) insert(db, session);
         if(lifts != null) for(Lift lift : lifts) insert(db, lift);
-        if(exercises != null) for(Exercise exercise : exercises) insert(db, exercise);
+        if(exercises != null) for(Exercise exercise : exercises.values()) insert(db, exercise);
     }
     public long insert(Lift lift)
     {
@@ -152,8 +163,29 @@ public class DataAccessObject extends SQLiteOpenHelper
 
     public boolean update(Exercise exercise)
     {
-        //TODO
-        return false;
+        if(exercise == null || exercise.getId() == -1) return false;
+        SQLiteDatabase db = this.getWritableDatabase();
+//        String qry = "UPDATE " + EXERCISE_TABLE_NAME +
+//                " SET " + EXERCISE_COLUMN_NAME + " = " + exercise.getName() + ", " +
+//                EXERCISE_COLUMN_DESCRIPTION + " = " + exercise.getDescription()  +
+//                " WHERE " + EXERCISE_COLUMN_PK + " = " + exercise.getId();
+        ContentValues values = new ContentValues();
+        values.put(EXERCISE_COLUMN_NAME, exercise.getName());
+        values.put(EXERCISE_COLUMN_DESCRIPTION, exercise.getDescription());
+        values.put(EXERCISE_COLUMN_DATE, System.currentTimeMillis());
+
+        try
+        {
+            db.update(EXERCISE_TABLE_NAME, values, EXERCISE_COLUMN_PK + " = " + exercise.getId(), null);
+//            db.execSQL(qry);
+        }
+        catch(SQLException e)
+        {
+            Log.d(LOG_TAG, e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
 
@@ -218,15 +250,16 @@ public class DataAccessObject extends SQLiteOpenHelper
     }
 
 
-    public List<Exercise> selectExercises()
+    public Map<Long, Exercise> selectExercises()
     {
         SQLiteDatabase db = this.getReadableDatabase();
         return selectExercises(db);
     }
 
-    public List<Exercise> selectExercises(SQLiteDatabase db)
+    public Map<Long, Exercise> selectExercises(SQLiteDatabase db)
     {
-        ArrayList<Exercise> result = new ArrayList<Exercise>();
+//        ArrayList<Exercise> result = new ArrayList<Exercise>();
+        HashMap<Long, Exercise> result = new HashMap<>();
         String qry = "SELECT * FROM " + EXERCISE_TABLE_NAME;
         Cursor cursor = db.rawQuery(qry, null);
 
@@ -248,15 +281,9 @@ public class DataAccessObject extends SQLiteOpenHelper
             exercise.setName(name);
             exercise.setDescription(desc);
 
-            result.add(exercise);
+            result.put(id, exercise);
 
             hasNext = cursor.moveToNext();
-        }
-
-        //update exercise Map
-        for(Exercise exercise : result)
-        {
-            exerciseMap.put(exercise.getId(), exercise);
         }
 
         return result;
@@ -298,6 +325,8 @@ public class DataAccessObject extends SQLiteOpenHelper
             lift.setSets(sets);
             lift.setReps(reps);
             lift.setWarmup(warmup == 1 ? true : false);
+
+            hasNext = cursor.moveToNext();
         }
 
         return result;
@@ -306,8 +335,15 @@ public class DataAccessObject extends SQLiteOpenHelper
 
     public List<Session> selectSessions()
     {
-        SQLiteDatabase db = this.getReadableDatabase();
-        return selectSessions(db);
+        try
+        {
+            SQLiteDatabase db = this.getReadableDatabase();
+            return selectSessions(db);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 
@@ -426,6 +462,14 @@ public class DataAccessObject extends SQLiteOpenHelper
             result.getLifts().add(lift);
 
             hasNext = cursor.moveToNext();
+        }
+
+        Map<Long, Exercise> exercises = selectExercises();
+        for(Lift lift : result.getLifts())
+        {
+            long exerciseId = lift.getExerciseId();
+            Exercise exercise = exercises.get(exerciseId);
+            if(exercise != null) lift.setExerciseName(exercise.getName());
         }
 
         return result;

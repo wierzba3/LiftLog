@@ -52,18 +52,9 @@ public class ViewSession extends AppCompatActivity {
         dao = new DataAccessObject(this);
 
         Intent intent  = getIntent();
-        String idString = intent.getStringExtra(SESSION_ID_KEY);
-        try
-        {
-            sessionId = Long.parseLong(idString);
-        }
-        catch(NumberFormatException ex)
-        {
-            sessionId = -1;
-            Log.d(LOG_TAG, "ViewSession intent extended data is badly formatted: session_id");
-        }
+        sessionId = intent.getLongExtra(SESSION_ID_KEY, -1l);
 
-        Log.d(LOG_TAG, "LIFT_ID_KEY=" + idString);
+//        Log.d(LOG_TAG, "LIFT_ID_KEY=" + sessionId);
 
 
         createContents();
@@ -142,19 +133,19 @@ public class ViewSession extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle bundle) {
         super.onSaveInstanceState(bundle);
-        bundle.putString(SESSION_ID_KEY, String.valueOf(sessionId));
+        bundle.putLong(SESSION_ID_KEY, sessionId);
     }
 
     protected void onRestoreInstanceState(Bundle bundle) {
         super.onSaveInstanceState(bundle);
-        String idString = bundle.getString(SESSION_ID_KEY, String.valueOf(sessionId));
-        if(idString == null || idString.isEmpty())
+        long id = bundle.getLong(SESSION_ID_KEY, -1);
+        if(id == -1)
         {
-            Toast.makeText(this, "Error restoring session.", Toast.LENGTH_SHORT).show();
+            Log.d(LOG_TAG, "Error restoring session.");
             finish();
             return;
         }
-        sessionId = Long.parseLong(idString);
+        sessionId = id;
     }
 
     /**
@@ -164,8 +155,8 @@ public class ViewSession extends AppCompatActivity {
     private void doAdd(long liftId)
     {
         Intent intent = new Intent(ViewSession.this, ViewLift.class);
-        intent.putExtra(ViewLift.LIFT_ID_KEY, String.valueOf(liftId));
-        intent.putExtra(ViewLift.SESSION_ID_KEY, String.valueOf(sessionId));
+        intent.putExtra(ViewLift.LIFT_ID_KEY, liftId);
+        intent.putExtra(ViewLift.SESSION_ID_KEY, sessionId);
         startActivity(intent);
     }
 
@@ -181,7 +172,7 @@ public class ViewSession extends AppCompatActivity {
 
         new AlertDialog.Builder(this)
                 .setIcon(android.R.drawable.ic_dialog_alert)
-                .setTitle("Deleting Lift")
+                .setTitle("Delete Session")
                 .setMessage("Are you sure you want to delete this Session? All associated Lifts will also be deleted.")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override

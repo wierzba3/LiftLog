@@ -18,6 +18,10 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import wierzba.james.liftlog.models.Exercise;
 import wierzba.james.liftlog.models.Lift;
 
@@ -44,6 +48,8 @@ public class ViewLift extends AppCompatActivity {
 
     private double weightIncrement = 5.0;
 
+    private Map<Long, Exercise> exercises;
+
     Spinner spnExercise;
     RadioButton rbtnWarmup;
     //    NumberPicker pckWeight;
@@ -63,21 +69,10 @@ public class ViewLift extends AppCompatActivity {
         dao = new DataAccessObject(this);
 
         Intent intent = this.getIntent();
-        String liftIdString = intent.getStringExtra(LIFT_ID_KEY);
-        String sessionIdString = intent.getStringExtra(SESSION_ID_KEY);
-        try
-        {
-            liftId = Long.parseLong(liftIdString);
-            sessionId = Long.parseLong(sessionIdString);
-        }
-        catch(Exception ex)
-        {
-            Log.d(LOG_TAG, "AddLift intent extended data is badly formatted: session_id");
-        }
+        liftId  = intent.getLongExtra(LIFT_ID_KEY, -1l);
+        sessionId = intent.getLongExtra(SESSION_ID_KEY, -1l);
 
-
-
-        Log.d(LOG_TAG, "LIFT_ID_KEY=" + liftIdString);
+//        Log.d(LOG_TAG, "LIFT_ID_KEY=" + liftIdString);
 
         createContents();
         loadLift(liftId);
@@ -125,6 +120,7 @@ public class ViewLift extends AppCompatActivity {
                 doDelete(this.getCurrentFocus());
                 break;
             case R.id.home:
+                //Automatically handled by the action bar.
                 break;
             case R.id.action_settings:
                 break;
@@ -138,16 +134,24 @@ public class ViewLift extends AppCompatActivity {
     {
         Spinner spinner = (Spinner) findViewById(R.id.spn_exercise);
 
-        String[] staticExercises = {
-                Exercise.Squat().getName(),
-                Exercise.BenchPress().getName(),
-                Exercise.Deadlift().getName(),
-                Exercise.Press().getName()
-        };
-        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, staticExercises);
-        adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-        spinner.setAdapter(adapter);
-
+//        String[] staticExercises = {
+//                Exercise.Squat().getName(),
+//                Exercise.BenchPress().getName(),
+//                Exercise.Deadlift().getName(),
+//                Exercise.Press().getName()
+//        };
+        exercises = dao.selectExercises();
+        if(exercises != null)
+        {
+            List<Exercise> exerciseList = new ArrayList<>(exercises.values());
+            ArrayAdapter<Exercise> adapter = new ArrayAdapter<Exercise>(this, android.R.layout.simple_spinner_dropdown_item, exerciseList);
+            adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+            spinner.setAdapter(adapter);
+        }
+        else
+        {
+            Log.d(LOG_TAG, "Error loading exercises.");
+        }
         openOrCreateDatabase(DataAccessObject.DB_NAME, MODE_PRIVATE, null);
 
         //initialize control references
@@ -160,30 +164,12 @@ public class ViewLift extends AppCompatActivity {
         pckSets = (NumberPicker) findViewById(R.id.pck_sets);
         btnSave = (Button) findViewById(R.id.btn_save);
 
-//        txtDay = (EditText) findViewById(R.id.txt_day);
-//
-//        int numValues = 400;
-//        String[] weightValues = new String[numValues];
-//        double weightValue = 0;
-//        for(int i = 0; i < numValues; i++)
-//        {
-//            weightValue += weightIncrement;
-//            weightValues[i] = String.valueOf(weightValue);
-//        }
-//        pckWeight.setMinValue(1);
-//        pckWeight.setMaxValue(numValues);
-//        pckWeight.setWrapSelectorWheel(false);
-//        pckWeight.setDisplayedValues(weightValues);
-
-        pckReps.setMinValue(0);
+        pckReps.setMinValue(1);
         pckReps.setMaxValue(100);
         pckReps.setWrapSelectorWheel(false);
 
         pckSets.setMinValue(0);
         pckSets.setMaxValue(100);
-
-
-
         pckSets.setWrapSelectorWheel(false);
     }
 
@@ -199,10 +185,12 @@ public class ViewLift extends AppCompatActivity {
 
         int reps = pckReps.getValue();
         int sets = pckSets.getValue();
-
-        //TODO get actual id
-        int exerciseId = 5;
-
+        long exerciseId = -1;
+        Exercise selectedExercise = (Exercise) spnExercise.getSelectedItem();
+        if(selectedExercise != null)
+        {
+           exerciseId = selectedExercise.getId();
+        }
         Lift lift = new Lift();
         lift.setExerciseId(exerciseId);
         lift.setSessionId(sessionId);
@@ -242,7 +230,7 @@ public class ViewLift extends AppCompatActivity {
         }
         new AlertDialog.Builder(this)
                 .setIcon(android.R.drawable.ic_dialog_alert)
-                .setTitle("Deleting Lift")
+                .setTitle("Delete Lift")
                 .setMessage("Are you sure you want to delete this lift?")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
