@@ -67,7 +67,7 @@ public class BrowseSessions extends AppCompatActivity {
                         return;
                     }
                 }
-                intent.putExtra(ViewSession.SESSION_ID_KEY, String.valueOf(sessionId));
+                intent.putExtra(ViewSession.SESSION_ID_KEY, sessionId);
                 startActivity(intent);
             }
         });

@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import wierzba.james.liftlog.ExerciseInputDialog;
 
@@ -74,13 +75,14 @@ public class BrowseExercises extends AppCompatActivity implements ExerciseInputD
 
     private void loadExercises()
     {
-        List<Exercise> exercises = dao.selectExercises();
+        Map<Long, Exercise> exercises = dao.selectExercises();
         if(exercises == null || exercises.size() < 1)
         {
             return;
         }
 
-        ArrayAdapter<Exercise> adapter = new ArrayAdapter<Exercise>(this, android.R.layout.simple_list_item_1, exercises);
+        List<Exercise> exerciseList = new ArrayList<>(exercises.values());
+        ArrayAdapter<Exercise> adapter = new ArrayAdapter<Exercise>(this, android.R.layout.simple_list_item_1, exerciseList);
         listExercises.setAdapter(adapter);
     }
 

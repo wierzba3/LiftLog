@@ -23,6 +23,7 @@ public class Lift {
     private long id;
     private long exerciseId;
     private long sessionId;
+    private String exerciseName;
 //    private long date;
     private int weight;
     private Unit unit;
@@ -44,6 +45,14 @@ public class Lift {
 
     public void setExerciseId(long exerciseId) {
         this.exerciseId = exerciseId;
+    }
+
+    public String getExerciseName() {
+        return exerciseName;
+    }
+
+    public void setExerciseName(String exerciseName) {
+        this.exerciseName = exerciseName;
     }
 
     public long getId() {
@@ -106,8 +115,8 @@ public class Lift {
     public String toString()
     {
         if(id == -1) return "< Add Lift >";
-        Exercise exercise = DataAccessObject.exerciseMap.get(exerciseId);
-        return (exercise != null ? exercise.getName() : "?") + " " + weight + " x " + reps + " x " + sets;
+//        Exercise exercise = DataAccessObject.exerciseMap.get(exerciseId);
+        return (exerciseName != null ? exerciseName : "?") + " " + weight + " x " + reps + " x " + sets;
     }
 
 
