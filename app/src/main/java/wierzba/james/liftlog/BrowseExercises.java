@@ -160,20 +160,46 @@ public class BrowseExercises extends AppCompatActivity implements ExerciseInputD
         //do nothing
     }
 
-    public void onDialogDeleteClick(DialogFragment dialog, Exercise exercise)
+    public void onDialogDeleteClick(DialogFragment dialog, final Exercise exercise)
     {
-        //TODO confirmation and check if it is referenced in existing Lifts, if so, don't delete?
         if(exercise == null || exercise.getId() == -1)
         {
             Log.d(LOG_TAG, "Error handling delete exercise button click. Exercise is null|empty");
             return;
         }
 
-        if(!dao.deleteExercise(exercise.getId()))
+        String msg = "Are you sure you want to delete this Exercise?";
+        //TODO
+        /*
+        if(exercise references existing lifts)
         {
-            Toast.makeText(this, "Error deleting exercise.", Toast.LENGTH_SHORT).show();
-            Log.d(LOG_TAG, "Error deleting exercise. id=" + exercise.getId() + "\tname=" + exercise.getName());
+            msg = "Are you sure you want to delete this Exercise?\nThis Exercise is currently referenced by existing Lifts."
         }
+         */
+
+        new AlertDialog.Builder(this)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle("Delete Exercise")
+                .setMessage(msg)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+
+                        if(!dao.deleteExercise(exercise.getId()))
+                        {
+                            Toast.makeText(BrowseExercises.this, "Error deleting exercise.", Toast.LENGTH_SHORT).show();
+                            Log.d(LOG_TAG, "Error deleting exercise. id=" + exercise.getId() + "\tname=" + exercise.getName());
+                        }
+
+                    }
+
+                })
+                .setNegativeButton("No", null)
+                .show();
+
+
+
 
         loadExercises();
     }

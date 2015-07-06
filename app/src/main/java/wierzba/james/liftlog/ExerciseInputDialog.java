@@ -58,11 +58,10 @@ public class ExerciseInputDialog extends DialogFragment {
             txtDesc.setText(currentExercise.getDescription());
         }
 
-        // Inflate and set the layout for the dialog
-        // Pass null as the parent view because its going in the dialog layout
+        //Save is the "Negative" button because this is always the left-most button.
         builder.setView(customView)
                 // Add action buttons
-                .setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                .setNegativeButton("Save", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int id) {
                         String name = txtName.getText().toString();
@@ -75,25 +74,32 @@ public class ExerciseInputDialog extends DialogFragment {
 
                         mListener.onDialogSaveClick(ExerciseInputDialog.this, currentExercise);
                     }
-                })
-                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        mListener.onDialogCancelClick(ExerciseInputDialog.this);
-                    }
-                })
-                .setNeutralButton("Delete", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        String name = txtName.getText().toString();
-                        String desc = txtDesc.getText().toString();
-
-                        if (currentExercise == null) currentExercise = new Exercise();
-                        currentExercise.setId(exerciseId);
-                        currentExercise.setName(name);
-                        currentExercise.setDescription(desc);
-
-                        mListener.onDialogDeleteClick(ExerciseInputDialog.this, currentExercise);
-                    }
                 });
+
+        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                mListener.onDialogCancelClick(ExerciseInputDialog.this);
+            }
+        });
+
+        //if we are not adding a new exercise, show the delete button
+        //Delete is the "Positive" button because it is always the right-most button
+        if(currentExercise != null && currentExercise.getId() > -1)
+        {
+            builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    String name = txtName.getText().toString();
+                    String desc = txtDesc.getText().toString();
+
+                    if (currentExercise == null) currentExercise = new Exercise();
+                    currentExercise.setId(exerciseId);
+                    currentExercise.setName(name);
+                    currentExercise.setDescription(desc);
+
+                    mListener.onDialogDeleteClick(ExerciseInputDialog.this, currentExercise);
+                }
+            });
+        }
         return builder.create();
     }
 

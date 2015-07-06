@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import wierzba.james.liftlog.models.Lift;
@@ -117,6 +118,8 @@ public class ViewSession extends AppCompatActivity {
         {
             lifts = session.getLifts();
         }
+
+        Collections.sort(lifts);
 
         //dummy lift for < Add New > option
         Lift emptyLift = new Lift();

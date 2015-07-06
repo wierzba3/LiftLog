@@ -317,6 +317,7 @@ public class DataAccessObject extends SQLiteOpenHelper
             int sets = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_SETS));
             int reps = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_REPS));
             int warmup = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_WARMUP));
+            long dateCreated = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_DATE_CREATED));
 
             lift.setId(id);
             lift.setExerciseId(exerciseId);
@@ -325,6 +326,7 @@ public class DataAccessObject extends SQLiteOpenHelper
             lift.setSets(sets);
             lift.setReps(reps);
             lift.setWarmup(warmup == 1 ? true : false);
+            lift.setDateCreated(dateCreated);
 
             hasNext = cursor.moveToNext();
         }
@@ -413,6 +415,7 @@ public class DataAccessObject extends SQLiteOpenHelper
                 "b." + LIFT_COLUMN_WEIGHT + ", " +
                 "b." + LIFT_COLUMN_REPS + ", " +
                 "b." + LIFT_COLUMN_SETS + ", " +
+                "b." + LIFT_COLUMN_DATE_CREATED + ", " +
                 "b." + LIFT_COLUMN_WARMUP + ", " +
                 "a." + SESSION_COLUMN_DATE + //" as " + sessionDateAlias +
                 "" +
@@ -428,15 +431,6 @@ public class DataAccessObject extends SQLiteOpenHelper
             e.printStackTrace();
         }
 
-//        int cnt = cursor.getCount();
-//        if(cursor == null || cursor.getCount() == 0)
-//        {
-//            return null;
-//        }
-
-
-//        int sessionDate = -1;
-
         boolean hasNext = cursor.moveToFirst();
         while(hasNext)
         {
@@ -450,6 +444,8 @@ public class DataAccessObject extends SQLiteOpenHelper
             int reps = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_REPS));
             int sets = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_SETS));
             int warmup = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_WARMUP));
+            long dateCreated = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_DATE_CREATED));
+
             lift.setId(liftId);
             lift.setExerciseId(exerciseId);
             lift.setSessionId(sessionId);
@@ -457,7 +453,7 @@ public class DataAccessObject extends SQLiteOpenHelper
             lift.setReps(reps);
             lift.setSets(sets);
             lift.setWarmup(warmup == 1 ? true : false);
-
+            lift.setDateCreated(dateCreated);
 
             result.getLifts().add(lift);
 
@@ -493,6 +489,7 @@ public class DataAccessObject extends SQLiteOpenHelper
         int sets = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_SETS));
         int reps = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_REPS));
         int warmup = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_WARMUP));
+        long dateCreated = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_DATE_CREATED));
 
         result.setId(id);
         result.setExerciseId(exerciseId);
@@ -501,6 +498,7 @@ public class DataAccessObject extends SQLiteOpenHelper
         result.setSets(sets);
         result.setReps(reps);
         result.setWarmup(warmup == 1 ? true : false);
+        result.setDateCreated(dateCreated);
 
         return result;
     }
@@ -622,6 +620,7 @@ public class DataAccessObject extends SQLiteOpenHelper
             lift.setWeight(315);
             lift.setSets(3);
             lift.setReps(5);
+            lift.setDateCreated(System.currentTimeMillis());
             insert(lift);
         }
     }
