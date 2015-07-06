@@ -1,13 +1,10 @@
 package wierzba.james.liftlog.models;
 
-import android.database.Cursor;
-
-import wierzba.james.liftlog.DataAccessObject;
-
 /**
  * Created by James Wierzba on 2/4/2015.
  */
-public class Lift {
+public class Lift implements Comparable<Lift> {
+
 
     public Lift()
     {
@@ -24,83 +21,109 @@ public class Lift {
     private long exerciseId;
     private long sessionId;
     private String exerciseName;
-//    private long date;
     private int weight;
     private Unit unit;
     private int sets;
     private int reps;
     private boolean isWarmup;
+    private long dateCreated;
 
-    public long getSessionId() {
+    public long getSessionId()
+    {
         return sessionId;
     }
 
-    public void setSessionId(long sessionId) {
+    public void setSessionId(long sessionId)
+    {
         this.sessionId = sessionId;
     }
 
-    public long getExerciseId() {
+    public long getExerciseId()
+    {
         return exerciseId;
     }
 
-    public void setExerciseId(long exerciseId) {
+    public void setExerciseId(long exerciseId)
+    {
         this.exerciseId = exerciseId;
     }
 
-    public String getExerciseName() {
+    public String getExerciseName()
+    {
         return exerciseName;
     }
 
-    public void setExerciseName(String exerciseName) {
+    public void setExerciseName(String exerciseName)
+    {
         this.exerciseName = exerciseName;
     }
 
-    public long getId() {
+    public long getId()
+    {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(long id)
+    {
         this.id = id;
     }
 
-    public int getSets() {
+    public int getSets()
+    {
         return sets;
     }
 
-    public void setSets(int sets) {
+    public void setSets(int sets)
+    {
         this.sets = sets;
     }
 
-    public int getReps() {
+    public int getReps()
+    {
         return reps;
     }
 
-    public void setReps(int reps) {
+    public void setReps(int reps)
+    {
         this.reps = reps;
     }
 
-    public Unit getUnit() {
+    public Unit getUnit()
+    {
         return unit;
     }
 
-    public void setUnit(Unit unit) {
+    public void setUnit(Unit unit)
+    {
         this.unit = unit;
     }
 
-    public int getWeight() {
+    public int getWeight()
+    {
         return weight;
     }
 
-    public void setWeight(int weight) {
+    public void setWeight(int weight)
+    {
         this.weight = weight;
     }
 
-    public boolean isWarmup() {
+    public boolean isWarmup()
+    {
         return isWarmup;
     }
 
-    public void setWarmup(boolean isWarmup) {
+    public void setWarmup(boolean isWarmup)
+    {
         this.isWarmup = isWarmup;
+    }
+
+    public long getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(long dateCreated) {
+        this.dateCreated = dateCreated;
     }
 
     //    public long getDate() {
@@ -109,6 +132,35 @@ public class Lift {
 //
 //    public void setDate(long date) {
 //        this.date = date;
+//    }
+
+
+
+    @Override
+    public int compareTo(Lift other)
+    {
+        if(other == null) return 1;
+        if(dateCreated > other.getDateCreated()) return 1;
+        else if(dateCreated < other.getDateCreated()) return -1;
+        else return 0;
+    }
+
+//    @Override
+//    public int compareTo(Lift other)
+//    {
+//        if(other == null) return 1;
+//        //if the names are not equal, sort by name
+//        if(exerciseName != null && !exerciseName.equals(other.getExerciseName()))
+//        {
+//            return exerciseName.compareTo(other.getExerciseName());
+//        }
+//        //else sort by the weight
+//        else
+//        {
+//            if(weight > other.getWeight()) return 1;
+//            else if(weight < other.getWeight()) return -1;
+//            else return 0;
+//        }
 //    }
 
     @Override

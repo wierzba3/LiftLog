@@ -3,7 +3,6 @@ package wierzba.james.liftlog;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -45,8 +44,6 @@ public class ViewLift extends AppCompatActivity {
     private long liftId = -1;
 
     private DataAccessObject dao;
-
-    private double weightIncrement = 5.0;
 
     private Map<Long, Exercise> exercises;
 
@@ -132,28 +129,6 @@ public class ViewLift extends AppCompatActivity {
 
     private void createContents()
     {
-        Spinner spinner = (Spinner) findViewById(R.id.spn_exercise);
-
-//        String[] staticExercises = {
-//                Exercise.Squat().getName(),
-//                Exercise.BenchPress().getName(),
-//                Exercise.Deadlift().getName(),
-//                Exercise.Press().getName()
-//        };
-        exercises = dao.selectExercises();
-        if(exercises != null)
-        {
-            List<Exercise> exerciseList = new ArrayList<>(exercises.values());
-            ArrayAdapter<Exercise> adapter = new ArrayAdapter<Exercise>(this, android.R.layout.simple_spinner_dropdown_item, exerciseList);
-            adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-            spinner.setAdapter(adapter);
-        }
-        else
-        {
-            Log.d(LOG_TAG, "Error loading exercises.");
-        }
-        openOrCreateDatabase(DataAccessObject.DB_NAME, MODE_PRIVATE, null);
-
         //initialize control references
         spnExercise = (Spinner) findViewById(R.id.spn_exercise);
         pckSets = (NumberPicker) findViewById(R.id.pck_sets);
@@ -163,6 +138,22 @@ public class ViewLift extends AppCompatActivity {
         pckReps = (NumberPicker) findViewById(R.id.pck_reps);
         pckSets = (NumberPicker) findViewById(R.id.pck_sets);
         btnSave = (Button) findViewById(R.id.btn_save);
+
+        exercises = dao.selectExercises();
+        if(exercises != null)
+        {
+            List<Exercise> exerciseList = new ArrayList<>(exercises.values());
+            ArrayAdapter<Exercise> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, exerciseList);
+            adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+            spnExercise.setAdapter(adapter);
+        }
+        else
+        {
+            Log.d(LOG_TAG, "Error loading exercises.");
+        }
+        openOrCreateDatabase(DataAccessObject.DB_NAME, MODE_PRIVATE, null);
+
+
 
         pckReps.setMinValue(1);
         pckReps.setMaxValue(100);
@@ -175,16 +166,16 @@ public class ViewLift extends AppCompatActivity {
 
     /**
      * Handle Submit button onClick
-     * @param view
+     * @param view The view
      */
     public void doSave(View view)
     {
-        String exercise = spnExercise.getSelectedItem().toString();
         boolean isWarmup = rbtnWarmup.isChecked();
         int weight = Integer.parseInt(txtWeight.getText().toString());
 
         int reps = pckReps.getValue();
         int sets = pckSets.getValue();
+
         long exerciseId = -1;
         Exercise selectedExercise = (Exercise) spnExercise.getSelectedItem();
         if(selectedExercise != null)
@@ -219,7 +210,7 @@ public class ViewLift extends AppCompatActivity {
 
     /**
      * Handle Delete button click
-     * @param view
+     * @param view The view
      */
     public void doDelete(View view)
     {
@@ -251,7 +242,7 @@ public class ViewLift extends AppCompatActivity {
 
     /**
      * Handle Cancel button click
-     * @param view
+     * @param view The view
      */
     public void doCancel(View view)
     {

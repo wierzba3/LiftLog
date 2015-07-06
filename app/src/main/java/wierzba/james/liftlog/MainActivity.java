@@ -11,13 +11,16 @@ import android.content.Intent;
  *  TODO
  *
  * Implement now:
+ * - Action bar icon buttons on bottom of MainActivity to navigate to the Primary screens (BrowseSessions, BrowseExercises, ...)
+ * - Option to <Add new> Exercise from Add Lift ComboBox
+ * - Group Lifts in Session by the exercise, then after selecting exercise, show the individual lifts.
+ *      Some tree-like structure?
  * - Add increment set button on the lifts ListView on ViewSession
- * - Sort Lifts in ViewSession by Lift name, then by weight
- * - Better layout for Save/Cancel/Delete buttons on add exercise dialog
  * - Tabular view of lifts
  * - Decide what to do when the user deletes an exercise that is referenced by 1 or more lifts
  *      I think the best option would be to not delete it, but change the name to "undefined" or something
  *      and offer the user the choice to re-define it when it is shown as "undefined"
+ *
  *
  * Bugs:
  * - Remove "delete" button on ExerciseInputDialog when the user is entering a new exercise
@@ -71,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Start the activity to add a lift
-     * @param view
+     * @param view The view
      */
     public void startAddLift(View view)
     {
@@ -81,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Start the activity to browse previous workout sessions
-     * @param view
+     * @param view The view
      */
     public void startBrowseSessions(View view)
     {
@@ -92,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Start the activity to browse previous workout sessions
-     * @param view
+     * @param view The view
      */
     public void startBrowseExercises(View view)
     {
@@ -100,10 +103,7 @@ public class MainActivity extends AppCompatActivity {
         this.startActivity(intent);
     }
 
-    private void loadLocalUserData()
-    {
 
-    }
 
 
 }
