@@ -1,4 +1,4 @@
-package wierzba.james.liftlog;
+package com.liftlog;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -13,10 +13,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import wierzba.james.liftlog.models.Exercise;
-import wierzba.james.liftlog.models.Lift;
-import wierzba.james.liftlog.models.Session;
-import wierzba.james.liftlog.wierzba.james.liftlog.utils.Util;
+import com.liftlog.models.Exercise;
+import com.liftlog.models.Lift;
+import com.liftlog.models.Session;
 
 /**
  * Created by jwierzba on 6/8/2015.

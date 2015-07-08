@@ -1,13 +1,8 @@
-package wierzba.james.liftlog.models;
-
-import android.database.Cursor;
+package com.liftlog.models;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-
-import wierzba.james.liftlog.DataAccessObject;
 
 /**
  * Created by James Wierzba on 2/4/2015.

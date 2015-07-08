@@ -3,7 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:context="wierzba.james.liftlog.ExerciseInputDialog">
+    tools:context="com.liftlog.components.ExerciseInputDialog">
 
     <EditText
         android:id="@+id/txt_name"

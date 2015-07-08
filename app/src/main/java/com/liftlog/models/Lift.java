@@ -1,4 +1,4 @@
-package wierzba.james.liftlog.models;
+package com.liftlog.models;
 
 /**
  * Created by James Wierzba on 2/4/2015.

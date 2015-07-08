@@ -1,4 +1,4 @@
-package wierzba.james.liftlog;
+package com.liftlog.components;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -11,7 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import wierzba.james.liftlog.models.Exercise;
+import com.liftlog.DataAccessObject;
+import wierzba.james.liftlog.R;
+import com.liftlog.models.Exercise;
 
 
 public class ExerciseInputDialog extends DialogFragment {
