@@ -1,4 +1,4 @@
-package wierzba.james.liftlog.wierzba.james.liftlog.utils;
+package com.liftlog.utils;
 
 import android.os.Environment;
 

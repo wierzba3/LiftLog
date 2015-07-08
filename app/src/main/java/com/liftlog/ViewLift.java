@@ -1,4 +1,4 @@
-package wierzba.james.liftlog;
+package com.liftlog;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -21,8 +21,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import wierzba.james.liftlog.models.Exercise;
-import wierzba.james.liftlog.models.Lift;
+import wierzba.james.liftlog.R;
+
+import com.liftlog.models.Exercise;
+import com.liftlog.models.Lift;
 
 //public class ViewLift extends Activity {
 public class ViewLift extends AppCompatActivity {

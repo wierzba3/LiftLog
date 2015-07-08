@@ -1,4 +1,4 @@
-package wierzba.james.liftlog;
+package com.liftlog;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
