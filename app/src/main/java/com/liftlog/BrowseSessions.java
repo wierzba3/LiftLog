@@ -16,6 +16,7 @@ import java.util.List;
 
 import wierzba.james.liftlog.R;
 
+import com.liftlog.common.DataAccessObject;
 import com.liftlog.models.Session;
 
 

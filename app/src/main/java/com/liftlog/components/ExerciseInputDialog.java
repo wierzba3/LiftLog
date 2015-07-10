@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import com.liftlog.DataAccessObject;
+import com.liftlog.common.DataAccessObject;
 import wierzba.james.liftlog.R;
 import com.liftlog.models.Exercise;
 

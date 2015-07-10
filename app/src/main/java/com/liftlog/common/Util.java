@@ -1,4 +1,4 @@
-package com.liftlog.utils;
+package com.liftlog.common;
 
 import android.os.Environment;
 
