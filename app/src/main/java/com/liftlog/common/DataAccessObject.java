@@ -1,4 +1,4 @@
-package com.liftlog;
+package com.liftlog.common;
 
 import android.content.ContentValues;
 import android.content.Context;

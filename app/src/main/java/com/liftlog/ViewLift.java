@@ -23,6 +23,7 @@ import java.util.Map;
 
 import wierzba.james.liftlog.R;
 
+import com.liftlog.common.DataAccessObject;
 import com.liftlog.models.Exercise;
 import com.liftlog.models.Lift;
 
