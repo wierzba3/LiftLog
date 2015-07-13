@@ -58,25 +58,25 @@
         >
 
 
-        <RadioGroup
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            >
-            <RadioButton
-                android:id="@+id/rbtn_warmup"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="Warm-up"
-                />
+        <!--<RadioGroup-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:orientation="horizontal"-->
+            <!-->-->
+            <!--<RadioButton-->
+                <!--android:id="@+id/rbtn_warmup"-->
+                <!--android:layout_width="fill_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="Warm-up"-->
+                <!--/>-->
 
-            <RadioButton
-                android:id="@+id/radio_workset"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Work set"
-                android:checked="true"/>
-        </RadioGroup>
+            <!--<RadioButton-->
+                <!--android:id="@+id/radio_workset"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:text="Work set"-->
+                <!--android:checked="true"/>-->
+        <!--</RadioGroup>-->
 
     </LinearLayout>
 
