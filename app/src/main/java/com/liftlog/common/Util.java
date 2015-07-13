@@ -8,7 +8,7 @@ import java.io.FileOutputStream;
 import java.nio.channels.FileChannel;
 
 /**
- * Created by jwierzba on 6/21/2015.
+ * Created by James Wierzba on 6/21/2015.
  */
 public class Util {
 

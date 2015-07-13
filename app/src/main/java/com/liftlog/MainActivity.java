@@ -1,42 +1,56 @@
 package com.liftlog;
 
+
 import android.os.Bundle;
+
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.content.Intent;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import wierzba.james.liftlog.R;
 
 /**
- *  TODO
- *
+ * TODO
+
  * Implement now:
- * - Action bar icon buttons on bottom of MainActivity to navigate to the Primary screens (BrowseSessions, BrowseExercises, ...)
- * - Option to <Add new> Exercise from Add Lift ComboBox
+ * - Option to Add new Exercise from Add Lift ComboBox
  * - Group Lifts in Session by the exercise, then after selecting exercise, show the individual lifts.
  *      Some tree-like structure?
  * - Add increment set button on the lifts ListView on ViewSession
- * - Tabular view of lifts
+
  * - Decide what to do when the user deletes an exercise that is referenced by 1 or more lifts
  *      I think the best option would be to not delete it, but change the name to "undefined" or something
  *      and offer the user the choice to re-define it when it is shown as "undefined"
  *
  *
+ *
  * Bugs:
- * - Remove "delete" button on ExerciseInputDialog when the user is entering a new exercise
+ * -
  *
  *
  * Implement in the future:
  * - Programmable training routines. Define rules that the user can set for an exercise.
- *      Display planned lifts separately from the completed lifts in the sessions.
- *      e.g. repeat selected lift every M/W/F, increase weight each day/week
+ * Display planned lifts separately from the completed lifts in the sessions.
+ * e.g. repeat selected lift every M/W/F, increase weight each day/week
  * - Hi-scores. Users can submit their video of lifts to be reviewed and then entered in high scores.
- *
+ * - Settings
+ *   - "sort by" option on sessions/lifts
+ * - Copy option for session
+ * - Tabular view of lifts
  */
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity
+{
+
+    private FragmentPagerAdapter mCustomPagerAdapter;
+    private ViewPager mViewPager;
 
     public static final String LOG_TAG = "LiftLog";
 
@@ -46,7 +60,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        Util.copyDbFile();
+        mCustomPagerAdapter = new FragmentPagerAdapter();
+        mViewPager = (ViewPager) findViewById(R.id.pager);
+        mViewPager.setAdapter(mCustomPagerAdapter);
     }
 
 
@@ -67,7 +83,8 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_settings)
+        {
             return true;
         }
 
@@ -76,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Start the activity to add a lift
+     *
      * @param view The view
      */
     public void startAddLift(View view)
@@ -84,28 +102,101 @@ public class MainActivity extends AppCompatActivity {
         this.startActivity(intent);
     }
 
-    /**
-     * Start the activity to browse previous workout sessions
-     * @param view The view
-     */
-    public void startBrowseSessions(View view)
+//    /**
+//     * Start the activity to browse previous workout sessions
+//     *
+//     * @param view The view
+//     */
+//    public void startBrowseSessions(View view)
+//    {
+//        Intent intent = new Intent(this, BrowseSessions.class);
+//        this.startActivity(intent);
+//    }
+
+
+//    /**
+//     * Start the activity to browse previous workout sessions
+//     *
+//     * @param view The view
+//     */
+//    public void startBrowseExercises(View view)
+//    {
+//        Intent intent = new Intent(this, BrowseExercises.class);
+//        this.startActivity(intent);
+//    }
+
+    public class FragmentPagerAdapter extends android.support.v4.app.FragmentPagerAdapter
     {
-        Intent intent = new Intent(this, BrowseSessions.class);
-        this.startActivity(intent);
+        final int PAGE_COUNT = 2;
+
+        private final String[] PAGE_TITLES =
+                {
+                        "Exercises",
+                        "Log"
+                };
+
+        public FragmentPagerAdapter()
+        {
+            super(getSupportFragmentManager());
+        }
+
+        @Override
+        public int getCount()
+        {
+            return PAGE_COUNT;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position)
+        {
+            return PAGE_TITLES[position];
+        }
+
+        @Override
+        public Fragment getItem(int position)
+        {
+            switch(position)
+            {
+                case 0:
+                    return new ExercisesFragment();
+                case 1:
+                    return new SessionsFragment();
+                default:
+                    return null;
+            }
+
+        }
     }
 
-
-    /**
-     * Start the activity to browse previous workout sessions
-     * @param view The view
-     */
-    public void startBrowseExercises(View view)
-    {
-        Intent intent = new Intent(this, BrowseExercises.class);
-        this.startActivity(intent);
-    }
-
-
-
-
+//    public static class PageFragment extends Fragment
+//    {
+//        public static final String ARG_PAGE = "ARG_PAGE";
+//
+//        private int mPage;
+//
+//        public static PageFragment create(int page)
+//        {
+//            Bundle args = new Bundle();
+//            args.putInt(ARG_PAGE, page);
+//            PageFragment fragment = new PageFragment();
+//            fragment.setArguments(args);
+//            return fragment;
+//        }
+//
+//        @Override
+//        public void onCreate(Bundle savedInstanceState)
+//        {
+//            super.onCreate(savedInstanceState);
+//            mPage = getArguments().getInt(ARG_PAGE);
+//        }
+//
+//        @Override
+//        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+//        {
+//            View view = inflater.inflate(R.layout.fragment_demo, container, false);
+//            TextView textView = (TextView) view;
+//            textView.setText("Fragment #" + mPage);
+//            return view;
+//        }
+//    }
 }

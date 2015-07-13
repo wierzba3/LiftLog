@@ -2,14 +2,17 @@ package com.liftlog;
 
 import android.app.ActionBar;
 import android.app.AlertDialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -27,31 +30,39 @@ import com.liftlog.components.ExerciseInputDialog;
 import com.liftlog.models.Exercise;
 
 
-public class BrowseExercises extends AppCompatActivity implements ExerciseInputDialog.NoticeDialogListener {
+public class ExercisesFragment extends Fragment implements ExerciseInputDialog.ExerciseInputDialogListener
+{
 
     public static final String LOG_TAG = "liftlog.BrowseExercises";
+
+    public static final int REQUEST_CODE = 1;
 
     ListView listExercises;
 
     DataAccessObject dao;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_browse_exercises);
+//        setContentView(R.layout.activity_browse_exercises);
+        View view = inflater.inflate(R.layout.fragment_exercises, container, false);
 
-        dao = new DataAccessObject(this);
+        dao = new DataAccessObject(super.getActivity());
 
-        createContents();
+        createContents(view);
         loadExercises();
+
+        return view;
     }
 
-    private void createContents()
+    private void createContents(View view)
     {
-        listExercises = (ListView) findViewById(R.id.list_exercises);
+        setHasOptionsMenu(true);
 
-        ActionBar actionBar = this.getActionBar();
+        listExercises = (ListView) view.findViewById(R.id.list_exercises_fragment);
+
+        ActionBar actionBar = super.getActivity().getActionBar();
 //        if(actionBar == null) actionBar =
         if(actionBar != null)
         {
@@ -76,13 +87,13 @@ public class BrowseExercises extends AppCompatActivity implements ExerciseInputD
     private void loadExercises()
     {
         Map<Long, Exercise> exercises = dao.selectExercises();
-        if(exercises == null || exercises.size() < 1)
+        if(exercises == null)
         {
             return;
         }
 
         List<Exercise> exerciseList = new ArrayList<>(exercises.values());
-        ArrayAdapter<Exercise> adapter = new ArrayAdapter<Exercise>(this, android.R.layout.simple_list_item_1, exerciseList);
+        ArrayAdapter<Exercise> adapter = new ArrayAdapter<Exercise>(super.getActivity(), android.R.layout.simple_list_item_1, exerciseList);
         listExercises.setAdapter(adapter);
     }
 
@@ -94,23 +105,25 @@ public class BrowseExercises extends AppCompatActivity implements ExerciseInputD
         exercise.setId(id);
 
         ExerciseInputDialog dialog = ExerciseInputDialog.newInstance(exercise);
-        dialog.show(getFragmentManager(), "ExerciseInputDialog");
+        dialog.setTargetFragment(this, REQUEST_CODE);
+        dialog.show(getFragmentManager().beginTransaction(), "ExerciseInputDialog");
 
     }
 
     public void doEdit(Exercise exercise)
     {
         ExerciseInputDialog dialog = ExerciseInputDialog.newInstance(exercise);
-        dialog.show(getFragmentManager(), "ExerciseInputDialog");
+        dialog.setTargetFragment(this, REQUEST_CODE);
+        dialog.show(getFragmentManager().beginTransaction(), "ExerciseInputDialog");
     }
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
     {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_browse_exercises, menu);
-        return true;
+        inflater.inflate(R.menu.menu_exercises, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
@@ -145,7 +158,7 @@ public class BrowseExercises extends AppCompatActivity implements ExerciseInputD
         {
             if(!dao.update(exercise))
             {
-                Toast.makeText(this, "Error updating exercise.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(super.getActivity(), "Error updating exercise.", Toast.LENGTH_SHORT).show();
                 Log.d(LOG_TAG, "Error updating exercise.");
             }
         }
@@ -177,7 +190,7 @@ public class BrowseExercises extends AppCompatActivity implements ExerciseInputD
         }
          */
 
-        new AlertDialog.Builder(this)
+        new AlertDialog.Builder(super.getActivity())
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setTitle("Delete Exercise")
                 .setMessage(msg)
@@ -188,10 +201,11 @@ public class BrowseExercises extends AppCompatActivity implements ExerciseInputD
 
                         if(!dao.deleteExercise(exercise.getId()))
                         {
-                            Toast.makeText(BrowseExercises.this, "Error deleting exercise.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ExercisesFragment.super.getActivity(), "Error deleting exercise.", Toast.LENGTH_SHORT).show();
                             Log.d(LOG_TAG, "Error deleting exercise. id=" + exercise.getId() + "\tname=" + exercise.getName());
                         }
 
+                        loadExercises();
                     }
 
                 })
@@ -201,7 +215,7 @@ public class BrowseExercises extends AppCompatActivity implements ExerciseInputD
 
 
 
-        loadExercises();
+
     }
 
 }

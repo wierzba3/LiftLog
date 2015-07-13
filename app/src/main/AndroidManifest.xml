@@ -50,11 +50,7 @@
             android:label="@string/title_activity_browse_exercises"
             android:parentActivityName="com.liftlog.MainActivity" >
         </activity>
-        <activity
-            android:name="com.liftlog.MainActivityTabbed"
-            android:label="@string/title_activity_main_activity_tabbed" >
 
-        </activity>
     </application>
 
 </manifest>

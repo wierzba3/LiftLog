@@ -136,6 +136,7 @@ public class Lift implements Comparable<Lift> {
 
 
 
+    //default sort by date
     @Override
     public int compareTo(Lift other)
     {

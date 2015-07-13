@@ -3,9 +3,10 @@ package com.liftlog.components;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,8 @@ import wierzba.james.liftlog.R;
 import com.liftlog.models.Exercise;
 
 
-public class ExerciseInputDialog extends DialogFragment {
+public class ExerciseInputDialog extends DialogFragment
+{
 
     public static ExerciseInputDialog newInstance(Exercise exercise)
     {
@@ -60,23 +62,23 @@ public class ExerciseInputDialog extends DialogFragment {
             txtDesc.setText(currentExercise.getDescription());
         }
 
-        //Save is the "Negative" button because this is always the left-most button.
-        builder.setView(customView)
-                // Add action buttons
-                .setNegativeButton("Save", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int id) {
-                        String name = txtName.getText().toString();
-                        String desc = txtDesc.getText().toString();
+        builder.setView(customView);
 
-                        if (currentExercise == null) currentExercise = new Exercise();
-                        currentExercise.setId(exerciseId);
-                        currentExercise.setName(name);
-                        currentExercise.setDescription(desc);
+        // Add action buttons
+        builder.setNegativeButton("Save", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+                String name = txtName.getText().toString();
+                String desc = txtDesc.getText().toString();
 
-                        mListener.onDialogSaveClick(ExerciseInputDialog.this, currentExercise);
-                    }
-                });
+                if (currentExercise == null) currentExercise = new Exercise();
+                currentExercise.setId(exerciseId);
+                currentExercise.setName(name);
+                currentExercise.setDescription(desc);
+
+                mListener.onDialogSaveClick(ExerciseInputDialog.this, currentExercise);
+            }
+        });
 
         builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
@@ -104,6 +106,7 @@ public class ExerciseInputDialog extends DialogFragment {
         }
         return builder.create();
     }
+
 
     public ExerciseInputDialog()
     {
@@ -137,19 +140,27 @@ public class ExerciseInputDialog extends DialogFragment {
         return null;//return inflater.inflate(R.layout.fragment_exercise_input_dialog, container, false);
     }
 
+    /**
+     * Cast the caller to a DateInputDialogListener to communicate events back.
+     * The class of the calling Fragment/Activity must implement ExerciseInputDialogListener
+     * @param activity The calling activity
+     */
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        // Verify that the host activity implements the callback interface
-        try {
-            // Instantiate the NoticeDialogListener so we can send events to the host
-            mListener = (NoticeDialogListener) activity;
-        } catch (ClassCastException e) {
-            // The activity doesn't implement the interface, throw exception
-            throw new ClassCastException(activity.toString()
-                    + " must implement NoticeDialogListener");
+        Fragment callingFragment = getTargetFragment();
+        //if called from a fragment
+        if(callingFragment != null)
+        {
+            mListener = (ExerciseInputDialogListener) getTargetFragment();
+        }
+        //else called from an activity
+        else
+        {
+            mListener = (ExerciseInputDialogListener) activity;
         }
     }
+
 
     @Override
     public void onDetach() {
@@ -162,7 +173,8 @@ public class ExerciseInputDialog extends DialogFragment {
      * implement this interface in order to receive event callbacks.
      * Each method passes the DialogFragment in case the host needs to query it.
      */
-    public interface NoticeDialogListener {
+    public interface ExerciseInputDialogListener
+    {
         /**
          *
          * @param dialog The event sender
@@ -183,6 +195,6 @@ public class ExerciseInputDialog extends DialogFragment {
          */
         public void onDialogDeleteClick(DialogFragment dialog, Exercise exercise);
     }
-    private NoticeDialogListener mListener;
+    private ExerciseInputDialogListener mListener;
 
 }

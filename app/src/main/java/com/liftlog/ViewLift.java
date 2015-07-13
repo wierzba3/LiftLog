@@ -51,7 +51,7 @@ public class ViewLift extends AppCompatActivity {
     private Map<Long, Exercise> exercises;
 
     Spinner spnExercise;
-    RadioButton rbtnWarmup;
+    //    RadioButton rbtnWarmup;
     //    NumberPicker pckWeight;
     EditText txtWeight;
     NumberPicker pckReps;
@@ -85,14 +85,28 @@ public class ViewLift extends AppCompatActivity {
             txtWeight.setText(String.valueOf(0));
             pckReps.setValue(5);
             pckSets.setValue(5);
-            rbtnWarmup.setChecked(false);
+//            rbtnWarmup.setChecked(false);
         }
         else {
             Lift lift = dao.selectLift(id);
             txtWeight.setText(String.valueOf(lift.getWeight()));
             pckReps.setValue(lift.getReps());
             pckSets.setValue(lift.getSets());
-            rbtnWarmup.setChecked(lift.isWarmup());
+
+            //find and select the exercise matching the id
+            long exerciseId = lift.getExerciseId();
+            int cnt = spnExercise.getAdapter().getCount();
+            Exercise exercise;
+            for(int i = 0; i < cnt; i++)
+            {
+                exercise = (Exercise) spnExercise.getItemAtPosition(i);
+                if(exercise != null && exercise.getId() == exerciseId)
+                {
+                    spnExercise.setSelection(i);
+                    break;
+                }
+            }
+//            rbtnWarmup.setChecked(lift.isWarmup());
         }
 
     }
@@ -135,7 +149,7 @@ public class ViewLift extends AppCompatActivity {
         //initialize control references
         spnExercise = (Spinner) findViewById(R.id.spn_exercise);
         pckSets = (NumberPicker) findViewById(R.id.pck_sets);
-        rbtnWarmup = (RadioButton) findViewById(R.id.rbtn_warmup);
+//        rbtnWarmup = (RadioButton) findViewById(R.id.rbtn_warmup);
 //        pckWeight = (NumberPicker) findViewById(R.id.pck_weight);
         txtWeight = (EditText) findViewById(R.id.txt_weight);
         pckReps = (NumberPicker) findViewById(R.id.pck_reps);
@@ -173,7 +187,7 @@ public class ViewLift extends AppCompatActivity {
      */
     public void doSave(View view)
     {
-        boolean isWarmup = rbtnWarmup.isChecked();
+//        boolean isWarmup = rbtnWarmup.isChecked();
         int weight = Integer.parseInt(txtWeight.getText().toString());
 
         int reps = pckReps.getValue();
@@ -183,7 +197,7 @@ public class ViewLift extends AppCompatActivity {
         Exercise selectedExercise = (Exercise) spnExercise.getSelectedItem();
         if(selectedExercise != null)
         {
-           exerciseId = selectedExercise.getId();
+            exerciseId = selectedExercise.getId();
         }
         Lift lift = new Lift();
         lift.setExerciseId(exerciseId);
@@ -191,7 +205,7 @@ public class ViewLift extends AppCompatActivity {
         lift.setWeight(weight);
         lift.setSets(sets);
         lift.setReps(reps);
-        lift.setWarmup(isWarmup);
+        lift.setWarmup(false);
 
         if(liftId == -1)
         {
