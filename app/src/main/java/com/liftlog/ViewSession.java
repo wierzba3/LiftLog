@@ -2,6 +2,7 @@ package com.liftlog;
 
 import android.app.ActionBar;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 //import android.support.v7.app.ActionBar;
@@ -9,13 +10,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -27,7 +32,8 @@ import com.liftlog.common.DataAccessObject;
 import com.liftlog.models.Lift;
 import com.liftlog.models.Session;
 
-public class ViewSession extends AppCompatActivity {
+public class ViewSession extends AppCompatActivity
+{
 //public class ViewSession extends Activity {
 
     /**
@@ -51,7 +57,7 @@ public class ViewSession extends AppCompatActivity {
 
         dao = new DataAccessObject(this);
 
-        Intent intent  = getIntent();
+        Intent intent = getIntent();
         sessionId = intent.getLongExtra(SESSION_ID_KEY, -1l);
 
 //        Log.d(LOG_TAG, "LIFT_ID_KEY=" + sessionId);
@@ -65,7 +71,7 @@ public class ViewSession extends AppCompatActivity {
     {
         ActionBar actionBar = this.getActionBar();
 //        if(actionBar == null) actionBar =
-        if(actionBar != null)
+        if (actionBar != null)
         {
             actionBar.setDisplayUseLogoEnabled(false);
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -75,14 +81,16 @@ public class ViewSession extends AppCompatActivity {
 
         listLifts = (ListView) findViewById(R.id.list_lifts);
 
-        listLifts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position,
-                                    long id) {
-                Lift lift = (Lift) parent.getItemAtPosition(position);
-                doAdd(lift.getId());
-            }
-        });
+//        listLifts.setOnItemClickListener(new AdapterView.OnItemClickListener()
+//        {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position,
+//                                    long id)
+//            {
+//                Lift lift = (Lift) parent.getItemAtPosition(position);
+//                doAdd(lift.getId());
+//            }
+//        });
 
 
     }
@@ -109,7 +117,7 @@ public class ViewSession extends AppCompatActivity {
 //        }
 
         ArrayList<Lift> lifts;
-        if(session == null)
+        if (session == null)
         {
             lifts = new ArrayList<Lift>();
         }
@@ -129,19 +137,22 @@ public class ViewSession extends AppCompatActivity {
 //        for(Lift lift : lifts) liftLabels.add("" + lift.getId());
 
         ArrayAdapter<Lift> adapter = new ArrayAdapter<Lift>(this, android.R.layout.simple_list_item_1, lifts);
-        listLifts.setAdapter(adapter);
+        LiftArrayAdapter liftArrayAdapter = new LiftArrayAdapter(this, R.id.lbl_lift, lifts);
+        listLifts.setAdapter(liftArrayAdapter);
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle bundle) {
+    protected void onSaveInstanceState(Bundle bundle)
+    {
         super.onSaveInstanceState(bundle);
         bundle.putLong(SESSION_ID_KEY, sessionId);
     }
 
-    protected void onRestoreInstanceState(Bundle bundle) {
+    protected void onRestoreInstanceState(Bundle bundle)
+    {
         super.onSaveInstanceState(bundle);
         long id = bundle.getLong(SESSION_ID_KEY, -1);
-        if(id == -1)
+        if (id == -1)
         {
             Log.d(LOG_TAG, "Error restoring session.");
             finish();
@@ -152,6 +163,7 @@ public class ViewSession extends AppCompatActivity {
 
     /**
      * Add a new Lift
+     *
      * @param liftId The id of the lift (-1 for a new Lift)
      */
     private void doAdd(long liftId)
@@ -165,7 +177,7 @@ public class ViewSession extends AppCompatActivity {
 
     private void doDelete()
     {
-        if(sessionId == -1)
+        if (sessionId == -1)
         {
             //this should never happen
             Toast.makeText(this, "Error attempting to delete session.", Toast.LENGTH_SHORT).show();
@@ -176,11 +188,13 @@ public class ViewSession extends AppCompatActivity {
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setTitle("Delete Session")
                 .setMessage("Are you sure you want to delete this Session? All associated Lifts will also be deleted.")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+                {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(DialogInterface dialog, int which)
+                    {
 
-                        if(!dao.deleteSession(sessionId))
+                        if (!dao.deleteSession(sessionId))
                         {
                             Toast.makeText(ViewSession.this, "Error deleting session.", Toast.LENGTH_SHORT).show();
                             return;
@@ -199,7 +213,7 @@ public class ViewSession extends AppCompatActivity {
     protected void onResume()
     {
         super.onResume();
-        if(sessionId > -1)
+        if (sessionId > -1)
         {
             loadSession(sessionId);
         }
@@ -216,7 +230,8 @@ public class ViewSession extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -238,4 +253,61 @@ public class ViewSession extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    public class LiftArrayAdapter extends ArrayAdapter<Lift>
+    {
+
+        private ArrayList<Lift> items;
+
+        public LiftArrayAdapter(Context context, int textViewResourceId, ArrayList<Lift> items)
+        {
+            super(context, textViewResourceId, items);
+            this.items = items;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent)
+        {
+            View v = convertView;
+            if (v == null)
+            {
+                LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                v = vi.inflate(R.layout.lift_item, null);
+            }
+            final Lift lift = items.get(position);
+
+            TextView lblLift = (TextView) v.findViewById(R.id.lbl_lift);
+            Button btnIncrement = (Button) v.findViewById(R.id.btn_increment);
+
+            if (lift != null)
+            {
+                if (lblLift != null)
+                {
+                    lblLift.setText(lift.toString());
+                }
+            }
+            else return null;
+
+            lblLift.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    doAdd(lift.getId());
+                }
+            });
+            btnIncrement.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                   Toast.makeText(ViewSession.this, "TODO increment lift: " + lift, Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            return v;
+        }
+
+    }
+
 }
