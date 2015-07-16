@@ -24,6 +24,8 @@ import wierzba.james.liftlog.R;
  * - Group Lifts in Session by the exercise, then after selecting exercise, show the individual lifts.
  *      Some tree-like structure?
  * - Add increment set button on the lifts ListView on ViewSession
+ *      Buttin is added. Need to implement the increment operation on the action listener.
+ *      Also need to find a pretty icon rather than a Button with text "+"
 
  * - Decide what to do when the user deletes an exercise that is referenced by 1 or more lifts
  *      I think the best option would be to not delete it, but change the name to "undefined" or something
