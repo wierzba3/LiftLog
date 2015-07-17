@@ -70,8 +70,6 @@ public class DateInputDialog extends DialogFragment
         {
             public void onClick(DialogInterface dialog, int id)
             {
-                //TODO
-                // call listener's cancel method
                 mListener.onDialogCancelClick(DateInputDialog.this);
             }
         });

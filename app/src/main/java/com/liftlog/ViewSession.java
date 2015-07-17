@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -277,13 +278,19 @@ public class ViewSession extends AppCompatActivity
             final Lift lift = items.get(position);
 
             TextView lblLift = (TextView) v.findViewById(R.id.lbl_lift);
-            Button btnIncrement = (Button) v.findViewById(R.id.btn_increment);
+            ImageButton btnIncrement = (ImageButton) v.findViewById(R.id.btn_increment);
 
             if (lift != null)
             {
                 if (lblLift != null)
                 {
                     lblLift.setText(lift.toString());
+                }
+
+                //remove the increment button in the <New Lift> dummy item
+                if(lift.getId() == -1)
+                {
+                    btnIncrement.setVisibility(View.GONE);
                 }
             }
             else return null;
@@ -301,7 +308,9 @@ public class ViewSession extends AppCompatActivity
                 @Override
                 public void onClick(View v)
                 {
-                   Toast.makeText(ViewSession.this, "TODO increment lift: " + lift, Toast.LENGTH_SHORT).show();
+                    lift.setSets(lift.getSets() + 1);
+                    dao.update(lift);
+                    loadSession(sessionId);
                 }
             });
 
