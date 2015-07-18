@@ -84,7 +84,7 @@ public class ViewLift extends AppCompatActivity {
         {
             txtWeight.setText(String.valueOf(0));
             pckReps.setValue(5);
-            pckSets.setValue(5);
+            pckSets.setValue(1);
 //            rbtnWarmup.setChecked(false);
         }
         else {
