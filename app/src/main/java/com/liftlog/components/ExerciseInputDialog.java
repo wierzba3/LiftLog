@@ -12,13 +12,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import com.liftlog.common.DataAccessObject;
+import com.liftlog.com.liftlog.db.DataAccessObject;
 import wierzba.james.liftlog.R;
 import com.liftlog.models.Exercise;
 
 
 public class ExerciseInputDialog extends DialogFragment
 {
+
+    public enum RequestType
+    {
+        DEFAULT(0);
+
+        private int value;
+
+        RequestType(int value) { this.value = value; }
+        public int getValue() { return value; }
+    }
 
     public static ExerciseInputDialog newInstance(Exercise exercise)
     {

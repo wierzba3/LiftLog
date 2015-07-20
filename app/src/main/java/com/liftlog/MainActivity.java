@@ -20,14 +20,13 @@ import wierzba.james.liftlog.R;
  * TODO
 
  * Implement now:
- * - Option to Add new Exercise from Add Lift ComboBox
  * - Group Lifts in Session by the exercise, then after selecting exercise, show the individual lifts.
  *      Some tree-like structure?
  *
  * - Decide what to do when the user deletes an exercise that is referenced by 1 or more lifts
- *      I think the best option would be to not delete it, but change the name to "undefined" or something
- *      and offer the user the choice to re-define it when it is shown as "undefined"
- *
+ *      add new boolean field to Exercise: valid, need to update database this allows the user
+ *          to "delete the lift" by us setting valid to false and name to "?" and the user can choose to re-define it if
+ *          there are existing lifts which reference that exercise
  *
  *
  * Bugs:
@@ -35,6 +34,9 @@ import wierzba.james.liftlog.R;
  *
  *
  * Implement in the future:
+ * - Tools
+ *      1RM calculator
+ *
  * - Programmable training routines. Define rules that the user can set for an exercise.
  * Display planned lifts separately from the completed lifts in the sessions.
  * e.g. repeat selected lift every M/W/F, increase weight each day/week
@@ -130,8 +132,8 @@ public class MainActivity extends AppCompatActivity
 
         private final String[] PAGE_TITLES =
                 {
-                        "Exercises",
-                        "Log"
+                        "Log",
+                        "Exercises"
                 };
 
         public FragmentPagerAdapter()
@@ -157,9 +159,9 @@ public class MainActivity extends AppCompatActivity
             switch(position)
             {
                 case 0:
-                    return new ExercisesFragment();
-                case 1:
                     return new SessionsFragment();
+                case 1:
+                    return new ExercisesFragment();
                 default:
                     return null;
             }
