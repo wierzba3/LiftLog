@@ -25,7 +25,7 @@ import java.util.Map;
 
 import wierzba.james.liftlog.R;
 
-import com.liftlog.com.liftlog.db.DataAccessObject;
+import com.liftlog.db.DataAccessObject;
 import com.liftlog.components.ExerciseInputDialog;
 
 import com.liftlog.models.Exercise;
@@ -58,6 +58,14 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
         return view;
     }
 
+    @Override
+    public void onViewStateRestored(Bundle savedInstanceState)
+    {
+        super.onViewStateRestored(savedInstanceState);
+
+    }
+
+
     private void createContents(View view)
     {
         setHasOptionsMenu(true);
@@ -86,7 +94,7 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
         });
     }
 
-    private void loadExercises()
+    public void loadExercises()
     {
         Map<Long, Exercise> exercises = dao.selectExercises();
         if (exercises == null)

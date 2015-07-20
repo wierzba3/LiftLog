@@ -21,7 +21,7 @@ public class Exercise {
     private long id;
     private String name;
     private String description;
-    private boolean valid;
+    private boolean valid = true;
 
     public long getId() {
         return id;

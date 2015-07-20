@@ -15,6 +15,15 @@
         android:layout_weight="1"
         android:layout_gravity="center">
 
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="New Exercise"
+            android:onClick="doNewExercise"
+            android:id="@+id/btn_add_exercise"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"/>
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -28,23 +37,14 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:orientation="horizontal"
         android:layout_height="wrap_content"
         android:layout_width="fill_parent"
         android:layout_weight="1"
         android:layout_gravity="center">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="New Exercise"
-            android:onClick="doNewExercise"
-            android:id="@+id/btn_add_exercise"
-            />
-
-    </LinearLayout>
+    </RelativeLayout>
 
     <GridLayout
         android:layout_width="wrap_content"
