@@ -30,7 +30,8 @@ import wierzba.james.liftlog.R;
  *
  *
  * Bugs:
- * -
+ * - Deleting an Exercise that is referencing an existing Lift is not giving the special prompt.
+ * - Need to update the exercise fragment when exercises change from another context
  *
  *
  * Implement in the future:
@@ -64,6 +65,7 @@ public class MainActivity extends AppCompatActivity
         mCustomPagerAdapter = new FragmentPagerAdapter();
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mCustomPagerAdapter);
+
     }
 
 
