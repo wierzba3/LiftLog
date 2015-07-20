@@ -1,7 +1,6 @@
 package com.liftlog;
 
 import android.app.ActionBar;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -16,21 +15,15 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import wierzba.james.liftlog.R;
 
-import com.liftlog.common.DataAccessObject;
+import com.liftlog.com.liftlog.db.DataAccessObject;
 import com.liftlog.components.DateInputDialog;
-import com.liftlog.components.ExerciseInputDialog;
-import com.liftlog.models.Exercise;
-import com.liftlog.models.Lift;
 import com.liftlog.models.Session;
 
 

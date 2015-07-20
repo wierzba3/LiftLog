@@ -1,5 +1,7 @@
 package com.liftlog.models;
 
+import java.util.Comparator;
+
 /**
  * Created by James Wierzba on 2/8/2015.
  */
@@ -19,6 +21,7 @@ public class Exercise {
     private long id;
     private String name;
     private String description;
+    private boolean valid;
 
     public long getId() {
         return id;
@@ -42,6 +45,16 @@ public class Exercise {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public boolean isValid()
+    {
+        return valid;
+    }
+
+    public void setValid(boolean valid)
+    {
+        this.valid = valid;
     }
 
     public static final Exercise Squat(){
@@ -82,6 +95,37 @@ public class Exercise {
         Exercise result = new Exercise(-1, name, desc);
         return result;
     }
+
+    /**
+     * Compare by name, and place dummy "&lt;Add New&gt;" first
+     */
+    public static final Comparator<Exercise> byNameDummyFirst = new Comparator<Exercise>()
+    {
+        @Override
+        public int compare(Exercise lhs, Exercise rhs)
+        {
+            if(lhs == null && rhs == null) return 0;
+            if(lhs == null) return -1;
+            if(rhs == null) return 1;
+            if(lhs.getId() == -1) return -1;
+            return lhs.getName().compareTo(rhs.getName());
+        }
+    };
+    /**
+     * Compare by name, and place dummy "&lt;Add New&gt;" last
+     */
+    public static final Comparator<Exercise> byNameDummyLast = new Comparator<Exercise>()
+    {
+        @Override
+        public int compare(Exercise lhs, Exercise rhs)
+        {
+            if(lhs == null && rhs == null) return 0;
+            if(lhs == null) return -1;
+            if(rhs == null) return 1;
+            if(lhs.getId() == -1) return 1;
+            return lhs.getName().compareTo(rhs.getName());
+        }
+    };
 
     @Override
     public String toString()

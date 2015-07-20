@@ -4,31 +4,34 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.NumberPicker;
-import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import wierzba.james.liftlog.R;
 
-import com.liftlog.common.DataAccessObject;
+import com.liftlog.com.liftlog.db.DataAccessObject;
+import com.liftlog.components.ExerciseInputDialog;
 import com.liftlog.models.Exercise;
 import com.liftlog.models.Lift;
 
 //public class ViewLift extends Activity {
-public class ViewLift extends AppCompatActivity {
+public class ViewLift extends AppCompatActivity implements ExerciseInputDialog.ExerciseInputDialogListener {
 
     private static final String LOG_TAG = "LiftLog.AddLift";
 
@@ -75,6 +78,7 @@ public class ViewLift extends AppCompatActivity {
 //        Log.d(LOG_TAG, "LIFT_ID_KEY=" + liftIdString);
 
         createContents();
+        loadExercises();
         loadLift(liftId);
     }
 
@@ -95,22 +99,70 @@ public class ViewLift extends AppCompatActivity {
 
             //find and select the exercise matching the id
             long exerciseId = lift.getExerciseId();
-            int cnt = spnExercise.getAdapter().getCount();
-            Exercise exercise;
-            for(int i = 0; i < cnt; i++)
-            {
-                exercise = (Exercise) spnExercise.getItemAtPosition(i);
-                if(exercise != null && exercise.getId() == exerciseId)
-                {
-                    spnExercise.setSelection(i);
-                    break;
-                }
-            }
+            setSelectedExercise(exerciseId);
+
+
 //            rbtnWarmup.setChecked(lift.isWarmup());
         }
 
     }
 
+    private void setSelectedExercise(long exerciseId)
+    {
+        int cnt = spnExercise.getAdapter().getCount();
+        Exercise exercise;
+        for(int i = 0; i < cnt; i++)
+        {
+            exercise = (Exercise) spnExercise.getItemAtPosition(i);
+            if(exercise != null && exercise.getId() == exerciseId)
+            {
+                spnExercise.setSelection(i);
+               return;
+            }
+        }
+        spnExercise.setSelection(0);
+    }
+
+
+    private void loadExercises()
+    {
+        exercises = dao.selectExercises();
+        if(exercises != null)
+        {
+            List<Exercise> exerciseList = new ArrayList<>(exercises.values());
+            //dummy Exercise object for <Add New>
+//            Exercise dummyExercise = new Exercise();
+//            dummyExercise.setId(-1);
+//            dummyExercise.setName("<Add New>");
+//            exerciseList.add(dummyExercise);
+            Collections.sort(exerciseList, Exercise.byNameDummyLast);
+
+            ArrayAdapter<Exercise> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, exerciseList);
+            adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+            spnExercise.setAdapter(adapter);
+
+
+        }
+        else
+        {
+            Log.d(LOG_TAG, "Error loading exercises.");
+        }
+    }
+
+
+
+    /**
+     * Launch a ExerciseInputDialog
+     */
+    public void doNewExercise(View view)
+    {
+        Exercise exercise = new Exercise();
+        exercise.setId(-1);
+
+        ExerciseInputDialog dialog = ExerciseInputDialog.newInstance(exercise);
+//        dialog.setTargetFragment(this, ExerciseInputDialog.RequestType.DEFAULT.getValue());
+        dialog.show(this.getSupportFragmentManager(), "ExerciseInputDialog");
+    }
 
 
     @Override
@@ -143,7 +195,7 @@ public class ViewLift extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-
+    int previousExercisePos = 0;
     private void createContents()
     {
         //initialize control references
@@ -156,21 +208,8 @@ public class ViewLift extends AppCompatActivity {
         pckSets = (NumberPicker) findViewById(R.id.pck_sets);
         btnSave = (Button) findViewById(R.id.btn_save);
 
-        exercises = dao.selectExercises();
-        if(exercises != null)
-        {
-            List<Exercise> exerciseList = new ArrayList<>(exercises.values());
-            ArrayAdapter<Exercise> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, exerciseList);
-            adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-            spnExercise.setAdapter(adapter);
-        }
-        else
-        {
-            Log.d(LOG_TAG, "Error loading exercises.");
-        }
+
         openOrCreateDatabase(DataAccessObject.DB_NAME, MODE_PRIVATE, null);
-
-
 
         pckReps.setMinValue(1);
         pckReps.setMaxValue(100);
@@ -179,6 +218,29 @@ public class ViewLift extends AppCompatActivity {
         pckSets.setMinValue(0);
         pckSets.setMaxValue(100);
         pckSets.setWrapSelectorWheel(false);
+
+        spnExercise.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
+//                Exercise selectedExercise = (Exercise) parent.getItemAtPosition(position);
+//
+//                if(selectedExercise == null) return;
+//                if(selectedExercise.getId() == -1)
+//                {
+//                    ViewLift.this.doNewExercise();
+//                }
+//                //remember the last actual exercise that was selected
+//                else previousExercisePos = position;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent)
+            {
+            //do nothing
+            }
+        });
     }
 
     /**
@@ -266,5 +328,32 @@ public class ViewLift extends AppCompatActivity {
         finish();
     }
 
+    @Override
+    public void onDialogSaveClick(DialogFragment dialog, Exercise exercise)
+    {
+        if(exercise == null) return;
+        long id = exercise.getId();
+        //this should always be true (we don't allow editing from ViewLift context)
+        if(id == -1)
+        {
+            long newExerciseId = dao.insert(exercise);
+            loadExercises();
+            setSelectedExercise(newExerciseId);
+        }
+        else spnExercise.setSelection(0);
 
+
+    }
+
+    @Override
+    public void onDialogCancelClick(DialogFragment dialog)
+    {
+        spnExercise.setSelection(previousExercisePos);
+    }
+
+    @Override
+    public void onDialogDeleteClick(DialogFragment dialog, Exercise exercise)
+    {
+        //do nothing
+    }
 }

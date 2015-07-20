@@ -16,9 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -29,7 +27,7 @@ import java.util.Collections;
 
 import wierzba.james.liftlog.R;
 
-import com.liftlog.common.DataAccessObject;
+import com.liftlog.com.liftlog.db.DataAccessObject;
 import com.liftlog.models.Lift;
 import com.liftlog.models.Session;
 

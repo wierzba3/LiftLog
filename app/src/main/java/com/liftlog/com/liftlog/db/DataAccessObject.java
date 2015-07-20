@@ -1,4 +1,4 @@
-package com.liftlog.common;
+package com.liftlog.com.liftlog.db;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -72,6 +72,8 @@ public class DataAccessObject extends SQLiteOpenHelper
     public static final String EXERCISE_COLUMN_PK = "id";
     public static final String EXERCISE_COLUMN_NAME = "name";
     public static final String EXERCISE_COLUMN_DESCRIPTION = "description";
+    //TODO
+    public static final String EXERCISE_COLUMN_VALID = "valid";
     public static final String EXERCISE_COLUMN_DATE = "date_created";
     public static final String EXERCISE_TABLE_CREATE_QUERY =
             "CREATE TABLE " + EXERCISE_TABLE_NAME
@@ -79,6 +81,7 @@ public class DataAccessObject extends SQLiteOpenHelper
                     + EXERCISE_COLUMN_PK + " INTEGER PRIMARY KEY, "
                     + EXERCISE_COLUMN_NAME + " TEXT, "
                     + EXERCISE_COLUMN_DESCRIPTION + " TEXT, "
+                    + EXERCISE_COLUMN_VALID + " INTEGER DEFAULT 1, "
                     + EXERCISE_COLUMN_DATE + " INTEGER"
                     + ")";
 
@@ -87,7 +90,7 @@ public class DataAccessObject extends SQLiteOpenHelper
 
     public DataAccessObject(Context context)
     {
-        super(context, DB_NAME, null, 16);
+        super(context, DB_NAME, null, 17);
     }
 
     @Override
@@ -156,6 +159,7 @@ public class DataAccessObject extends SQLiteOpenHelper
         ContentValues values = new ContentValues();
         values.put(EXERCISE_COLUMN_NAME, exercise.getName());
         values.put(EXERCISE_COLUMN_DESCRIPTION, exercise.getDescription());
+        values.put(EXERCISE_COLUMN_VALID, exercise.isValid() ? 1 : 0);
         values.put(EXERCISE_COLUMN_DATE, System.currentTimeMillis());
         long id = db.insert(EXERCISE_TABLE_NAME, null, values);
         return id;
@@ -172,6 +176,7 @@ public class DataAccessObject extends SQLiteOpenHelper
         ContentValues values = new ContentValues();
         values.put(EXERCISE_COLUMN_NAME, exercise.getName());
         values.put(EXERCISE_COLUMN_DESCRIPTION, exercise.getDescription());
+        values.put(EXERCISE_COLUMN_VALID, exercise.isValid() ? 1 : 0);
         values.put(EXERCISE_COLUMN_DATE, System.currentTimeMillis());
 
         try
@@ -241,9 +246,11 @@ public class DataAccessObject extends SQLiteOpenHelper
 
         String name = cursor.getString(cursor.getColumnIndex(EXERCISE_COLUMN_NAME));
         String desc = cursor.getString(cursor.getColumnIndex(EXERCISE_COLUMN_DESCRIPTION));
+        int valid = cursor.getInt(cursor.getColumnIndex(EXERCISE_COLUMN_VALID));
 
         result.setId(id);
         result.setName(name);
+        result.setValid(valid == 1 ? true : false);
         result.setDescription(desc);
 
 
@@ -277,9 +284,11 @@ public class DataAccessObject extends SQLiteOpenHelper
             long id = cursor.getLong(cursor.getColumnIndex(EXERCISE_COLUMN_PK));
             String name = cursor.getString(cursor.getColumnIndex(EXERCISE_COLUMN_NAME));
             String desc = cursor.getString(cursor.getColumnIndex(EXERCISE_COLUMN_DESCRIPTION));
+            int valid = cursor.getInt(cursor.getColumnIndex(EXERCISE_COLUMN_VALID));
 
             exercise.setId(id);
             exercise.setName(name);
+            exercise.setValid(valid == 1 ? true : false);
             exercise.setDescription(desc);
 
             result.put(id, exercise);
