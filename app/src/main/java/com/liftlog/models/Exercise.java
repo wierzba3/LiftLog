@@ -123,7 +123,7 @@ public class Exercise {
             if(lhs == null) return -1;
             if(rhs == null) return 1;
             if(lhs.getId() == -1) return 1;
-            return lhs.getName().compareTo(rhs.getName());
+            return lhs.getName().compareToIgnoreCase(rhs.getName());
         }
     };
 

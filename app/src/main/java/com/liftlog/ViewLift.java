@@ -25,7 +25,7 @@ import java.util.Map;
 
 import wierzba.james.liftlog.R;
 
-import com.liftlog.com.liftlog.db.DataAccessObject;
+import com.liftlog.db.DataAccessObject;
 import com.liftlog.components.ExerciseInputDialog;
 import com.liftlog.models.Exercise;
 import com.liftlog.models.Lift;

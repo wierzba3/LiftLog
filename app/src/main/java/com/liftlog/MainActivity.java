@@ -22,16 +22,13 @@ import wierzba.james.liftlog.R;
  * Implement now:
  * - Group Lifts in Session by the exercise, then after selecting exercise, show the individual lifts.
  *      Some tree-like structure?
- *
+ * - Implement Sync Adapter ( need to set-up db schema in google cloud sql database first...)
  * - Decide what to do when the user deletes an exercise that is referenced by 1 or more lifts
  *      add new boolean field to Exercise: valid, need to update database this allows the user
  *          to "delete the lift" by us setting valid to false and name to "?" and the user can choose to re-define it if
  *          there are existing lifts which reference that exercise
  *
  *
- * Bugs:
- * - Deleting an Exercise that is referencing an existing Lift is not giving the special prompt.
- * - Need to update the exercise fragment when exercises change from another context
  *
  *
  * Implement in the future:
