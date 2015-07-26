@@ -27,7 +27,7 @@ import java.util.Collections;
 
 import wierzba.james.liftlog.R;
 
-import com.liftlog.com.liftlog.db.DataAccessObject;
+import com.liftlog.db.DataAccessObject;
 import com.liftlog.models.Lift;
 import com.liftlog.models.Session;
 
