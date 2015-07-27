@@ -1,4 +1,4 @@
-package com.liftlog.db;
+package com.liftlog.data;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -25,7 +25,7 @@ public class DataAccessObject extends SQLiteOpenHelper
 
 //    public static Map<Long, Exercise> exerciseMap = new HashMap<>();
 
-    public static final String DB_NAME = "LiftLog.db";
+    public static final String DB_NAME = "LiftLog.data";
 
     public static final String LIFT_TABLE_NAME = "lifts";
     public static final String LIFT_COLUMN_PK = "id";
@@ -182,7 +182,7 @@ public class DataAccessObject extends SQLiteOpenHelper
         try
         {
             db.update(EXERCISE_TABLE_NAME, values, EXERCISE_COLUMN_PK + " = " + exercise.getId(), null);
-//            db.execSQL(qry);
+//            data.execSQL(qry);
         } catch (SQLException e)
         {
             Log.d(LOG_TAG, e.getMessage());

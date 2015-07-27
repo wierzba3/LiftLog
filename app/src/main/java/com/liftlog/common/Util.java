@@ -22,8 +22,8 @@ public class Util {
 
             if (sd.canWrite())
             {
-                String currentDBPath = "//data/data/wierzba.james.liftlog/databases/LiftLog.db";
-                String backupDBPath = "C:/Users/cdewz/Desktop/LiftLog_backup.db";
+                String currentDBPath = "//data/data/wierzba.james.liftlog/databases/LiftLog.data";
+                String backupDBPath = "C:/Users/cdewz/Desktop/LiftLog_backup.data";
                 File currentDB = new File(currentDBPath);
                 File backupDB = new File(sd, backupDBPath);
 
