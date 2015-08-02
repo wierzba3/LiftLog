@@ -1,14 +1,12 @@
-package com.liftlog.models;
-
-import com.liftlog.data.DataAccessObject;
+package com.liftlog.backend;
 
 /**
  * Created by James Wierzba on 2/4/2015.
  */
-public class Lift implements Comparable<Lift> {
+public class LiftAPI implements Comparable<LiftAPI> {
 
 
-    public Lift()
+    public LiftAPI()
     {
 
     }
@@ -29,7 +27,6 @@ public class Lift implements Comparable<Lift> {
     private int reps;
     private boolean isWarmup;
     private long dateCreated;
-    private DataAccessObject.RecordState state;
 
     public long getSessionId()
     {
@@ -129,16 +126,6 @@ public class Lift implements Comparable<Lift> {
         this.dateCreated = dateCreated;
     }
 
-    public DataAccessObject.RecordState getState()
-    {
-        return state;
-    }
-
-    public void setState(DataAccessObject.RecordState state)
-    {
-        this.state = state;
-    }
-
     //    public long getDate() {
 //        return date;
 //    }
@@ -151,7 +138,7 @@ public class Lift implements Comparable<Lift> {
 
     //default sort by date
     @Override
-    public int compareTo(Lift other)
+    public int compareTo(LiftAPI other)
     {
         if(other == null) return 1;
         if(dateCreated > other.getDateCreated()) return 1;

@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import com.liftlog.data.DataAccessObject;
-import wierzba.james.liftlog.R;
+import com.liftlog.R;
 import com.liftlog.models.Exercise;
 
 

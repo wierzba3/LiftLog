@@ -1,34 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="wierzba.james.liftlog" >
+    package="com.liftlog" >
 
     <uses-sdk android:minSdkVersion="11" />
 
-    <service
-        android:name="com.liftlog.data.AuthenticatorService">
-        <intent-filter>
-            <action android:name="android.accounts.AccountAuthenticator"/>
-        </intent-filter>
-        <meta-data
-            android:name="android.accounts.AccountAuthenticator"
-            android:resource="@xml/authenticator" />
-    </service>
-    <service
-        android:name="com.liftlog.data.SyncService"
-        android:exported="true"
-        android:process=":sync">
-        <intent-filter>
-            <action android:name="android.content.SyncAdapter"/>
-        </intent-filter>
-        <meta-data android:name="android.content.SyncAdapter"
-                   android:resource="@xml/syncadapter" />
-    </service>
 
-    <provider
-        android:name="com.liftlog.data.StubProvider"
-        android:authorities="com.liftlog.data.provider"
-        android:exported="false"
-        android:syncable="true"/>
 
 
 
@@ -39,6 +15,7 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
 
     <uses-permission android:name="android.permission.INTERNET" /> <!-- <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> -->
     <!-- <android:uses-permission android:name="android.permission.READ_PHONE_STATE" /> -->
@@ -64,21 +41,34 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.liftlog.MainActivity" />
         </activity>
-        <!--<activity-->
-            <!--android:name="com.liftlog.BrowseSessions"-->
-            <!--android:label="@string/title_activity_browse_sessions" >-->
-        <!--</activity>-->
-        <!--<activity-->
-            <!--android:name="com.liftlog.ViewSession"-->
-            <!--android:label="@string/title_activity_view_session"-->
-            <!--android:launchMode="singleTop"-->
-            <!--android:parentActivityName="com.liftlog.BrowseSessions" >-->
-        <!--</activity>-->
-        <!--<activity-->
-            <!--android:name="com.liftlog.BrowseExercises"-->
-            <!--android:label="@string/title_activity_browse_exercises"-->
-            <!--android:parentActivityName="com.liftlog.MainActivity" >-->
-        <!--</activity>-->
+
+        <service
+            android:name="com.liftlog.data.AuthenticatorService">
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator"/>
+            </intent-filter>
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/authenticator" />
+        </service>
+
+        <service
+            android:name="com.liftlog.data.SyncService"
+            android:exported="true"
+            android:process=":sync">
+            <intent-filter>
+                <action android:name="android.content.SyncAdapter"/>
+            </intent-filter>
+            <meta-data android:name="android.content.SyncAdapter"
+                       android:resource="@xml/syncadapter" />
+        </service>
+
+        <provider
+            android:name="com.liftlog.data.StubProvider"
+            android:authorities="com.liftlog.data.provider"
+            android:exported="false"
+            android:syncable="true"
+            android:label="stub provider"/>
     </application>
 
 </manifest>

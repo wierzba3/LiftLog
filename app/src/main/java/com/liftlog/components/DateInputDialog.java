@@ -17,7 +17,7 @@ import com.liftlog.models.Exercise;
 import java.util.Calendar;
 import java.util.Date;
 
-import wierzba.james.liftlog.R;
+import com.liftlog.R;
 
 /**
  * Created by James Wierzba on 7/12/2015.

@@ -25,10 +25,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import wierzba.james.liftlog.R;
-
-import com.liftlog.data.DataAccessObject;
 import com.liftlog.models.Lift;
+import com.liftlog.data.DataAccessObject;
 import com.liftlog.models.Session;
 
 public class ViewSession extends AppCompatActivity

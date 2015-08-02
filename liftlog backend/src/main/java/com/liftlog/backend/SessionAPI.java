@@ -1,7 +1,4 @@
-package com.liftlog.models;
-
-import com.liftlog.data.DataAccessObject;
-import com.liftlog.models.Lift;
+package com.liftlog.backend;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,24 +12,22 @@ import java.util.Map;
 /**
  * Created by James Wierzba on 2/4/2015.
  */
-public class Session
+public class SessionAPI
 {
 
-    public Session()
+    public SessionAPI()
     {
-        lifts = new ArrayList<Lift>();
+        lifts = new ArrayList<LiftAPI>();
     }
 
     private long id;
     private long date;
-    private ArrayList<Lift> lifts;
-    private DataAccessObject.RecordState state;
+    private ArrayList<LiftAPI> lifts;
     /**
      * This variable having a value greater than 1 indicates that this is the i'th instance of session that has the same date.
      * (Same day of year, not same millisecond value.
      */
     private int sequenceNum;
-
 
     public long getId()
     {
@@ -44,12 +39,12 @@ public class Session
         this.id = id;
     }
 
-    public ArrayList<Lift> getLifts()
+    public ArrayList<LiftAPI> getLifts()
     {
         return lifts;
     }
 
-    public void setLifts(ArrayList<Lift> lifts)
+    public void setLifts(ArrayList<LiftAPI> lifts)
     {
         this.lifts = lifts;
     }
@@ -74,16 +69,6 @@ public class Session
         this.sequenceNum = sequenceNum;
     }
 
-    public DataAccessObject.RecordState getState()
-    {
-        return state;
-    }
-
-    public void setState(DataAccessObject.RecordState state)
-    {
-        this.state = state;
-    }
-
     @Override
     public String toString()
     {
@@ -99,30 +84,30 @@ public class Session
         return result;
     }
 
-    public static final Comparator<Session> byDateAsc = new Comparator<Session>()
+    public static final Comparator<SessionAPI> byDateAsc = new Comparator<SessionAPI>()
     {
         @Override
-        public int compare(Session lhs, Session rhs)
+        public int compare(SessionAPI lhs, SessionAPI rhs)
         {
             if(lhs.getDate() < rhs.getDate()) return -1;
             else if(lhs.getDate() > rhs.getDate()) return 1;
             else return 0;
         }
     };
-    public static final Comparator<Session> byDateDesc = new Comparator<Session>()
+    public static final Comparator<SessionAPI> byDateDesc = new Comparator<SessionAPI>()
     {
         @Override
-        public int compare(Session lhs, Session rhs)
+        public int compare(SessionAPI lhs, SessionAPI rhs)
         {
             if(lhs.getDate() < rhs.getDate()) return 1;
             else if(lhs.getDate() > rhs.getDate()) return -1;
             else return 0;
         }
     };
-    public static final Comparator<Session> byID = new Comparator<Session>()
+    public static final Comparator<SessionAPI> byID = new Comparator<SessionAPI>()
     {
         @Override
-        public int compare(Session lhs, Session rhs)
+        public int compare(SessionAPI lhs, SessionAPI rhs)
         {
             if(lhs.getId() < rhs.getId()) return -1;
             else if(lhs.getId() > rhs.getId()) return 1;
@@ -134,7 +119,7 @@ public class Session
      * Calculate the Sessions that have the same day of year date value, and assign it's sequenceNum value.
      * @param sessions The List of sessions.
      */
-    public static void computeDuplicateDays(List<Session> sessions)
+    public static void computeDuplicateDays(List<SessionAPI> sessions)
     {
         if(sessions == null || sessions.size() == 0) return;
 
@@ -144,7 +129,7 @@ public class Session
         Map<Long, Integer> instanceCount = new HashMap<Long, Integer>();
 
         Integer value;
-        for(Session session : sessions)
+        for(SessionAPI session : sessions)
         {
             long date = session.getDate();
             long day = date / (1000 * 60 * 60 * 24);
@@ -159,7 +144,7 @@ public class Session
             }
         }
 
-        Session session;
+        SessionAPI session;
         for(int i = sessions.size() - 1; i >= 0; i--)
         {
             session = sessions.get(i);

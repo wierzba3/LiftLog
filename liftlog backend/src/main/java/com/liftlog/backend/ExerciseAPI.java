@@ -1,21 +1,20 @@
-package com.liftlog.models;
-
-import com.liftlog.data.DataAccessObject;
+package com.liftlog.backend;
 
 import java.util.Comparator;
 
 /**
  * Created by James Wierzba on 2/8/2015.
  */
-public class Exercise {
+public class ExerciseAPI
+{
 
 
-    public Exercise()
+    public ExerciseAPI()
     {
 
     }
 
-    public Exercise(long id, String name, String description){
+    public ExerciseAPI(long id, String name, String description){
         this.name = name;
         this.description = description;
     }
@@ -24,7 +23,6 @@ public class Exercise {
     private String name;
     private String description;
     private boolean valid = true;
-    private DataAccessObject.RecordState state;
 
     public long getId() {
         return id;
@@ -60,17 +58,7 @@ public class Exercise {
         this.valid = valid;
     }
 
-    public DataAccessObject.RecordState getState()
-    {
-        return state;
-    }
-
-    public void setState(DataAccessObject.RecordState state)
-    {
-        this.state = state;
-    }
-
-    public static final Exercise Squat(){
+    public static final ExerciseAPI Squat(){
         String name = "Squat";
         String desc = "From rack with barbell at upper chest height, position bar high on back of shoulders and grasp barbell to sides. " +
                 "Dismount bar from rack and stand with shoulder width stance. " +
@@ -78,44 +66,44 @@ public class Exercise {
                 "keeping back straight and knees pointed same direction as feet. " +
                 "Descend until thighs are just past parallel to floor. Extend knees and hips until legs are straight. Return and repeat." +
                 "Source: http://www.exrx.net/WeightExercises/Quadriceps/BBSquat.html";
-        Exercise result = new Exercise(-1, name, desc);
+        ExerciseAPI result = new ExerciseAPI(-1, name, desc);
         return result;
     }
 
-    public static final Exercise BenchPress(){
+    public static final ExerciseAPI BenchPress(){
         String name = "Bench Press";
         String desc = "Lie supine on bench. Dismount barbell from rack over upper chest using wide oblique overhand grip. " +
                 "Lower weight to mid-chest. Press bar upward until arms are extended. Repeat.   " +
                 "Source: http://www.exrx.net/WeightExercises/PectoralSternal/BBBenchPress.html";
-        Exercise result = new Exercise(-1, name, desc);
+        ExerciseAPI result = new ExerciseAPI(-1, name, desc);
         return result;
     }
 
-    public static final Exercise Deadlift(){
+    public static final ExerciseAPI Deadlift(){
         String name = "Deadlift";
         String desc = "With feet flat beneath bar, squat down and grasp bar with shoulder width or slightly wider overhand or mixed grip. " +
                 "Lift bar by extending hips and knees to full extension. Pull shoulders back at top of lift if rounded. Return and repeat. " +
                 "Source: http://www.exrx.net/WeightExercises/ErectorSpinae/BBDeadlift.html";
-        Exercise result = new Exercise(-1, name, desc);
+        ExerciseAPI result = new ExerciseAPI(-1, name, desc);
         return result;
     }
 
-    public static final Exercise Press(){
+    public static final ExerciseAPI Press(){
         String name = "Overhead Press";
         String desc = "Grasp barbell from rack or clean barbell from floor with overhand grip, slightly wider than shoulder width. Position bar in front of neck. " +
                 "Press bar upward until arms are extended overhead. Lower to front of neck and repeat. " +
                 "Source: http://www.exrx.net/WeightExercises/DeltoidAnterior/BBMilitaryPress.html";
-        Exercise result = new Exercise(-1, name, desc);
+        ExerciseAPI result = new ExerciseAPI(-1, name, desc);
         return result;
     }
 
     /**
      * Compare by name, and place dummy "&lt;Add New&gt;" first
      */
-    public static final Comparator<Exercise> byNameDummyFirst = new Comparator<Exercise>()
+    public static final Comparator<ExerciseAPI> byNameDummyFirst = new Comparator<ExerciseAPI>()
     {
         @Override
-        public int compare(Exercise lhs, Exercise rhs)
+        public int compare(ExerciseAPI lhs, ExerciseAPI rhs)
         {
             if(lhs == null && rhs == null) return 0;
             if(lhs == null) return -1;
@@ -127,10 +115,10 @@ public class Exercise {
     /**
      * Compare by name, and place dummy "&lt;Add New&gt;" last
      */
-    public static final Comparator<Exercise> byNameDummyLast = new Comparator<Exercise>()
+    public static final Comparator<ExerciseAPI> byNameDummyLast = new Comparator<ExerciseAPI>()
     {
         @Override
-        public int compare(Exercise lhs, Exercise rhs)
+        public int compare(ExerciseAPI lhs, ExerciseAPI rhs)
         {
             if(lhs == null && rhs == null) return 0;
             if(lhs == null) return -1;

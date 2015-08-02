@@ -6,6 +6,7 @@ import android.content.ContentProviderClient;
 import android.content.Context;
 import android.content.SyncResult;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
@@ -20,6 +21,7 @@ import java.io.IOException;
  */
 public class SyncAdapter extends AbstractThreadedSyncAdapter
 {
+    public static final String LOG_TAG = "LiftLog";
 
     private DataAccessObject dao;
     private static MyApi myApiService = null;
@@ -59,22 +61,11 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult)
     {
+        Log.d(LOG_TAG, "hello from onPerformSync");
         //TODO sync to database server
-        /*
-env = os.getenv('SERVER_SOFTWARE')
-if (env and env.startswith('Google App Engine/')):
-  # Connecting from App Engine
-  data = MySQLdb.connect(
-    unix_socket='/cloudsql/liftlog-1016:liftlog-db1',
-    user='root')
-else:
-  # You may also assign an IP Address from the access control
-  # page and use it to connect from an external network.
-  pass
 
-cursor = data.cursor()
-cursor.execute('SELECT 1 + 1')
-         */
+
+
         if (myApiService == null)
         {  // Only do this once
             MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
@@ -82,7 +73,7 @@ cursor.execute('SELECT 1 + 1')
                     // options for running against local devappserver
                     // - 10.0.2.2 is localhost's IP address in Android emulator
                     // - turn off compression when running against local devappserver
-                    .setRootUrl("http://10.0.2.2:8080/_ah/api/")
+                    .setRootUrl("http://192.168.174.1:8080/_ah/api/")
                     .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer()
                     {
                         @Override
@@ -98,14 +89,15 @@ cursor.execute('SELECT 1 + 1')
 
         String name = "James Wierzba";
 
-        try
-        {
-
-            myApiService.sayHi(name).execute().getData();
-        } catch (IOException e)
-        {
-            return;
-        }
+//        try
+//        {
+//            String response = myApiService.sayHi(name).execute().getData();
+//            Log.d(LOG_TAG, "response: " + response);
+//        } catch (IOException e)
+//        {
+//            Log.d(LOG_TAG, "exception calling api: " + e.getMessage());
+//            return;
+//        }
 
     }
 }
