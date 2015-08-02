@@ -23,13 +23,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import wierzba.james.liftlog.R;
+import com.liftlog.R;
 
+import com.liftlog.backend.myApi.model.MyBean;
 import com.liftlog.data.DataAccessObject;
 import com.liftlog.components.ExerciseInputDialog;
-
 import com.liftlog.models.Exercise;
 import com.liftlog.models.Lift;
+
 
 
 public class ExercisesFragment extends Fragment implements ExerciseInputDialog.ExerciseInputDialogListener
@@ -50,7 +51,7 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
 //        setContentView(R.layout.activity_browse_exercises);
         View view = inflater.inflate(R.layout.fragment_exercises, container, false);
 
-        dao = new DataAccessObject(super.getActivity());
+        dao = new DataAccessObject(super.getActivity());MyBean b;
 
         createContents(view);
         loadExercises();

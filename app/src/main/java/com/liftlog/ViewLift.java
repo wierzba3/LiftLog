@@ -23,12 +23,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import wierzba.james.liftlog.R;
-
+import com.liftlog.models.Lift;
 import com.liftlog.data.DataAccessObject;
 import com.liftlog.components.ExerciseInputDialog;
 import com.liftlog.models.Exercise;
-import com.liftlog.models.Lift;
 
 //public class ViewLift extends Activity {
 public class ViewLift extends AppCompatActivity implements ExerciseInputDialog.ExerciseInputDialogListener {

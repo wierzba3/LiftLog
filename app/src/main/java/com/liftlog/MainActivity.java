@@ -3,6 +3,7 @@ package com.liftlog;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -15,17 +16,23 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.content.Intent;
-import android.view.ViewGroup;
-import android.widget.TextView;
 
-import wierzba.james.liftlog.R;
+import com.liftlog.R;
+
 
 /**
  * TODO
+ * BUGS:
+ * - SyncAdapter is not working, periodically or when called explicitly
+ *
+ *
+ *
+ *
  * Implement now:
  * - Implement Sync Adapter ( need to set-up data schema in google cloud sql database first...)
  *      Set up all the stub classes. Next: execute the SyncAdapter  https://developer.android.com/training/sync-adapters/running-sync-adapter.html
- *
+ * - Deploy backend to app engine
+ *      https://github.com/GoogleCloudPlatform/gradle-appengine-templates/tree/master/HelloEndpoints section 2.2
  *
  * - Group Lifts in Session by the exercise, then after selecting exercise, show the individual lifts.
  * Some tree-like structure?
@@ -62,15 +69,19 @@ public class MainActivity extends AppCompatActivity
     // The authority for the sync adapter's content provider
     public static final String AUTHORITY = "com.liftlog.data.provider";
     // An account type, in the form of a domain name
-    public static final String ACCOUNT_TYPE = "liftlog.com";
+    public String accountType;
     // The account name
     public static final String ACCOUNT = "dummyaccount";
     // Instance fields
     Account mAccount;
 
+    private ContentResolver mResolver;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -78,7 +89,19 @@ public class MainActivity extends AppCompatActivity
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mCustomPagerAdapter);
 
+        accountType = getString(R.string.accountType);
         mAccount = CreateSyncAccount(this);
+
+        Log.d(LOG_TAG, "test");
+        mResolver = getContentResolver();
+        ContentResolver.setSyncAutomatically(mAccount, AUTHORITY, true);
+        ContentResolver.addPeriodicSync(
+                mAccount,
+                AUTHORITY,
+                Bundle.EMPTY,
+                2
+        );
+        ContentResolver.requestSync(mAccount, AUTHORITY, Bundle.EMPTY);
 
     }
 
@@ -168,37 +191,47 @@ public class MainActivity extends AppCompatActivity
      *
      * @param context The application context
      */
-    public static Account CreateSyncAccount(Context context)
+    public Account CreateSyncAccount(Context context)
     {
         // Create the account type and default account
         Account newAccount = new Account(
-                ACCOUNT, ACCOUNT_TYPE);
+                ACCOUNT, accountType);
         // Get an instance of the Android account manager
-        AccountManager accountManager =
-                (AccountManager) context.getSystemService(
-                        ACCOUNT_SERVICE);
+//        AccountManager accountManager = (AccountManager) context.getSystemService(ACCOUNT_SERVICE);
+        AccountManager accountManager = AccountManager.get(this);
         /*
          * Add the account and account type, no password or user data
          * If successful, return the Account object, otherwise report an error.
          */
-        if (accountManager.addAccountExplicitly(newAccount, null, null))
+        Account[] accounts = accountManager.getAccountsByType(accountType);
+        if (accounts.length == 0)
         {
-            /*
-             * If you don't set android:syncable="true" in
-             * in your <provider> element in the manifest,
-             * then call context.setIsSyncable(account, AUTHORITY, 1)
-             * here.
-             */
+            boolean ret = false;
+            ret = accountManager.addAccountExplicitly(newAccount, null, null);
         }
         else
         {
-            /*
-             * The account exists or some other error occurred. Log this, report it,
-             * or handle it internally.
-             */
-            Log.d(LOG_TAG, "Error creating account");
-            return null;
+            return accounts[0];
         }
+
+//        if (ret)
+//        {
+//            /*
+//             * If you don't set android:syncable="true" in
+//             * in your <provider> element in the manifest,
+//             * then call context.setIsSyncable(account, AUTHORITY, 1)
+//             * here.
+//             */
+//        }
+//        else
+//        {
+//            /*
+//             * The account exists or some other error occurred. Log this, report it,
+//             * or handle it internally.
+//             */
+//            Log.d(LOG_TAG, "Error creating account");
+//            return null;
+//        }
 
         return newAccount;
     }

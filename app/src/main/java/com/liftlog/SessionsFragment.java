@@ -20,7 +20,7 @@ import android.widget.Toast;
 import java.util.Collections;
 import java.util.List;
 
-import wierzba.james.liftlog.R;
+import com.liftlog.R;
 
 import com.liftlog.data.DataAccessObject;
 import com.liftlog.components.DateInputDialog;

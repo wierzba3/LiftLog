@@ -2,7 +2,7 @@
 <sync-adapter
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:contentAuthority="com.liftlog.data.provider"
-    android:accountType="liftlog.com"
+    android:accountType="@string/accountType"
     android:userVisible="false"
     android:supportsUploading="false"
     android:allowParallelSyncs="false"
