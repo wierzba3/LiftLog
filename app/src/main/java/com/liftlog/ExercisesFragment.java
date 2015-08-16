@@ -25,7 +25,6 @@ import java.util.Map;
 
 import com.liftlog.R;
 
-import com.liftlog.backend.myApi.model.MyBean;
 import com.liftlog.data.DataAccessObject;
 import com.liftlog.components.ExerciseInputDialog;
 import com.liftlog.models.Exercise;
@@ -51,7 +50,7 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
 //        setContentView(R.layout.activity_browse_exercises);
         View view = inflater.inflate(R.layout.fragment_exercises, container, false);
 
-        dao = new DataAccessObject(super.getActivity());MyBean b;
+        dao =  new DataAccessObject(super.getActivity());
 
         createContents(view);
         loadExercises();
@@ -107,6 +106,7 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
         Exercise dummyExercise = new Exercise();
         dummyExercise.setId(-1);
         dummyExercise.setName("<Add New>");
+        dummyExercise.setState(DataAccessObject.RecordState.UNCHANGED);
         exerciseList.add(dummyExercise);
         Collections.sort(exerciseList, Exercise.byNameDummyFirst);
 
@@ -120,7 +120,7 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
 
         Exercise exercise = new Exercise();
         exercise.setId(id);
-
+        exercise.setState(DataAccessObject.RecordState.NEW);
         ExerciseInputDialog dialog = ExerciseInputDialog.newInstance(exercise);
         dialog.setTargetFragment(this, ExerciseInputDialog.RequestType.DEFAULT.getValue());
         dialog.show(getFragmentManager().beginTransaction(), "ExerciseInputDialog");

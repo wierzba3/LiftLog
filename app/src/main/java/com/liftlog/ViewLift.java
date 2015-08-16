@@ -156,6 +156,7 @@ public class ViewLift extends AppCompatActivity implements ExerciseInputDialog.E
     {
         Exercise exercise = new Exercise();
         exercise.setId(-1);
+        exercise.setState(DataAccessObject.RecordState.NEW);
 
         ExerciseInputDialog dialog = ExerciseInputDialog.newInstance(exercise);
 //        dialog.setTargetFragment(this, ExerciseInputDialog.RequestType.DEFAULT.getValue());
@@ -266,6 +267,7 @@ public class ViewLift extends AppCompatActivity implements ExerciseInputDialog.E
         lift.setSets(sets);
         lift.setReps(reps);
         lift.setWarmup(false);
+        lift.setState(DataAccessObject.RecordState.NEW);
 
         if(liftId == -1)
         {
