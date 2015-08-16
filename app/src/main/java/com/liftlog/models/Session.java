@@ -1,7 +1,7 @@
 package com.liftlog.models;
 
+import com.liftlog.backend.myApi.model.SessionAPI;
 import com.liftlog.data.DataAccessObject;
-import com.liftlog.models.Lift;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -175,5 +175,21 @@ public class Session
         }
     }
 
+    @Override
+    public boolean equals(Object o)
+    {
+        if(o == null) return false;
+        if(o instanceof Session)
+        {
+            Session that = (Session)o;
+            return id == that.getId();
+        }
+        else if(o instanceof SessionAPI)
+        {
+            SessionAPI that = (SessionAPI)o;
+            return id == that.getId();
+        }
+        else return false;
+    }
 
 }

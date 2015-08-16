@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.liftlog.backend.myApi.model.ExerciseAPI;
 import com.liftlog.models.Lift;
 import com.liftlog.models.Exercise;
 import com.liftlog.models.Session;
@@ -30,7 +31,8 @@ public class DataAccessObject extends SQLiteOpenHelper
 
         UNCHANGED(0),
         MODIFIED(1),
-        DELETED(2)
+        DELETED(2),
+        NEW(3)
         ;
 
         RecordState(int value)
@@ -58,7 +60,7 @@ public class DataAccessObject extends SQLiteOpenHelper
     }
 
 
-    public static final String DB_NAME = "liftlog";
+    public static final String DB_NAME = "Liftlog.db";
 
     public static final String LIFT_TABLE_NAME = "lifts";
     public static final String LIFT_COLUMN_PK = "id";
@@ -121,16 +123,26 @@ public class DataAccessObject extends SQLiteOpenHelper
                     + EXERCISE_COLUMN_NAME + " TEXT, "
                     + EXERCISE_COLUMN_DESCRIPTION + " TEXT, "
                     + EXERCISE_COLUMN_VALID + " INTEGER DEFAULT 1, "
-                    + EXERCISE_COLUMN_DATE + " INTEGER"
+                    + EXERCISE_COLUMN_DATE + " INTEGER, "
                     + EXERCISE_COLUMN_STATE + " INTEGER"
                     + ")";
 
 
     private static final String LOG_TAG = "LiftLog";
 
+//    private static DataAccessObject instance;
+//    public synchronized static DataAccessObject getInstance(Context context)
+//    {
+//        if(instance == null)
+//        {
+//            instance = new DataAccessObject(context);
+//        }
+//        return instance;
+//    }
+
     public DataAccessObject(Context context)
     {
-        super(context, DB_NAME, null, 18);
+        super(context, DB_NAME, null, 21);
     }
 
     @Override
@@ -203,6 +215,22 @@ public class DataAccessObject extends SQLiteOpenHelper
         values.put(EXERCISE_COLUMN_VALID, exercise.isValid() ? 1 : 0);
         values.put(EXERCISE_COLUMN_DATE, System.currentTimeMillis());
         values.put(EXERCISE_COLUMN_STATE, exercise.getState().getValue());
+        long id = db.insert(EXERCISE_TABLE_NAME, null, values);
+        return id;
+    }
+
+    public long insert(ExerciseAPI exercise)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return insert(db, exercise);
+    }
+
+    public long insert(SQLiteDatabase db, ExerciseAPI exercise)
+    {
+        ContentValues values = new ContentValues();
+        values.put(EXERCISE_COLUMN_NAME, exercise.getName());
+        values.put(EXERCISE_COLUMN_DESCRIPTION, exercise.getDescription());
+        values.put(EXERCISE_COLUMN_DATE, System.currentTimeMillis());
         long id = db.insert(EXERCISE_TABLE_NAME, null, values);
         return id;
     }
@@ -488,8 +516,7 @@ public class DataAccessObject extends SQLiteOpenHelper
                 "b." + LIFT_COLUMN_DATE_CREATED + ", " +
                 "b." + LIFT_COLUMN_WARMUP + ", " +
                 "b." + LIFT_COLUMN_STATE + ", " +
-                "a." + SESSION_COLUMN_DATE + //" as " + sessionDateAlias +
-                "" +
+                "a." + SESSION_COLUMN_DATE + ", " +
                 " FROM " + SESSION_TABLE_NAME + " as a," + LIFT_TABLE_NAME + " as b" +
                 " WHERE a." + SESSION_COLUMN_PK + " = b." + LIFT_COLUMN_SESSION_FK +
                 " AND a." + SESSION_COLUMN_PK + " = " + id;
@@ -679,6 +706,7 @@ public class DataAccessObject extends SQLiteOpenHelper
         for (int i = 0; i < 10; i++)
         {
             Session session = new Session();
+            session.setState(RecordState.NEW);
             session.setDate(System.currentTimeMillis() - (millisPerDay * i));
             insert(session);
         }
@@ -693,6 +721,7 @@ public class DataAccessObject extends SQLiteOpenHelper
         for (long i = 0; i < 20; i++)
         {
             Lift lift = new Lift();
+            lift.setState(RecordState.UNCHANGED);
             lift.setSessionId(3l);
             lift.setExerciseId(i);
             lift.setWeight(315);

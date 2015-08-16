@@ -1,5 +1,6 @@
 package com.liftlog.models;
 
+import com.liftlog.backend.myApi.model.LiftAPI;
 import com.liftlog.data.DataAccessObject;
 
 /**
@@ -183,6 +184,23 @@ public class Lift implements Comparable<Lift> {
         if(id == -1) return "< Add Lift >";
 //        Exercise exercise = DataAccessObject.exerciseMap.get(exerciseId);
         return (exerciseName != null ? exerciseName : "?") + " " + weight + " x " + reps + " x " + sets;
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if(o == null) return false;
+        if(o instanceof Lift)
+        {
+            Lift that = (Lift)o;
+            return id == that.getId();
+        }
+        else if(o instanceof LiftAPI)
+        {
+            LiftAPI that = (LiftAPI)o;
+            return id == that.getId();
+        }
+        else return false;
     }
 
 

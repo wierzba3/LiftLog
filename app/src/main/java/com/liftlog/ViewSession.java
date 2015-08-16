@@ -127,6 +127,7 @@ public class ViewSession extends AppCompatActivity
 
         //dummy lift for < Add New > option
         Lift emptyLift = new Lift();
+        emptyLift.setState(DataAccessObject.RecordState.UNCHANGED);
         emptyLift.setId(-1);
         lifts.add(0, emptyLift);
 

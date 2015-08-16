@@ -1,5 +1,6 @@
 package com.liftlog.models;
 
+import com.liftlog.backend.myApi.model.ExerciseAPI;
 import com.liftlog.data.DataAccessObject;
 
 import java.util.Comparator;
@@ -146,6 +147,21 @@ public class Exercise {
         return name;
     }
 
-
+    @Override
+    public boolean equals(Object o)
+    {
+        if(o == null) return false;
+        if(o instanceof Exercise)
+        {
+            Exercise that = (Exercise)o;
+            return id == that.getId();
+        }
+        else if(o instanceof ExerciseAPI)
+        {
+            ExerciseAPI that = (ExerciseAPI)o;
+            return id == that.getId();
+        }
+        else return false;
+    }
 
 }

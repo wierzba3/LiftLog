@@ -111,6 +111,7 @@ public class SessionsFragment extends Fragment implements  DateInputDialog.DateI
         Collections.sort(sessions, Session.byDateDesc);
 
         Session dummySession = new Session();
+        dummySession.setState(DataAccessObject.RecordState.UNCHANGED);
         dummySession.setId(-1);
         sessions.add(0, dummySession);
 
@@ -168,6 +169,7 @@ public class SessionsFragment extends Fragment implements  DateInputDialog.DateI
     public void onDialogSaveClick(DialogFragment dialog, long date)
     {
         Session session = new Session();
+        session.setState(DataAccessObject.RecordState.NEW);
         long sessionId;
         session.setDate(date);
         sessionId = dao.insert(session);
