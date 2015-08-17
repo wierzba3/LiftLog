@@ -113,15 +113,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
     }
 
 
-
-    //remote db exercise table/column names
-    public static final String EXERCISE_REMOTE_TABLE_NAME = "exercises";
-    public static final String EXERCISE_REMOTE_COLUMN_USERNAME = "username";
-    public static final String EXERCISE_REMOTE_COLUMN_PK = "id";
-    public static final String EXERCISE_REMOTE_COLUMN_NAME = "name";
-    public static final String EXERCISE_REMOTE_COLUMN_DESCRIPTION = "description";
-    public static final String EXERCISE_REMOTE_COLUMN_VALID = "valid";
-    public static final String EXERCISE_REMOTE_COLUMN_DATE = "date_created";
     private void syncExercises(Connection conn)
     {
         Map<Long, Exercise> localExercises = dao.selectExercises();
@@ -148,33 +139,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
 
         //TODO update remote db with the modified, new, and deleted exercises
 
-        String qry = "SELECT * FROM exercises WHERE username = 'jamesmw129@gmail.com'";
-        try
-        {
 
-            ResultSet rs = conn.createStatement().executeQuery(qry);
-
-            boolean hasNext = rs.first();
-            if(hasNext) Log.d(LOG_TAG, "empty");
-            while(hasNext)
-            {
-                //TODO
-                long id;
-                String name;
-                String desc;
-                int valid;
-                long dateCreated;
-
-                
-
-                hasNext = rs.next();
-            }
-
-        } catch (SQLException e)
-        {
-            Log.d(LOG_TAG, "SQLException: " + e.getMessage());
-            return;
-        }
     }
 
 
