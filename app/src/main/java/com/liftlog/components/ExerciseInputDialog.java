@@ -81,11 +81,10 @@ public class ExerciseInputDialog extends DialogFragment
                 String name = txtName.getText().toString();
                 String desc = txtDesc.getText().toString();
 
-                if (currentExercise == null) currentExercise = new Exercise();
+                if (currentExercise == null) currentExercise = new Exercise(DataAccessObject.RecordState.MODIFIED);
                 currentExercise.setId(exerciseId);
                 currentExercise.setName(name);
                 currentExercise.setDescription(desc);
-                currentExercise.setState(DataAccessObject.RecordState.MODIFIED);
 
                 mListener.onDialogSaveClick(ExerciseInputDialog.this, currentExercise);
             }
@@ -106,11 +105,10 @@ public class ExerciseInputDialog extends DialogFragment
                     String name = txtName.getText().toString();
                     String desc = txtDesc.getText().toString();
 
-                    if (currentExercise == null) currentExercise = new Exercise();
+                    if (currentExercise == null) currentExercise = new Exercise(DataAccessObject.RecordState.DELETED);
                     currentExercise.setId(exerciseId);
                     currentExercise.setName(name);
                     currentExercise.setDescription(desc);
-                    currentExercise.setState(DataAccessObject.RecordState.DELETED);
 
                     mListener.onDialogDeleteClick(ExerciseInputDialog.this, currentExercise);
                 }

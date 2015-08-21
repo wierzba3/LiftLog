@@ -16,6 +16,7 @@ import com.liftlog.backend.myApi.MyApi;
 import com.liftlog.backend.myApi.model.ExerciseAPI;
 import com.liftlog.backend.myApi.model.LiftAPI;
 import com.liftlog.backend.myApi.model.SessionAPI;
+import com.liftlog.data.mysql.MySQLController;
 import com.liftlog.models.Exercise;
 import com.liftlog.models.Lift;
 import com.liftlog.models.Session;
@@ -74,7 +75,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult)
     {
-        Log.d(LOG_TAG, "hello from onPerformSync");
+        Log.d(LOG_TAG, "HI from onPerformSync");
         //TODO sync to database server
 
         try
@@ -94,7 +95,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
             conn = DriverManager.getConnection("jdbc:mysql://sql5.freesqldatabase.com/sql586870?" + "user=sql586870&password=kS8*lJ8!");
 
             // Do something with the Connection
-            System.out.println("success");
+            Log.d(LOG_TAG, "success connecting");
 
         }
         catch (SQLException ex)
@@ -103,7 +104,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
             return;
         }
 
-        syncExercises(conn);
+        syncExercises(conn, "jamesmw129@gmail.com");
 
 
 
@@ -113,7 +114,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
     }
 
 
-    private void syncExercises(Connection conn)
+    private void syncExercises(Connection conn, String username)
     {
         Map<Long, Exercise> localExercises = dao.selectExercises();
 
@@ -138,7 +139,17 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
         }
 
         //TODO update remote db with the modified, new, and deleted exercises
-
+        Map<Long, Exercise> remoteExercises = MySQLController.selectExercises(conn, username);
+        for(long id : remoteExercises.keySet())
+        {
+            //if the local database does not contain the remote exercise
+            if(!localExercises.containsKey(id))
+            {
+                Log.d(LOG_TAG, "inserting exercise from remote db: " + remoteExercises.get(id).getName());
+                long newId = dao.insert(remoteExercises.get(id));
+                Log.d(LOG_TAG, "inserted exercise: " + id);
+            }
+        }
 
     }
 

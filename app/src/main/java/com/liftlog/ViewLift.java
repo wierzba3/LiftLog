@@ -154,9 +154,8 @@ public class ViewLift extends AppCompatActivity implements ExerciseInputDialog.E
      */
     public void doNewExercise(View view)
     {
-        Exercise exercise = new Exercise();
+        Exercise exercise = new Exercise(DataAccessObject.RecordState.NEW);
         exercise.setId(-1);
-        exercise.setState(DataAccessObject.RecordState.NEW);
 
         ExerciseInputDialog dialog = ExerciseInputDialog.newInstance(exercise);
 //        dialog.setTargetFragment(this, ExerciseInputDialog.RequestType.DEFAULT.getValue());
