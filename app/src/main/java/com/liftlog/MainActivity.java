@@ -96,13 +96,14 @@ public class MainActivity extends AppCompatActivity
 
         Log.d(LOG_TAG, "test");
         mResolver = getContentResolver();
-        ContentResolver.setSyncAutomatically(mAccount, AUTHORITY, true);
-        ContentResolver.addPeriodicSync(
-                mAccount,
-                AUTHORITY,
-                Bundle.EMPTY,
-                2
-        );
+
+//        ContentResolver.setSyncAutomatically(mAccount, AUTHORITY, true);
+//        ContentResolver.addPeriodicSync(
+//                mAccount,
+//                AUTHORITY,
+//                Bundle.EMPTY,
+//                2
+//        );
         ContentResolver.requestSync(mAccount, AUTHORITY, Bundle.EMPTY);
 
     }

@@ -32,7 +32,8 @@ public class DataAccessObject extends SQLiteOpenHelper
         UNCHANGED(0),
         MODIFIED(1),
         DELETED(2),
-        NEW(3)
+        NEW(3),
+        UNKNOWN(4);
         ;
 
         RecordState(int value)
@@ -201,6 +202,7 @@ public class DataAccessObject extends SQLiteOpenHelper
         return id;
     }
 
+
     public long insert(Exercise exercise)
     {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -210,11 +212,15 @@ public class DataAccessObject extends SQLiteOpenHelper
     public long insert(SQLiteDatabase db, Exercise exercise)
     {
         ContentValues values = new ContentValues();
+        if(exercise.getId() > 0)
+        {
+            values.put(EXERCISE_COLUMN_PK, exercise.getId());
+        }
         values.put(EXERCISE_COLUMN_NAME, exercise.getName());
         values.put(EXERCISE_COLUMN_DESCRIPTION, exercise.getDescription());
         values.put(EXERCISE_COLUMN_VALID, exercise.isValid() ? 1 : 0);
         values.put(EXERCISE_COLUMN_DATE, System.currentTimeMillis());
-        values.put(EXERCISE_COLUMN_STATE, exercise.getState().getValue());
+        values.put(EXERCISE_COLUMN_STATE,  exercise.getState().getValue());
         long id = db.insert(EXERCISE_TABLE_NAME, null, values);
         return id;
     }
@@ -305,7 +311,7 @@ public class DataAccessObject extends SQLiteOpenHelper
 
     public Exercise selectExercise(long id)
     {
-        Exercise result = new Exercise();
+        Exercise result = null;
 
         SQLiteDatabase db = this.getReadableDatabase();
         String qry = "SELECT * FROM " + EXERCISE_TABLE_NAME +
@@ -322,11 +328,11 @@ public class DataAccessObject extends SQLiteOpenHelper
         int valid = cursor.getInt(cursor.getColumnIndex(EXERCISE_COLUMN_VALID));
         RecordState state = RecordState.fromValue(cursor.getInt(cursor.getColumnIndex(EXERCISE_COLUMN_STATE)));
 
+        result = new Exercise(state);
         result.setId(id);
         result.setName(name);
         result.setValid(valid == 1 ? true : false);
         result.setDescription(desc);
-        result.setState(state);
 
         return result;
     }
@@ -353,7 +359,6 @@ public class DataAccessObject extends SQLiteOpenHelper
         boolean hasNext = cursor.moveToFirst();
         while (hasNext)
         {
-            Exercise exercise = new Exercise();
 
             long id = cursor.getLong(cursor.getColumnIndex(EXERCISE_COLUMN_PK));
             String name = cursor.getString(cursor.getColumnIndex(EXERCISE_COLUMN_NAME));
@@ -361,11 +366,11 @@ public class DataAccessObject extends SQLiteOpenHelper
             int valid = cursor.getInt(cursor.getColumnIndex(EXERCISE_COLUMN_VALID));
             RecordState state = RecordState.fromValue(cursor.getInt(cursor.getColumnIndex(EXERCISE_COLUMN_STATE)));
 
+            Exercise exercise = new Exercise(state);
             exercise.setId(id);
             exercise.setName(name);
             exercise.setValid(valid == 1 ? true : false);
             exercise.setDescription(desc);
-            exercise.setState(state);
 
             result.put(id, exercise);
 
@@ -516,7 +521,7 @@ public class DataAccessObject extends SQLiteOpenHelper
                 "b." + LIFT_COLUMN_DATE_CREATED + ", " +
                 "b." + LIFT_COLUMN_WARMUP + ", " +
                 "b." + LIFT_COLUMN_STATE + ", " +
-                "a." + SESSION_COLUMN_DATE + ", " +
+                "a." + SESSION_COLUMN_DATE  +
                 " FROM " + SESSION_TABLE_NAME + " as a," + LIFT_TABLE_NAME + " as b" +
                 " WHERE a." + SESSION_COLUMN_PK + " = b." + LIFT_COLUMN_SESSION_FK +
                 " AND a." + SESSION_COLUMN_PK + " = " + id;

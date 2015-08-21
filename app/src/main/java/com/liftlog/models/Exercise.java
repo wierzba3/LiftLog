@@ -11,9 +11,9 @@ import java.util.Comparator;
 public class Exercise {
 
 
-    public Exercise()
+    public Exercise(DataAccessObject.RecordState state)
     {
-
+        this.state = state;
     }
 
     public Exercise(long id, String name, String description){

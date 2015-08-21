@@ -34,12 +34,21 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="com.liftlog.ViewSession"
+            android:label="View Session" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.liftlog.MainActivity"
+                />
+        </activity>
+        <activity
             android:name="com.liftlog.ViewLift"
             android:label="@string/title_activity_add_lift"
             android:parentActivityName="com.liftlog.ViewSession" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.liftlog.MainActivity" />
+                android:value="com.liftlog.MainActivity"
+                />
         </activity>
 
         <service

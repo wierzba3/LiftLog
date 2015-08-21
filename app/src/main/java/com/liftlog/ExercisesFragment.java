@@ -103,7 +103,7 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
         }
 
         List<Exercise> exerciseList = new ArrayList<>(exercises.values());
-        Exercise dummyExercise = new Exercise();
+        Exercise dummyExercise = new Exercise(DataAccessObject.RecordState.UNKNOWN);
         dummyExercise.setId(-1);
         dummyExercise.setName("<Add New>");
         dummyExercise.setState(DataAccessObject.RecordState.UNCHANGED);
@@ -118,9 +118,8 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
     private void doAdd(long id)
     {
 
-        Exercise exercise = new Exercise();
+        Exercise exercise = new Exercise(DataAccessObject.RecordState.NEW);
         exercise.setId(id);
-        exercise.setState(DataAccessObject.RecordState.NEW);
         ExerciseInputDialog dialog = ExerciseInputDialog.newInstance(exercise);
         dialog.setTargetFragment(this, ExerciseInputDialog.RequestType.DEFAULT.getValue());
         dialog.show(getFragmentManager().beginTransaction(), "ExerciseInputDialog");

@@ -20,8 +20,8 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:appcompat-v7:22.2.0'
     compile project(path: ':liftlog backend', configuration: 'android-endpoints')
-    compile files('libs/mysql-connector-java-5.0.8-bin.jar')
+    compile files('libs/com.mysql.jdbc_5.1.5.jar')
 }

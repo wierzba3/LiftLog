@@ -2,13 +2,16 @@ package com.liftlog.data.mysql;
 
 import android.util.Log;
 
+import com.liftlog.data.DataAccessObject;
 import com.liftlog.models.Exercise;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by James Wierzba on 8/16/15.
@@ -28,9 +31,9 @@ public class MySQLController
     public static final String EXERCISE_REMOTE_COLUMN_VALID = "valid";
     public static final String EXERCISE_REMOTE_COLUMN_DATE = "date_created";
 
-    public static List<Exercise> selectExercises(Connection conn, String username)
+    public static Map<Long, Exercise> selectExercises(Connection conn, String username)
     {
-        List<Exercise> result = new ArrayList<Exercise>();
+        Map<Long, Exercise> result = new HashMap<Long, Exercise>();
 
         String qry = "SELECT * FROM exercises WHERE username = '" + username + "'";
         try
@@ -42,14 +45,18 @@ public class MySQLController
             if(hasNext) Log.d(LOG_TAG, "empty");
             while(hasNext)
             {
-                //TODO
-                long id;
-                String name;
-                String desc;
-                int valid;
-                long dateCreated;
+                long id = rs.getLong(rs.findColumn(EXERCISE_REMOTE_COLUMN_PK));
+                String name = rs.getString(rs.findColumn(EXERCISE_REMOTE_COLUMN_NAME));
+                String desc = rs.getString(rs.findColumn(EXERCISE_REMOTE_COLUMN_DESCRIPTION));
+                int valid = rs.getInt(rs.findColumn(EXERCISE_REMOTE_COLUMN_VALID));
+                long dateCreated  = rs.getLong(rs.findColumn(EXERCISE_REMOTE_COLUMN_DATE));
 
-
+                Exercise exercise = new Exercise(DataAccessObject.RecordState.UNCHANGED);
+                exercise.setId(id);
+                exercise.setName(name);
+                exercise.setDescription(desc);
+                exercise.setValid(valid == 1 ? true : false);
+                result.put(id, exercise);
 
                 hasNext = rs.next();
             }
