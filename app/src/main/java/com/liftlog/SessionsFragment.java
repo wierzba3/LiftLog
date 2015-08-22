@@ -110,7 +110,7 @@ public class SessionsFragment extends Fragment implements  DateInputDialog.DateI
         Session.computeDuplicateDays(sessions);
         Collections.sort(sessions, Session.byDateDesc);
 
-        Session dummySession = new Session();
+        Session dummySession = new Session(DataAccessObject.RecordState.UNKNOWN);
         dummySession.setState(DataAccessObject.RecordState.UNCHANGED);
         dummySession.setId(-1);
         sessions.add(0, dummySession);
@@ -168,8 +168,7 @@ public class SessionsFragment extends Fragment implements  DateInputDialog.DateI
     @Override
     public void onDialogSaveClick(DialogFragment dialog, long date)
     {
-        Session session = new Session();
-        session.setState(DataAccessObject.RecordState.NEW);
+        Session session = new Session(DataAccessObject.RecordState.NEW);
         long sessionId;
         session.setDate(date);
         sessionId = dao.insert(session);

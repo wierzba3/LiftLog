@@ -18,8 +18,9 @@ import java.util.Map;
 public class Session
 {
 
-    public Session()
+    public Session(DataAccessObject.RecordState state)
     {
+        this.state = state;
         lifts = new ArrayList<Lift>();
     }
 
@@ -29,7 +30,7 @@ public class Session
     private DataAccessObject.RecordState state;
     /**
      * This variable having a value greater than 1 indicates that this is the i'th instance of session that has the same date.
-     * (Same day of year, not same millisecond value.
+     * (Same day of year, not same millisecond value.)
      */
     private int sequenceNum;
 
