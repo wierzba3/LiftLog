@@ -110,7 +110,14 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
 
 
 
-
+        try
+        {
+            conn.close();
+        }
+        catch(SQLException e)
+        {
+            Log.d(LOG_TAG, "Error closing mysql connection.");
+        }
     }
 
 
@@ -118,22 +125,36 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
     {
         Map<Long, Exercise> localExercises = dao.selectExercises();
 
-        List<Exercise> newlyAddedExercises = new ArrayList<Exercise>();
-        List<Exercise> modifiedExercises = new ArrayList<Exercise>();
-        List<Exercise> deletedExercises = new ArrayList<Exercise>();
+//        List<Exercise> newlyAddedExercises = new ArrayList<Exercise>();
+//        List<Exercise> modifiedExercises = new ArrayList<Exercise>();
+//        List<Exercise> deletedExercises = new ArrayList<Exercise>();
 
         for(Exercise localExercise : localExercises.values())
         {
             switch(localExercise.getState())
             {
                 case NEW:
-                    newlyAddedExercises.add(localExercise);
+                    //insert the exercise into the remote database
+//                    newlyAddedExercises.add(localExercise);
+                    try
+                    {
+                        Log.d(LOG_TAG, "trying to insert new exercise from local: " + localExercise.getName());
+                        MySQLController.insert(conn, username, localExercise);
+                    }catch(SQLException ex)
+                    {
+                        Log.d(LOG_TAG, "error inserting exercise into remote db: " + ex.getMessage());
+                        break;
+                    }
+                    //mark the local record as up-to-date
+                    Log.d(LOG_TAG, "successfully insert local exercise into remote db");
+                    localExercise.setState(DataAccessObject.RecordState.UNCHANGED);
+                    dao.update(localExercise);
                     break;
                 case MODIFIED:
-                    modifiedExercises.add(localExercise);
+//                    modifiedExercises.add(localExercise);
                     break;
                 case DELETED:
-                    deletedExercises.add(localExercise);
+//                    deletedExercises.add(localExercise);
                     break;
             }
         }

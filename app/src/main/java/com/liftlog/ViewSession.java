@@ -126,7 +126,7 @@ public class ViewSession extends AppCompatActivity
         Collections.sort(lifts);
 
         //dummy lift for < Add New > option
-        Lift emptyLift = new Lift();
+        Lift emptyLift = new Lift(DataAccessObject.RecordState.UNKNOWN);
         emptyLift.setState(DataAccessObject.RecordState.UNCHANGED);
         emptyLift.setId(-1);
         lifts.add(0, emptyLift);

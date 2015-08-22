@@ -400,7 +400,7 @@ public class DataAccessObject extends SQLiteOpenHelper
         boolean hasNext = true;
         while (hasNext)
         {
-            Lift lift = new Lift();
+
 
             long id = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_PK));
             long exerciseId = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_EXERCISE_FK));
@@ -412,6 +412,7 @@ public class DataAccessObject extends SQLiteOpenHelper
             RecordState state = RecordState.fromValue(cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_STATE)));
             long dateCreated = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_DATE_CREATED));
 
+            Lift lift = new Lift(state);
             lift.setId(id);
             lift.setExerciseId(exerciseId);
             lift.setSessionId(sessionId);
@@ -420,7 +421,6 @@ public class DataAccessObject extends SQLiteOpenHelper
             lift.setReps(reps);
             lift.setWarmup(warmup == 1 ? true : false);
             lift.setDateCreated(dateCreated);
-            lift.setState(state);
 
             hasNext = cursor.moveToNext();
         }
@@ -475,14 +475,14 @@ public class DataAccessObject extends SQLiteOpenHelper
         boolean hasNext = true;
         while (hasNext)
         {
-            Session session = new Session();
+
             long id = cursor.getInt(cursor.getColumnIndex(SESSION_COLUMN_PK));
             long date = cursor.getLong(cursor.getColumnIndex(SESSION_COLUMN_DATE));
             RecordState state = RecordState.fromValue(cursor.getInt(cursor.getColumnIndex(SESSION_COLUMN_STATE)));
 
+            Session session = new Session(state);
             session.setId(id);
             session.setDate(date);
-            session.setState(state);
 
             result.add(session);
 
@@ -503,13 +503,14 @@ public class DataAccessObject extends SQLiteOpenHelper
         }
 
         cursorSession.moveToFirst();
-        Session result = new Session();
-        result.setId(id);
+
+
         long date = cursorSession.getLong(cursorSession.getColumnIndex(SESSION_COLUMN_DATE));
         RecordState state = RecordState.fromValue(cursorSession.getInt(cursorSession.getColumnIndex(SESSION_COLUMN_STATE)));
 
+        Session result = new Session(state);
+        result.setId(id);
         result.setDate(date);
-        result.setState(state);
 
         String qryLifts = "SELECT " +
                 "b." + LIFT_COLUMN_PK + ", " +
@@ -540,7 +541,7 @@ public class DataAccessObject extends SQLiteOpenHelper
         while (hasNext)
         {
 
-            Lift lift = new Lift();
+
 
             long liftId = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_PK));
             long exerciseId = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_EXERCISE_FK));
@@ -552,6 +553,7 @@ public class DataAccessObject extends SQLiteOpenHelper
             long dateCreated = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_DATE_CREATED));
             RecordState liftState = RecordState.fromValue(cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_STATE)));
 
+            Lift lift = new Lift(liftState);
             lift.setId(liftId);
             lift.setExerciseId(exerciseId);
             lift.setSessionId(sessionId);
@@ -560,7 +562,6 @@ public class DataAccessObject extends SQLiteOpenHelper
             lift.setSets(sets);
             lift.setWarmup(warmup == 1 ? true : false);
             lift.setDateCreated(dateCreated);
-            lift.setState(liftState);
 
             result.getLifts().add(lift);
 
@@ -580,7 +581,7 @@ public class DataAccessObject extends SQLiteOpenHelper
 
     public Lift selectLift(long id)
     {
-        Lift result = new Lift();
+
 
         SQLiteDatabase db = this.getReadableDatabase();
         String qry = "SELECT * FROM " + LIFT_TABLE_NAME +
@@ -602,6 +603,7 @@ public class DataAccessObject extends SQLiteOpenHelper
         long dateCreated = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_DATE_CREATED));
         RecordState state = RecordState.fromValue(cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_STATE)));
 
+        Lift result = new Lift(state);
         result.setId(id);
         result.setExerciseId(exerciseId);
         result.setSessionId(sessionId);
@@ -610,7 +612,6 @@ public class DataAccessObject extends SQLiteOpenHelper
         result.setReps(reps);
         result.setWarmup(warmup == 1 ? true : false);
         result.setDateCreated(dateCreated);
-        result.setState(state);
 
         return result;
     }
@@ -710,7 +711,7 @@ public class DataAccessObject extends SQLiteOpenHelper
         final long millisPerDay = 86400000;
         for (int i = 0; i < 10; i++)
         {
-            Session session = new Session();
+            Session session = new Session(RecordState.UNKNOWN);
             session.setState(RecordState.NEW);
             session.setDate(System.currentTimeMillis() - (millisPerDay * i));
             insert(session);
@@ -725,7 +726,7 @@ public class DataAccessObject extends SQLiteOpenHelper
 
         for (long i = 0; i < 20; i++)
         {
-            Lift lift = new Lift();
+            Lift lift = new Lift(RecordState.UNKNOWN);
             lift.setState(RecordState.UNCHANGED);
             lift.setSessionId(3l);
             lift.setExerciseId(i);

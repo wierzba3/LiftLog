@@ -70,6 +70,53 @@ public class MySQLController
         return result;
     }
 
+    public static boolean deleteExercise(Connection conn, String username, long id) throws SQLException
+    {
+        String qry = "DELETE FROM "
+                + EXERCISE_REMOTE_TABLE_NAME
+                + " WHERE "
+                + EXERCISE_REMOTE_COLUMN_PK + " = " + id
+                + " AND " + EXERCISE_REMOTE_COLUMN_USERNAME + " = '" + username + "'";
+
+        return conn.createStatement().execute(qry);
+    }
+
+    public static boolean insert(Connection conn, String username, Exercise exercise) throws SQLException
+    {
+        long id = exercise.getId();
+        String name = exercise.getName();
+        String desc = exercise.getDescription();
+        int valid = exercise.isValid() ? 1 : 0;
+        long date = System.currentTimeMillis();
+
+        String qry = "INSERT INTO " + EXERCISE_REMOTE_TABLE_NAME
+                + "("
+                + EXERCISE_REMOTE_COLUMN_USERNAME + ","
+                + EXERCISE_REMOTE_COLUMN_PK + ","
+                + EXERCISE_REMOTE_COLUMN_NAME + ","
+                + EXERCISE_REMOTE_COLUMN_DESCRIPTION + ","
+                + EXERCISE_REMOTE_COLUMN_VALID + ","
+                + EXERCISE_REMOTE_COLUMN_DATE
+                + ") "
+                + " VALUES ("
+                + "'" + username + "',"
+                + id + ","
+                + "'" + name + "',"
+                + "'" + desc + "',"
+                + valid + ","
+                + date
+                + ")";
+        return conn.createStatement().execute(qry);
+    }
+
+    public static boolean update(Connection conn, String username, Exercise exercise) throws SQLException
+    {
+        String qry = "";
+        //TODO
+        return conn.createStatement().execute(qry);
+    }
+
+
 
 
 }

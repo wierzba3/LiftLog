@@ -9,9 +9,9 @@ import com.liftlog.data.DataAccessObject;
 public class Lift implements Comparable<Lift> {
 
 
-    public Lift()
+    public Lift(DataAccessObject.RecordState state)
     {
-
+        this.state = state;
     }
 
     public enum Unit

@@ -23,19 +23,13 @@ import com.liftlog.R;
 /**
  * TODO
  * BUGS:
- * - SyncAdapter onPerformSync is trying to call the API that pulls from local mysql instance, to get a list of bean objects from the mysql database
- *      to sync with the local database
- *      Something is not working because the bean object list getting returned is null. I think there is an issue with an ip address
  *
  *
  *
  *
  * Implement now:
- * - Implement Sync Adapter ( need to set-up data schema in google cloud sql database first...)
- *      Set up all the stub classes. Next: execute the SyncAdapter  https://developer.android.com/training/sync-adapters/running-sync-adapter.html
- * - Deploy backend to app engine
- *      https://github.com/GoogleCloudPlatform/gradle-appengine-templates/tree/master/HelloEndpoints section 2.2
- *
+ * - implement Local/Remote database Sync algorithms
+ *      - NEW exercise is completed and working
  * - Group Lifts in Session by the exercise, then after selecting exercise, show the individual lifts.
  * Some tree-like structure?
  * - Decide what to do when the user deletes an exercise that is referenced by 1 or more lifts
