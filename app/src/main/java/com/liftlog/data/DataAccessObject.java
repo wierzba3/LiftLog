@@ -164,7 +164,7 @@ public class DataAccessObject extends SQLiteOpenHelper
         {
             sessions = selectSessions(db, 0, Integer.MAX_VALUE);
             lifts = selectLifts(db);
-            exercises = selectExercises(db);
+            exercises = selectExercises(db, true);
         } catch (Exception ex)
         {
             ex.printStackTrace();
@@ -220,7 +220,7 @@ public class DataAccessObject extends SQLiteOpenHelper
         values.put(EXERCISE_COLUMN_DESCRIPTION, exercise.getDescription());
         values.put(EXERCISE_COLUMN_VALID, exercise.isValid() ? 1 : 0);
         values.put(EXERCISE_COLUMN_DATE, System.currentTimeMillis());
-        values.put(EXERCISE_COLUMN_STATE,  exercise.getState().getValue());
+        values.put(EXERCISE_COLUMN_STATE, exercise.getState().getValue());
         long id = db.insert(EXERCISE_TABLE_NAME, null, values);
         return id;
     }
@@ -338,17 +338,21 @@ public class DataAccessObject extends SQLiteOpenHelper
     }
 
 
-    public Map<Long, Exercise> selectExercises()
+    public Map<Long, Exercise> selectExercises(boolean includeDeleted)
     {
         SQLiteDatabase db = this.getReadableDatabase();
-        return selectExercises(db);
+        return selectExercises(db, includeDeleted);
     }
 
-    public Map<Long, Exercise> selectExercises(SQLiteDatabase db)
+    public Map<Long, Exercise> selectExercises(SQLiteDatabase db, boolean includeDeleted)
     {
 //        ArrayList<Exercise> result = new ArrayList<Exercise>();
         HashMap<Long, Exercise> result = new HashMap<>();
         String qry = "SELECT * FROM " + EXERCISE_TABLE_NAME;
+        if(!includeDeleted)
+        {
+            qry += " WHERE " + EXERCISE_COLUMN_STATE + " != " + RecordState.DELETED.getValue();
+        }
         Cursor cursor = db.rawQuery(qry, null);
 
         if (cursor == null)
@@ -568,7 +572,7 @@ public class DataAccessObject extends SQLiteOpenHelper
             hasNext = cursor.moveToNext();
         }
 
-        Map<Long, Exercise> exercises = selectExercises();
+        Map<Long, Exercise> exercises = selectExercises(false);
         for (Lift lift : result.getLifts())
         {
             long exerciseId = lift.getExerciseId();

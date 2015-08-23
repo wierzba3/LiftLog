@@ -106,13 +106,26 @@ public class MySQLController
                 + valid + ","
                 + date
                 + ")";
+
         return conn.createStatement().execute(qry);
     }
 
     public static boolean update(Connection conn, String username, Exercise exercise) throws SQLException
     {
-        String qry = "";
-        //TODO
+        long id = exercise.getId();
+        String name = exercise.getName();
+        String desc = exercise.getDescription();
+        int valid = exercise.isValid() ? 1 : 0;
+
+        String qry = "UPDATE " + EXERCISE_REMOTE_TABLE_NAME + " SET "
+                + EXERCISE_REMOTE_COLUMN_NAME + " = '" + name + "',"
+                + EXERCISE_REMOTE_COLUMN_DESCRIPTION + " = '" + desc + "',"
+                + EXERCISE_REMOTE_COLUMN_VALID + " = " + valid
+                + " WHERE "
+                + EXERCISE_REMOTE_COLUMN_PK + " = " + id
+                + " AND "
+                + EXERCISE_REMOTE_COLUMN_USERNAME + " = '" + username + "'";
+
         return conn.createStatement().execute(qry);
     }
 

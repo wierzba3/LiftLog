@@ -96,7 +96,7 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
 
     public void loadExercises()
     {
-        Map<Long, Exercise> exercises = dao.selectExercises();
+        Map<Long, Exercise> exercises = dao.selectExercises(false);
         if (exercises == null)
         {
             return;
@@ -252,7 +252,9 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
                     @Override
                     public void onClick(DialogInterface dialog, int which)
                     {
-                        if (!dao.deleteExercise(exercise.getId()))
+                        exercise.setState(DataAccessObject.RecordState.DELETED);
+//                        if (!dao.deleteExercise(exercise.getId()))
+                        if (!dao.update(exercise))
                         {
                             Toast.makeText(ExercisesFragment.super.getActivity(), "Error deleting exercise.", Toast.LENGTH_SHORT).show();
                             Log.d(LOG_TAG, "Error deleting exercise. id=" + exercise.getId() + "\tname=" + exercise.getName());

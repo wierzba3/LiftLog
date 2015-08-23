@@ -5,8 +5,11 @@ import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.database.ContentObserver;
 import android.os.Bundle;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -19,10 +22,14 @@ import android.content.Intent;
 
 import com.liftlog.R;
 
+import android.net.Uri;
+import java.net.URISyntaxException;
+
 
 /**
  * TODO
  * BUGS:
+ * - When doing a sync on app-starup, local database changes does not refresh the Session / Exercise listview. find out how to listen for db changes
  *
  *
  *
@@ -72,7 +79,7 @@ public class MainActivity extends AppCompatActivity
     Account mAccount;
 
     private ContentResolver mResolver;
-
+    private ContentObserver mObserver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -91,7 +98,16 @@ public class MainActivity extends AppCompatActivity
         Log.d(LOG_TAG, "test");
         mResolver = getContentResolver();
 
-//        ContentResolver.setSyncAutomatically(mAccount, AUTHORITY, true);
+        mObserver = new ContentObserver(new Handler(Looper.getMainLooper())) {
+            public void onChange(boolean selfChange)
+            {
+                //TODO notify the fragments that SyncAdapter has completed a sync
+            }
+        };
+
+        Uri uri = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority("com.liftlog").build();
+        getContentResolver().registerContentObserver(uri, false, mObserver);
+        //        ContentResolver.setSyncAutomatically(mAccount, AUTHORITY, true);
 //        ContentResolver.addPeriodicSync(
 //                mAccount,
 //                AUTHORITY,
@@ -99,7 +115,6 @@ public class MainActivity extends AppCompatActivity
 //                2
 //        );
         ContentResolver.requestSync(mAccount, AUTHORITY, Bundle.EMPTY);
-
     }
 
 
@@ -150,9 +165,24 @@ public class MainActivity extends AppCompatActivity
                         "Exercises"
                 };
 
+        private SessionsFragment sessionsFragment;
+        private ExercisesFragment exercisesFragment;
+
         public FragmentPagerAdapter()
         {
             super(getSupportFragmentManager());
+            sessionsFragment = new SessionsFragment();
+            exercisesFragment = new ExercisesFragment();
+        }
+
+        public SessionsFragment getSessionsFragment()
+        {
+            return sessionsFragment;
+        }
+
+        public ExercisesFragment getExercisesFragment()
+        {
+            return exercisesFragment;
         }
 
         @Override
@@ -173,9 +203,9 @@ public class MainActivity extends AppCompatActivity
             switch (position)
             {
                 case 0:
-                    return new SessionsFragment();
+                    return sessionsFragment;
                 case 1:
-                    return new ExercisesFragment();
+                    return exercisesFragment;
                 default:
                     return null;
             }
@@ -232,4 +262,5 @@ public class MainActivity extends AppCompatActivity
 
         return newAccount;
     }
+
 }
