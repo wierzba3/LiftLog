@@ -124,7 +124,7 @@ public class ViewLift extends AppCompatActivity implements ExerciseInputDialog.E
 
     private void loadExercises()
     {
-        exercises = dao.selectExercises();
+        exercises = dao.selectExercises(false);
         if(exercises != null)
         {
             List<Exercise> exerciseList = new ArrayList<>(exercises.values());
