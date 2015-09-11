@@ -44,7 +44,9 @@ public class SessionsFragment extends Fragment implements  DateInputDialog.DateI
         super.onCreate(savedInstanceState);
 //        setContentView(R.layout.activity_browse_sessions);
         View view = inflater.inflate(R.layout.fragment_sessions, container, false);
+
         dao = new DataAccessObject(super.getActivity());
+        //dao.test();
 
         createContents(view);
         loadSessions();
@@ -100,18 +102,19 @@ public class SessionsFragment extends Fragment implements  DateInputDialog.DateI
     }
 
 
-    private void loadSessions()
+    public void loadSessions()
     {
-//            dao.insertDummySessions();
-//        dao.test();
-//        dao.clearSessionsTable();
+        if(super.getActivity() == null)
+        {
+            //TODO figure out why this is returning null. Perhaps implement MainActivity as a singleton?
+            return;
+        }
 
-        List<Session> sessions = dao.selectSessions();
+        List<Session> sessions = dao.selectSessions(false);
         Session.computeDuplicateDays(sessions);
         Collections.sort(sessions, Session.byDateDesc);
 
-        Session dummySession = new Session(DataAccessObject.RecordState.UNKNOWN);
-        dummySession.setState(DataAccessObject.RecordState.UNCHANGED);
+        Session dummySession = new Session();
         dummySession.setId(-1);
         sessions.add(0, dummySession);
 
@@ -168,7 +171,8 @@ public class SessionsFragment extends Fragment implements  DateInputDialog.DateI
     @Override
     public void onDialogSaveClick(DialogFragment dialog, long date)
     {
-        Session session = new Session(DataAccessObject.RecordState.NEW);
+        Session session = new Session();
+        session.setNew(true);
         long sessionId;
         session.setDate(date);
         sessionId = dao.insert(session);

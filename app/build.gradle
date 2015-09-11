@@ -24,4 +24,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:22.2.0'
     compile project(path: ':liftlog backend', configuration: 'android-endpoints')
     compile files('libs/com.mysql.jdbc_5.1.5.jar')
+    compile files('libs/joda-time-2.8.2.jar')
 }

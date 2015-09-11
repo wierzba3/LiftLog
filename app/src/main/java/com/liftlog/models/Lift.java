@@ -3,15 +3,16 @@ package com.liftlog.models;
 import com.liftlog.backend.myApi.model.LiftAPI;
 import com.liftlog.data.DataAccessObject;
 
+import java.util.List;
+
 /**
  * Created by James Wierzba on 2/4/2015.
  */
 public class Lift implements Comparable<Lift> {
 
 
-    public Lift(DataAccessObject.RecordState state)
+    public Lift()
     {
-        this.state = state;
     }
 
     public enum Unit
@@ -30,7 +31,9 @@ public class Lift implements Comparable<Lift> {
     private int reps;
     private boolean isWarmup;
     private long dateCreated;
-    private DataAccessObject.RecordState state;
+    private boolean isNew;
+    private boolean isModified;
+    private boolean isDeleted;
 
     public long getSessionId()
     {
@@ -130,14 +133,34 @@ public class Lift implements Comparable<Lift> {
         this.dateCreated = dateCreated;
     }
 
-    public DataAccessObject.RecordState getState()
+    public boolean isNew()
     {
-        return state;
+        return isNew;
     }
 
-    public void setState(DataAccessObject.RecordState state)
+    public void setNew(boolean isNew)
     {
-        this.state = state;
+        this.isNew = isNew;
+    }
+
+    public boolean isModified()
+    {
+        return isModified;
+    }
+
+    public void setModified(boolean isModified)
+    {
+        this.isModified = isModified;
+    }
+
+    public boolean isDeleted()
+    {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean isDeleted)
+    {
+        this.isDeleted = isDeleted;
     }
 
     //    public long getDate() {
@@ -178,6 +201,25 @@ public class Lift implements Comparable<Lift> {
 //        }
 //    }
 
+    /**
+     * Search the argument list for a lift element whose ID matches the argument id
+     * @param lifts The list of Lifts
+     * @param id The id to search for
+     * @return The Lift that was found, null otherwise
+     */
+    public static Lift findInList(List<Lift> lifts, long id)
+    {
+        if(lifts == null || lifts.isEmpty()) return null;
+        for(Lift lift : lifts)
+        {
+            if(lift.getId() == id)
+            {
+                return lift;
+            }
+        }
+        return null;
+    }
+
     @Override
     public String toString()
     {
@@ -190,17 +232,16 @@ public class Lift implements Comparable<Lift> {
     public boolean equals(Object o)
     {
         if(o == null) return false;
-        if(o instanceof Lift)
-        {
-            Lift that = (Lift)o;
-            return id == that.getId();
-        }
-        else if(o instanceof LiftAPI)
-        {
-            LiftAPI that = (LiftAPI)o;
-            return id == that.getId();
-        }
-        else return false;
+        if(!(o instanceof Lift)) return false;
+        Lift that = (Lift)o;
+        if(id != that.getId()) return false;
+        if(exerciseId != that.getExerciseId()) return false;
+        if(sessionId != that.getSessionId()) return false;
+        if(sets != that.getSets()) return false;
+        if(reps != that.getReps()) return false;
+        if(weight != that.getWeight()) return false;
+        if(isWarmup != that.isWarmup) return false;
+        return true;
     }
 
 

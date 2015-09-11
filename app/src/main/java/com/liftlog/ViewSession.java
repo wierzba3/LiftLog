@@ -16,15 +16,24 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.SortedMap;
 
+import com.liftlog.models.Exercise;
 import com.liftlog.models.Lift;
 import com.liftlog.data.DataAccessObject;
 import com.liftlog.models.Session;
@@ -43,6 +52,7 @@ public class ViewSession extends AppCompatActivity
     private DataAccessObject dao;
 
     private ListView listLifts;
+    private ExpandableListView exListLifts;
 
     private long sessionId = -1;
 
@@ -77,6 +87,9 @@ public class ViewSession extends AppCompatActivity
 
 
         listLifts = (ListView) findViewById(R.id.list_lifts);
+//        exListLifts = (ExpandableListView) findViewById(R.id.exList_lifts);
+
+
 
 //        listLifts.setOnItemClickListener(new AdapterView.OnItemClickListener()
 //        {
@@ -94,24 +107,8 @@ public class ViewSession extends AppCompatActivity
 
     private void loadSession(long id)
     {
-//        dao.insertDummyLifts();
-//        dao.clearLiftsTable();
-
-//        if(sessionId == -1)
-//        {
-//            //this should never happen
-//            Toast.makeText(this, "Error creating new session", Toast.LENGTH_LONG);
-//            return;
-//        }
-
 
         Session session = dao.selectSession(sessionId);
-
-//        if(session == null)
-//        {
-//            Toast.makeText(this, "Error loading session data", Toast.LENGTH_LONG);
-//            return;
-//        }
 
         ArrayList<Lift> lifts;
         if (session == null)
@@ -122,21 +119,20 @@ public class ViewSession extends AppCompatActivity
         {
             lifts = session.getLifts();
         }
-
         Collections.sort(lifts);
 
+        Map<Long, Exercise> exerciseMap = dao.selectExercises(false);
+
         //dummy lift for < Add New > option
-        Lift emptyLift = new Lift(DataAccessObject.RecordState.UNKNOWN);
-        emptyLift.setState(DataAccessObject.RecordState.UNCHANGED);
+        Lift emptyLift = new Lift();
         emptyLift.setId(-1);
         lifts.add(0, emptyLift);
 
-//        ArrayList<String> liftLabels = new ArrayList<String>();
-//        for(Lift lift : lifts) liftLabels.add("" + lift.getId());
-
-        ArrayAdapter<Lift> adapter = new ArrayAdapter<Lift>(this, android.R.layout.simple_list_item_1, lifts);
         LiftArrayAdapter liftArrayAdapter = new LiftArrayAdapter(this, R.id.lbl_lift, lifts);
         listLifts.setAdapter(liftArrayAdapter);
+
+//        LiftExpendableListAdapter liftExpandableAdapter = new LiftExpendableListAdapter(this, lifts, exerciseMap);
+//        exListLifts.setAdapter(liftExpandableAdapter);
     }
 
     @Override
@@ -191,8 +187,10 @@ public class ViewSession extends AppCompatActivity
                     @Override
                     public void onClick(DialogInterface dialog, int which)
                     {
-
-                        if (!dao.deleteSession(sessionId))
+                        //can I get the Session object from somewhere previous in the lifecycle ?
+                        Session session = dao.selectSession(sessionId);
+                        session.setDeleted(true);
+                        if (!dao.update(session))
                         {
                             Toast.makeText(ViewSession.this, "Error deleting session.", Toast.LENGTH_SHORT).show();
                             return;
@@ -252,7 +250,7 @@ public class ViewSession extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    public class LiftArrayAdapter extends ArrayAdapter<Lift>
+    private class LiftArrayAdapter extends ArrayAdapter<Lift>
     {
 
         private ArrayList<Lift> items;
@@ -270,8 +268,10 @@ public class ViewSession extends AppCompatActivity
             if (v == null)
             {
                 LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                v = vi.inflate(R.layout.lift_item, null);
+                v = vi.inflate(R.layout.lift_item, parent, false);
             }
+//            v.setMinimumHeight(150);
+
             final Lift lift = items.get(position);
 
             TextView lblLift = (TextView) v.findViewById(R.id.lbl_lift);
@@ -285,7 +285,7 @@ public class ViewSession extends AppCompatActivity
                 }
 
                 //remove the increment button in the <New Lift> dummy item
-                if(lift.getId() == -1)
+                if (lift.getId() == -1)
                 {
                     btnIncrement.setVisibility(View.GONE);
                 }
@@ -314,6 +314,186 @@ public class ViewSession extends AppCompatActivity
             return v;
         }
 
+    }
+
+    private class LiftExpendableListAdapter extends BaseExpandableListAdapter
+    {
+        public LiftExpendableListAdapter(Context ctx, List<Lift> allLifts, Map<Long, Exercise> exerciseMap)
+        {
+            Map<Long, List<Lift>> map = new HashMap<Long, List<Lift>>();
+
+            for(Lift lift : allLifts)
+
+            {
+
+                List<Lift> lifts = map.get(lift.getExerciseId());
+
+                if(lifts == null)
+
+                {
+
+                    lifts = new ArrayList<Lift>();
+
+                }
+
+                lifts.add(lift);
+
+                map.put(lift.getExerciseId(), lifts);
+
+            }
+
+
+
+            exercises = new ArrayList<Exercise>();
+
+            liftLists = new ArrayList<List<Lift>>();
+
+            List<Lift> unknownLifts = new ArrayList<Lift>();
+
+            for(long exerciseId : map.keySet())
+
+            {
+
+                List<Lift> lifts = map.get(exerciseId);
+
+                Exercise exercise = exerciseMap.get(exerciseId);
+
+                if(exercise == null)
+
+                {
+
+                    unknownLifts.addAll(lifts);
+
+                    break;
+
+                }
+
+                Collections.sort(lifts);
+
+                exercises.add(exercise);
+
+                liftLists.add(lifts);
+
+            }
+
+            if(unknownLifts.size() > 0)
+
+            {
+
+                Exercise unknown = new Exercise();
+                unknown.setName("Unknown");
+
+                exercises.add(unknown);
+
+                liftLists.add(unknownLifts);
+
+            }
+        }
+
+        private List<List<Lift>> liftLists;
+        private List<Exercise> exercises;
+
+        @Override
+        public boolean isChildSelectable(int i, int i1)
+        {
+            return true;
+        }
+
+        @Override
+        public int getGroupCount()
+        {
+            return exercises.size();
+        }
+
+        @Override
+        public int getChildrenCount(int i)
+        {
+            int result = 0;
+            for (List<Lift> lifts : liftLists)
+            {
+                if (lifts != null)
+                {
+                    result += lifts.size();
+                }
+            }
+            return result;
+        }
+
+        @Override
+        public Object getGroup(int i)
+        {
+            return exercises.get(i);
+        }
+
+        @Override
+        public Object getChild(int i, int j)
+        {
+            return liftLists.get(i).get(j);
+        }
+
+        @Override
+        public long getGroupId(int i)
+        {
+            return exercises.get(i).getId();
+        }
+
+        @Override
+        public long getChildId(int i, int j)
+        {
+            return liftLists.get(i).get(j).getId();
+        }
+
+        @Override
+        public boolean hasStableIds()
+        {
+            return false;
+        }
+
+        @Override
+        public View getGroupView(int i, boolean b, View view, ViewGroup viewGroup)
+        {
+            if (view == null)
+            {
+                LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                view = vi.inflate(R.layout.lift_group_item, viewGroup, false);
+            }
+
+            Exercise exercise = exercises.get(i);
+            TextView lblExercise = (TextView) view.findViewById(R.id.lbl_lift_group);
+            lblExercise.setText(exercise.getName());
+
+            return null;
+        }
+
+        @Override
+        public View getChildView(int i, int j, boolean b, View view, ViewGroup viewGroup)
+        {
+            if (view == null)
+            {
+                LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                view = vi.inflate(R.layout.lift_item, viewGroup, false);
+            }
+
+            final Lift lift = liftLists.get(i).get(j);
+
+
+            TextView lblLift = (TextView) view.findViewById(R.id.lbl_lift);
+            lblLift.setText(lift.toString());
+
+            ImageButton btnIncrement = (ImageButton) view.findViewById(R.id.btn_increment);
+            btnIncrement.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    lift.setSets(lift.getSets() + 1);
+                    dao.update(lift);
+                    loadSession(sessionId);
+                }
+            });
+
+            return view;
+        }
     }
 
 }

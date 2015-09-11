@@ -13,32 +13,30 @@ import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.content.Intent;
 
-import com.liftlog.R;
-
 import android.net.Uri;
-import java.net.URISyntaxException;
+
+import com.liftlog.data.DataAccessObject;
 
 
 /**
  * TODO
  * BUGS:
- * - When doing a sync on app-starup, local database changes does not refresh the Session / Exercise listview. find out how to listen for db changes
- *
+ * - Prompt "Are you sure you want to delete this lift, it is referenced..." is not closing after pressing OK, have to press it twice
  *
  *
  *
  * Implement now:
- * - implement Local/Remote database Sync algorithms
- *      - NEW exercise is completed and working
+ * - Test out restoring the .db backup
+ *
  * - Group Lifts in Session by the exercise, then after selecting exercise, show the individual lifts.
  * Some tree-like structure?
+ *      see: ExpandableListView]
+ *
  * - Decide what to do when the user deletes an exercise that is referenced by 1 or more lifts
  * add new boolean field to Exercise: valid, need to update database this allows the user
  * to "delete the lift" by us setting valid to false and name to "?" and the user can choose to re-define it if
@@ -47,9 +45,10 @@ import java.net.URISyntaxException;
  *
  *
  * Implement in the future:
+ * - Categorize exercises
  * - Tools
- * 1RM calculator
- * <p/>
+ *      1RM calculator
+ * - user authentication
  * - Programmable training routines. Define rules that the user can set for an exercise.
  * Display planned lifts separately from the completed lifts in the sessions.
  * e.g. repeat selected lift every M/W/F, increase weight each day/week
@@ -58,10 +57,13 @@ import java.net.URISyntaxException;
  * - "sort by" option on sessions/lifts
  * - Copy option for session
  * - Tabular view of lifts
+ * - use stored procedures for security
  */
 
 public class MainActivity extends AppCompatActivity
 {
+
+    private DataAccessObject dao;
 
     private FragmentPagerAdapter mCustomPagerAdapter;
     private ViewPager mViewPager;
@@ -78,8 +80,27 @@ public class MainActivity extends AppCompatActivity
     // Instance fields
     Account mAccount;
 
-    private ContentResolver mResolver;
+//    private ContentResolver mResolver;
     private ContentObserver mObserver;
+
+    public static final Uri DUMMY_URI = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority("com.liftlog").build();
+
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+        mObserver = new ContentObserver(new Handler(Looper.getMainLooper()))
+        {
+            public void onChange(boolean selfChange)
+            {
+                mCustomPagerAdapter.getExercisesFragment().loadExercises();
+                mCustomPagerAdapter.getSessionsFragment().loadSessions();
+            }
+        };
+        getContentResolver().registerContentObserver(DUMMY_URI, false, mObserver);
+        ContentResolver.requestSync(mAccount, AUTHORITY, Bundle.EMPTY);
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -95,26 +116,19 @@ public class MainActivity extends AppCompatActivity
         accountType = getString(R.string.accountType);
         mAccount = CreateSyncAccount(this);
 
-        Log.d(LOG_TAG, "test");
-        mResolver = getContentResolver();
+        dao = new DataAccessObject(this);
+        dao.createBackupCopy(this);
+//        dao.restoreBackupCopy(this);
 
-        mObserver = new ContentObserver(new Handler(Looper.getMainLooper())) {
-            public void onChange(boolean selfChange)
-            {
-                //TODO notify the fragments that SyncAdapter has completed a sync
-            }
-        };
-
-        Uri uri = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority("com.liftlog").build();
-        getContentResolver().registerContentObserver(uri, false, mObserver);
-        //        ContentResolver.setSyncAutomatically(mAccount, AUTHORITY, true);
+//        mResolver = getContentResolver();
+//        ContentResolver.setSyncAutomatically(mAccount, AUTHORITY, true);
 //        ContentResolver.addPeriodicSync(
 //                mAccount,
 //                AUTHORITY,
 //                Bundle.EMPTY,
 //                2
 //        );
-        ContentResolver.requestSync(mAccount, AUTHORITY, Bundle.EMPTY);
+
     }
 
 
