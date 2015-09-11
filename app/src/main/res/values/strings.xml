@@ -4,6 +4,8 @@
     <string name="app_name">LiftLog</string>
     <string name="action_settings">Settings</string>
     <string name="accountType">liftlog.com</string>
+    <string name="preferencesFileKey">com.liftlog.PREFERENCE_FILE_KEY</string>
+
 
     <!-- Main activity strings -->
     <string name="button_add_lift">Add Lift</string>

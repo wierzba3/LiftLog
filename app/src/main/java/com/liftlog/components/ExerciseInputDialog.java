@@ -83,11 +83,12 @@ public class ExerciseInputDialog extends DialogFragment
 
                 if (currentExercise == null)
                 {
-                    currentExercise = new Exercise(DataAccessObject.RecordState.NEW);
+                    currentExercise = new Exercise();
+                    currentExercise.setNew(true);
                 }
                 else if(currentExercise.getId() > 0)
                 {
-                    currentExercise = new Exercise(DataAccessObject.RecordState.MODIFIED);
+                    currentExercise.setModified(true);
                 }
                 currentExercise.setId(exerciseId);
                 currentExercise.setName(name);
@@ -112,8 +113,11 @@ public class ExerciseInputDialog extends DialogFragment
                     String name = txtName.getText().toString();
                     String desc = txtDesc.getText().toString();
 
-                    if (currentExercise == null) currentExercise = new Exercise(DataAccessObject.RecordState.DELETED);
-                    currentExercise.setState(DataAccessObject.RecordState.DELETED);
+                    if (currentExercise == null)
+                    {
+                        currentExercise = new Exercise();
+                    }
+                    currentExercise.setDeleted(true);
                     currentExercise.setId(exerciseId);
                     currentExercise.setName(name);
                     currentExercise.setDescription(desc);

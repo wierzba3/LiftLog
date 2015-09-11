@@ -1,7 +1,10 @@
 package com.liftlog.models;
 
-import com.liftlog.backend.myApi.model.SessionAPI;
 import com.liftlog.data.DataAccessObject;
+
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.MutableDateTime;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -18,16 +21,17 @@ import java.util.Map;
 public class Session
 {
 
-    public Session(DataAccessObject.RecordState state)
+    public Session()
     {
-        this.state = state;
         lifts = new ArrayList<Lift>();
     }
 
     private long id;
     private long date;
     private ArrayList<Lift> lifts;
-    private DataAccessObject.RecordState state;
+    private boolean isNew;
+    private boolean isModified;
+    private boolean isDeleted;
     /**
      * This variable having a value greater than 1 indicates that this is the i'th instance of session that has the same date.
      * (Same day of year, not same millisecond value.)
@@ -75,29 +79,34 @@ public class Session
         this.sequenceNum = sequenceNum;
     }
 
-    public DataAccessObject.RecordState getState()
+    public boolean isNew()
     {
-        return state;
+        return isNew;
     }
 
-    public void setState(DataAccessObject.RecordState state)
+    public void setNew(boolean isNew)
     {
-        this.state = state;
+        this.isNew = isNew;
     }
 
-    @Override
-    public String toString()
+    public boolean isModified()
     {
-        if (id < 0) return "< New Session >";
+        return isModified;
+    }
 
-        Date dateObj = new Date(date);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("E, MMM dd yyyy");
-        String result = dateFormat.format(dateObj);
-        if(sequenceNum > 0)
-        {
-            result += " (" + sequenceNum + ")";
-        }
-        return result;
+    public void setModified(boolean isModified)
+    {
+        this.isModified = isModified;
+    }
+
+    public boolean isDeleted()
+    {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean isDeleted)
+    {
+        this.isDeleted = isDeleted;
     }
 
     public static final Comparator<Session> byDateAsc = new Comparator<Session>()
@@ -141,22 +150,39 @@ public class Session
 
         Collections.sort(sessions, byDateAsc);
 
-
         Map<Long, Integer> instanceCount = new HashMap<Long, Integer>();
 
-        Integer value;
+        //clear out instanceCount so that subsequent calls don't increment instanceCount fields more than once
         for(Session session : sessions)
         {
+            session.setSequenceNum(0);
+        }
+
+        MutableDateTime epoch = new MutableDateTime(0);
+        DateTime dateObj;
+        Integer value;
+//        for(Session session : sessions)
+        for(int i = 0; i < sessions.size(); i++)
+        {
+            Session session = sessions.get(i);
+
             long date = session.getDate();
-            long day = date / (1000 * 60 * 60 * 24);
-            value = instanceCount.get(day);
+            dateObj = new DateTime(date);
+
+            //days since epoch
+            long days = Days.daysBetween(epoch, dateObj).getDays();
+//            long day = date / (1000 * 60 * 60 * 24);
+
+            value = instanceCount.get(days);
+            //if there is already a day mapped to the day, add to it's sequence num
             if(value == null)
             {
-                instanceCount.put(day, 1);
+                DateTime dt = new DateTime(1l);
+                instanceCount.put(days, 1);
             }
             else
             {
-                instanceCount.put(day, value + 1);
+                instanceCount.put(days, value + 1);
             }
         }
 
@@ -176,21 +202,44 @@ public class Session
         }
     }
 
+    public static Session findInList(List<Session> sessions, long id)
+    {
+        if(sessions == null || sessions.isEmpty()) return null;
+        for(Session session : sessions)
+        {
+            if(session.getId() == id)
+            {
+                return session;
+            }
+        }
+        return null;
+    }
+
+
+
     @Override
     public boolean equals(Object o)
     {
         if(o == null) return false;
-        if(o instanceof Session)
+        if(!(o instanceof Session)) return false;
+        Session that = (Session)o;
+        return id == that.getId();
+
+    }
+
+    @Override
+    public String toString()
+    {
+        if (id < 0) return "< New Session >";
+
+        Date dateObj = new Date(date);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("E, MMM dd yyyy");
+        String result = dateFormat.format(dateObj);
+        if(sequenceNum > 0)
         {
-            Session that = (Session)o;
-            return id == that.getId();
+            result += " (" + sequenceNum + ")";
         }
-        else if(o instanceof SessionAPI)
-        {
-            SessionAPI that = (SessionAPI)o;
-            return id == that.getId();
-        }
-        else return false;
+        return result;
     }
 
 }

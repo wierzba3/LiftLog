@@ -154,7 +154,8 @@ public class ViewLift extends AppCompatActivity implements ExerciseInputDialog.E
      */
     public void doNewExercise(View view)
     {
-        Exercise exercise = new Exercise(DataAccessObject.RecordState.NEW);
+        Exercise exercise = new Exercise();
+        exercise.setNew(true);
         exercise.setId(-1);
 
         ExerciseInputDialog dialog = ExerciseInputDialog.newInstance(exercise);
@@ -259,7 +260,7 @@ public class ViewLift extends AppCompatActivity implements ExerciseInputDialog.E
         {
             exerciseId = selectedExercise.getId();
         }
-        Lift lift = new Lift(DataAccessObject.RecordState.UNKNOWN);
+        Lift lift = new Lift();
         lift.setExerciseId(exerciseId);
         lift.setSessionId(sessionId);
         lift.setWeight(weight);
@@ -271,15 +272,16 @@ public class ViewLift extends AppCompatActivity implements ExerciseInputDialog.E
         if(liftId == -1)
         {
             //insert new Lift
-            lift.setState(DataAccessObject.RecordState.NEW);
-            dao.insert(lift);
+            lift.setNew(true);
+            long ret = dao.insert(lift);
+            System.out.println();
         }
         else
         {
             //update existing lift
             lift.setId(liftId);
             boolean ret =  dao.update(lift);
-            lift.setState(DataAccessObject.RecordState.MODIFIED);
+            lift.setModified(true);
             Log.d(LOG_TAG, "" + ret);
         }
 

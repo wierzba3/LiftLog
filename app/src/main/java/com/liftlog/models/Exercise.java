@@ -11,9 +11,8 @@ import java.util.Comparator;
 public class Exercise {
 
 
-    public Exercise(DataAccessObject.RecordState state)
+    public Exercise()
     {
-        this.state = state;
     }
 
     public Exercise(long id, String name, String description){
@@ -25,7 +24,9 @@ public class Exercise {
     private String name;
     private String description;
     private boolean valid = true;
-    private DataAccessObject.RecordState state;
+    private boolean isNew;
+    private boolean isModified;
+    private boolean isDeleted;
 
     public long getId() {
         return id;
@@ -61,14 +62,34 @@ public class Exercise {
         this.valid = valid;
     }
 
-    public DataAccessObject.RecordState getState()
+    public boolean isNew()
     {
-        return state;
+        return isNew;
     }
 
-    public void setState(DataAccessObject.RecordState state)
+    public void setNew(boolean isNew)
     {
-        this.state = state;
+        this.isNew = isNew;
+    }
+
+    public boolean isModified()
+    {
+        return isModified;
+    }
+
+    public void setModified(boolean isModified)
+    {
+        this.isModified = isModified;
+    }
+
+    public boolean isDeleted()
+    {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean isDeleted)
+    {
+        this.isDeleted = isDeleted;
     }
 
     public static final Exercise Squat(){
@@ -151,17 +172,15 @@ public class Exercise {
     public boolean equals(Object o)
     {
         if(o == null) return false;
-        if(o instanceof Exercise)
-        {
-            Exercise that = (Exercise)o;
-            return id == that.getId();
-        }
-        else if(o instanceof ExerciseAPI)
-        {
-            ExerciseAPI that = (ExerciseAPI)o;
-            return id == that.getId();
-        }
-        else return false;
+        if(!(o instanceof Exercise)) return false;
+        Exercise that = (Exercise)o;
+        if(id != that.getId()) return false;
+        if(name == null && that.getName() != null) return false;
+        if(!name.equals(that.getName())) return false;
+        if(description == null && that.getDescription() != null) return false;
+        if(!description.equals(that.getDescription())) return false;
+        if(valid != that.isValid()) return false;
+        return true;
     }
 
 }

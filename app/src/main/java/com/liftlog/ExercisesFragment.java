@@ -1,6 +1,7 @@
 package com.liftlog;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -96,6 +97,12 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
 
     public void loadExercises()
     {
+        if( super.getActivity() == null)
+        {
+            //TODO figure out why this is returning null. Perhaps implement MainActivity as a singleton?
+            return;
+        }
+
         Map<Long, Exercise> exercises = dao.selectExercises(false);
         if (exercises == null)
         {
@@ -103,10 +110,9 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
         }
 
         List<Exercise> exerciseList = new ArrayList<>(exercises.values());
-        Exercise dummyExercise = new Exercise(DataAccessObject.RecordState.UNKNOWN);
+        Exercise dummyExercise = new Exercise();
         dummyExercise.setId(-1);
         dummyExercise.setName("<Add New>");
-        dummyExercise.setState(DataAccessObject.RecordState.UNCHANGED);
         exerciseList.add(dummyExercise);
         Collections.sort(exerciseList, Exercise.byNameDummyFirst);
 
@@ -118,7 +124,8 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
     private void doAdd(long id)
     {
 
-        Exercise exercise = new Exercise(DataAccessObject.RecordState.NEW);
+        Exercise exercise = new Exercise();
+        exercise.setNew(true);
         exercise.setId(id);
         ExerciseInputDialog dialog = ExerciseInputDialog.newInstance(exercise);
         dialog.setTargetFragment(this, ExerciseInputDialog.RequestType.DEFAULT.getValue());
@@ -200,7 +207,7 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
         String msg = "Are you sure you want to delete this Exercise?";
 
         //search all existing Lifts to check whether any of them reference this lift that the user wants to delete
-        List<Lift> lifts = dao.selectLifts();
+        List<Lift> lifts = dao.selectLifts(false);
         boolean found = false;
         for (Lift lift : lifts)
         {
@@ -252,7 +259,7 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
                     @Override
                     public void onClick(DialogInterface dialog, int which)
                     {
-                        exercise.setState(DataAccessObject.RecordState.DELETED);
+                        exercise.setDeleted(true);
 //                        if (!dao.deleteExercise(exercise.getId()))
                         if (!dao.update(exercise))
                         {
