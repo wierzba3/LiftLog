@@ -44,6 +44,7 @@
         <activity
             android:name="com.liftlog.ViewLift"
             android:label="@string/title_activity_add_lift"
+            android:launchMode="singleTop"
             android:parentActivityName="com.liftlog.ViewSession" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

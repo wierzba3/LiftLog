@@ -225,7 +225,8 @@ public class Lift implements Comparable<Lift> {
     {
         if(id == -1) return "< Add Lift >";
 //        Exercise exercise = DataAccessObject.exerciseMap.get(exerciseId);
-        return (exerciseName != null ? exerciseName : "?") + " " + weight + " x " + reps + " x " + sets;
+//        return (exerciseName != null ? exerciseName : "?") + " " + weight + " x " + reps + " x " + sets;
+        return String.valueOf(weight) + " x " + String.valueOf(reps) + " x " + String.valueOf(sets);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.liftlog;
 
+import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -7,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -115,7 +117,7 @@ public class ViewLift extends AppCompatActivity implements ExerciseInputDialog.E
             if(exercise != null && exercise.getId() == exerciseId)
             {
                 spnExercise.setSelection(i);
-               return;
+                return;
             }
         }
         spnExercise.setSelection(0);
@@ -178,16 +180,20 @@ public class ViewLift extends AppCompatActivity implements ExerciseInputDialog.E
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         switch (id)
         {
             case R.id.action_delete:
                 doDelete(this.getCurrentFocus());
                 break;
-            case R.id.home:
+            case android.R.id.home:
                 //Automatically handled by the action bar.
+                Intent intent = new Intent();
+                intent.putExtra(ViewSession.SESSION_ID_KEY, sessionId);
+                setResult(RESULT_OK, intent);
+                finish();
                 break;
             case R.id.action_settings:
+
                 break;
         }
 
@@ -197,6 +203,15 @@ public class ViewLift extends AppCompatActivity implements ExerciseInputDialog.E
     int previousExercisePos = 0;
     private void createContents()
     {
+        ActionBar actionBar = this.getActionBar();
+//        if(actionBar == null) actionBar =
+        if (actionBar != null)
+        {
+            actionBar.setDisplayUseLogoEnabled(false);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.show();
+        }
+
         //initialize control references
         spnExercise = (Spinner) findViewById(R.id.spn_exercise);
         pckSets = (NumberPicker) findViewById(R.id.pck_sets);
@@ -237,7 +252,7 @@ public class ViewLift extends AppCompatActivity implements ExerciseInputDialog.E
             @Override
             public void onNothingSelected(AdapterView<?> parent)
             {
-            //do nothing
+                //do nothing
             }
         });
     }
@@ -320,6 +335,23 @@ public class ViewLift extends AppCompatActivity implements ExerciseInputDialog.E
                 })
                 .setNegativeButton("No", null)
                 .show();
+    }
+
+    @Override
+    public void finish()
+    {
+        super.finish();
+        Intent intent = new Intent();
+        intent.putExtra(ViewSession.SESSION_ID_KEY, sessionId);
+        setResult(RESULT_OK, intent);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent();
+        intent.putExtra(ViewSession.SESSION_ID_KEY, sessionId);
+        setResult(RESULT_OK, intent);
     }
 
     /**

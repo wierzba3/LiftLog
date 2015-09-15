@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,9 +68,6 @@ public class ViewSession extends AppCompatActivity
         Intent intent = getIntent();
         sessionId = intent.getLongExtra(SESSION_ID_KEY, -1l);
 
-//        Log.d(LOG_TAG, "LIFT_ID_KEY=" + sessionId);
-
-
         createContents();
         loadSession(sessionId);
     }
@@ -86,8 +84,8 @@ public class ViewSession extends AppCompatActivity
         }
 
 
-        listLifts = (ListView) findViewById(R.id.list_lifts);
-//        exListLifts = (ExpandableListView) findViewById(R.id.exList_lifts);
+//        listLifts = (ListView) findViewById(R.id.list_lifts);
+        exListLifts = (ExpandableListView) findViewById(R.id.exList_lifts);
 
 
 
@@ -128,11 +126,11 @@ public class ViewSession extends AppCompatActivity
         emptyLift.setId(-1);
         lifts.add(0, emptyLift);
 
-        LiftArrayAdapter liftArrayAdapter = new LiftArrayAdapter(this, R.id.lbl_lift, lifts);
-        listLifts.setAdapter(liftArrayAdapter);
+//        LiftArrayAdapter liftArrayAdapter = new LtArrayAdapter(this, R.id.lbl_lift, lifts);
+//        listLifts.setAdapter(liftArrayAdapter);if
 
-//        LiftExpendableListAdapter liftExpandableAdapter = new LiftExpendableListAdapter(this, lifts, exerciseMap);
-//        exListLifts.setAdapter(liftExpandableAdapter);
+        LiftExpendableListAdapter liftExpandableAdapter = new LiftExpendableListAdapter(this, lifts, exerciseMap);
+        exListLifts.setAdapter(liftExpandableAdapter);
     }
 
     @Override
@@ -166,6 +164,19 @@ public class ViewSession extends AppCompatActivity
         intent.putExtra(ViewLift.LIFT_ID_KEY, liftId);
         intent.putExtra(ViewLift.SESSION_ID_KEY, sessionId);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if (requestCode == 1) {
+            if(resultCode == RESULT_OK){
+                String result=data.getStringExtra("result");
+            }
+            if (resultCode == RESULT_CANCELED) {
+                //Write your code if there's no result
+            }
+        }
     }
 
 
@@ -209,6 +220,8 @@ public class ViewSession extends AppCompatActivity
     protected void onResume()
     {
         super.onResume();
+        Intent intent = getIntent();
+        sessionId = intent.getLongExtra(SESSION_ID_KEY, -1l);
         if (sessionId > -1)
         {
             loadSession(sessionId);
@@ -320,12 +333,18 @@ public class ViewSession extends AppCompatActivity
     {
         public LiftExpendableListAdapter(Context ctx, List<Lift> allLifts, Map<Long, Exercise> exerciseMap)
         {
+            exercises = new ArrayList<Exercise>();
+            liftLists = new ArrayList<List<Lift>>();
+
+            if(allLifts == null) return;
+            Collections.sort(allLifts);
+
             Map<Long, List<Lift>> map = new HashMap<Long, List<Lift>>();
 
             for(Lift lift : allLifts)
 
             {
-
+                if(lift.getId() < 0) continue;
                 List<Lift> lifts = map.get(lift.getExerciseId());
 
                 if(lifts == null)
@@ -341,12 +360,6 @@ public class ViewSession extends AppCompatActivity
                 map.put(lift.getExerciseId(), lifts);
 
             }
-
-
-
-            exercises = new ArrayList<Exercise>();
-
-            liftLists = new ArrayList<List<Lift>>();
 
             List<Lift> unknownLifts = new ArrayList<Lift>();
 
@@ -370,10 +383,19 @@ public class ViewSession extends AppCompatActivity
 
                 Collections.sort(lifts);
 
-                exercises.add(exercise);
-
                 liftLists.add(lifts);
 
+            }
+
+            Collections.sort(liftLists, liftsComparator);
+            for(List<Lift> lifts : liftLists)
+            {
+                if(lifts != null && !lifts.isEmpty())
+                {
+                    long exerciseId = lifts.get(0).getExerciseId();
+                    Exercise exercise = exerciseMap.get(exerciseId);
+                    exercises.add(exercise);
+                }
             }
 
             if(unknownLifts.size() > 0)
@@ -386,9 +408,21 @@ public class ViewSession extends AppCompatActivity
                 exercises.add(unknown);
 
                 liftLists.add(unknownLifts);
-
             }
+
+
         }
+
+        private Comparator<List<Lift>> liftsComparator = new Comparator<List<Lift>>(){
+            @Override
+            public int compare(List<Lift> l1, List<Lift> l2)
+            {
+                if((l1 == null || l1.size() == 0) && (l2 == null || l2.size() == 0)) return 0;
+                else if(l1 == null || l1.size() == 0) return -1;
+                else if(l2 == null || l2.size() == 0) return 1;
+                return l1.get(0).compareTo(l2.get(0));
+            }
+        };
 
         private List<List<Lift>> liftLists;
         private List<Exercise> exercises;
@@ -408,15 +442,9 @@ public class ViewSession extends AppCompatActivity
         @Override
         public int getChildrenCount(int i)
         {
-            int result = 0;
-            for (List<Lift> lifts : liftLists)
-            {
-                if (lifts != null)
-                {
-                    result += lifts.size();
-                }
-            }
-            return result;
+            List<Lift> lifts = liftLists.get(i);
+            if(lifts == null) return 0;
+            return lifts.size();
         }
 
         @Override
@@ -462,7 +490,9 @@ public class ViewSession extends AppCompatActivity
             TextView lblExercise = (TextView) view.findViewById(R.id.lbl_lift_group);
             lblExercise.setText(exercise.getName());
 
-            return null;
+
+
+            return view;
         }
 
         @Override
@@ -489,6 +519,14 @@ public class ViewSession extends AppCompatActivity
                     lift.setSets(lift.getSets() + 1);
                     dao.update(lift);
                     loadSession(sessionId);
+                }
+            });
+            lblLift.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    doAdd(lift.getId());
                 }
             });
 
