@@ -213,6 +213,7 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
         {
             if (lift.getExerciseId() == exercise.getId()) found = true;
         }
+        //exercise is referencing existing lifts, give relevant warning
         if (found)
         {
             msg = "Are you sure you want to delete this Exercise?\nThis Exercise is currently referenced by existing Lifts.";
@@ -232,6 +233,7 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
 //                            }
                             exercise.setName("?");
                             exercise.setValid(false);
+                            exercise.setDeleted(true);
                             dao.update(exercise);
                             loadExercises();
                         }
@@ -249,30 +251,32 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
                     )
                     .show();
         }
-
-        new AlertDialog.Builder(super.getActivity())
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setTitle("Delete Exercise")
-                .setMessage(msg)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
+        else
+        //Exercise is not referencing existing lifts, give generic message.
+        {
+            new AlertDialog.Builder(super.getActivity())
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setTitle("Delete Exercise")
+                    .setMessage(msg)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener()
                     {
-                        exercise.setDeleted(true);
-//                        if (!dao.deleteExercise(exercise.getId()))
-                        if (!dao.update(exercise))
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)
                         {
-                            Toast.makeText(ExercisesFragment.super.getActivity(), "Error deleting exercise.", Toast.LENGTH_SHORT).show();
-                            Log.d(LOG_TAG, "Error deleting exercise. id=" + exercise.getId() + "\tname=" + exercise.getName());
+                            exercise.setDeleted(true);
+//                        if (!dao.deleteExercise(exercise.getId()))
+                            if (!dao.update(exercise))
+                            {
+                                Toast.makeText(ExercisesFragment.super.getActivity(), "Error deleting exercise.", Toast.LENGTH_SHORT).show();
+                                Log.d(LOG_TAG, "Error deleting exercise. id=" + exercise.getId() + "\tname=" + exercise.getName());
+                            }
+                            loadExercises();
                         }
-                        loadExercises();
-                    }
 
-                })
-                .setNegativeButton("No", null)
-                .show();
-
+                    })
+                    .setNegativeButton("No", null)
+                    .show();
+        }
 
     }
 

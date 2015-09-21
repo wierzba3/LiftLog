@@ -5,6 +5,8 @@ import com.liftlog.data.DataAccessObject;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.MutableDateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -235,6 +237,11 @@ public class Session
         Date dateObj = new Date(date);
         SimpleDateFormat dateFormat = new SimpleDateFormat("E, MMM dd yyyy");
         String result = dateFormat.format(dateObj);
+
+        DateTime dt = new DateTime(date);
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("E, MMM dd yyyy");
+        result = dtf.print(dt);
+
         if(sequenceNum > 0)
         {
             result += " (" + sequenceNum + ")";

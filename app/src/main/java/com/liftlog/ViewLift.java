@@ -101,7 +101,10 @@ public class ViewLift extends AppCompatActivity implements ExerciseInputDialog.E
             long exerciseId = lift.getExerciseId();
             setSelectedExercise(exerciseId);
 
-
+            //focus on weight EditText and set caret to end
+            txtWeight.requestFocus();
+            int endPos = txtWeight.getText().length();
+            txtWeight.setSelection(endPos);
 //            rbtnWarmup.setChecked(lift.isWarmup());
         }
 
@@ -187,11 +190,12 @@ public class ViewLift extends AppCompatActivity implements ExerciseInputDialog.E
                 break;
             case android.R.id.home:
                 //Automatically handled by the action bar.
-                Intent intent = new Intent();
-                intent.putExtra(ViewSession.SESSION_ID_KEY, sessionId);
-                setResult(RESULT_OK, intent);
+//                Intent intent = new Intent();
+//                intent.putExtra(ViewSession.SESSION_ID_KEY, sessionId);
+//                setResult(RESULT_OK, intent);
+//                finish();
                 finish();
-                break;
+                return true;
             case R.id.action_settings:
 
                 break;
@@ -255,6 +259,8 @@ public class ViewLift extends AppCompatActivity implements ExerciseInputDialog.E
                 //do nothing
             }
         });
+
+
     }
 
     /**
@@ -337,14 +343,14 @@ public class ViewLift extends AppCompatActivity implements ExerciseInputDialog.E
                 .show();
     }
 
-    @Override
-    public void finish()
-    {
-        super.finish();
-        Intent intent = new Intent();
-        intent.putExtra(ViewSession.SESSION_ID_KEY, sessionId);
-        setResult(RESULT_OK, intent);
-    }
+//    @Override
+//    public void finish()
+//    {
+//        //super.finish();
+//        Intent intent = new Intent();
+//        intent.putExtra(ViewSession.SESSION_ID_KEY, sessionId);
+//        setResult(RESULT_OK, intent);
+//    }
 
     @Override
     public void onBackPressed() {
