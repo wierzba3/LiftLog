@@ -26,21 +26,16 @@ import com.liftlog.data.DataAccessObject;
 /**
  * TODO
  * BUGS:
- * - Prompt "Are you sure you want to delete this lift, it is referenced..." is not closing after pressing OK, have to press it twice
- *
+ * - Session toString is always displaying Sept 07 when trying to setTitle(session.toString()) on ViewSession
+ *      even though lifts are loaded correctly
  *
  *
  * Implement now:
  * - Test out restoring the .db backup
+ * - Implement tools tab
+ * - Implement View History (via Tools or ViewLift)
+ * - filter sessions
  *
- * - Group Lifts in Session by the exercise, then after selecting exercise, show the individual lifts.
- * Some tree-like structure?
- *      see: ExpandableListView]
- *
- * - Decide what to do when the user deletes an exercise that is referenced by 1 or more lifts
- * add new boolean field to Exercise: valid, need to update database this allows the user
- * to "delete the lift" by us setting valid to false and name to "?" and the user can choose to re-define it if
- * there are existing lifts which reference that exercise
  *
  *
  *
@@ -48,6 +43,7 @@ import com.liftlog.data.DataAccessObject;
  * - Categorize exercises
  * - Tools
  *      1RM calculator
+ *      History of lifts
  * - user authentication
  * - Programmable training routines. Define rules that the user can set for an exercise.
  * Display planned lifts separately from the completed lifts in the sessions.

@@ -74,6 +74,7 @@ public class ViewSession extends AppCompatActivity
 
     private void createContents()
     {
+
         ActionBar actionBar = this.getActionBar();
 //        if(actionBar == null) actionBar =
         if (actionBar != null)
@@ -86,7 +87,6 @@ public class ViewSession extends AppCompatActivity
 
 //        listLifts = (ListView) findViewById(R.id.list_lifts);
         exListLifts = (ExpandableListView) findViewById(R.id.exList_lifts);
-
 
 
 //        listLifts.setOnItemClickListener(new AdapterView.OnItemClickListener()
@@ -116,6 +116,8 @@ public class ViewSession extends AppCompatActivity
         else
         {
             lifts = session.getLifts();
+            String lbl = session.toString();
+            setTitle(session.toString());
         }
         Collections.sort(lifts);
 
@@ -131,6 +133,11 @@ public class ViewSession extends AppCompatActivity
 
         LiftExpendableListAdapter liftExpandableAdapter = new LiftExpendableListAdapter(this, lifts, exerciseMap);
         exListLifts.setAdapter(liftExpandableAdapter);
+
+        for(int i = 0; i < liftExpandableAdapter.getGroupCount(); i++)
+        {
+            exListLifts.expandGroup(i);
+        }
     }
 
     @Override
@@ -164,16 +171,21 @@ public class ViewSession extends AppCompatActivity
         intent.putExtra(ViewLift.LIFT_ID_KEY, liftId);
         intent.putExtra(ViewLift.SESSION_ID_KEY, sessionId);
         startActivity(intent);
+//        startActivityForResult(intent, 1);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if (requestCode == 1) {
-            if(resultCode == RESULT_OK){
-                String result=data.getStringExtra("result");
+        if (requestCode == 1)
+        {
+            if(resultCode == RESULT_OK)
+            {
+                long id = data.getLongExtra(SESSION_ID_KEY, -1);
+                String result = data.getStringExtra("result");
             }
-            if (resultCode == RESULT_CANCELED) {
+            if (resultCode == RESULT_CANCELED)
+            {
                 //Write your code if there's no result
             }
         }
@@ -489,7 +501,6 @@ public class ViewSession extends AppCompatActivity
             Exercise exercise = exercises.get(i);
             TextView lblExercise = (TextView) view.findViewById(R.id.lbl_lift_group);
             lblExercise.setText(exercise.getName());
-
 
 
             return view;
