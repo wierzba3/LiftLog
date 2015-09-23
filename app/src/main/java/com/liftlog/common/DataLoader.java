@@ -13,12 +13,15 @@ import org.joda.time.Days;
 import org.joda.time.MutableDateTime;
 import org.joda.time.field.MillisDurationField;
 
+import java.util.Map;
+
 /**
  * Created by root on 9/5/15.
  */
 public class DataLoader
 {
 
+	private static DataAccessObject dao;
 
     private static long SQUAT_ID;
     private static long BENCH_ID;
@@ -39,7 +42,7 @@ public class DataLoader
     //TODO
     public static void reload(Context ctx)
     {
-        DataAccessObject dao = new DataAccessObject(ctx);
+        dao = new DataAccessObject(ctx);
         dao.clearExerciseTable();
         dao.clearLiftsTable();
         dao.clearSessionsTable();
@@ -271,7 +274,7 @@ public class DataLoader
 		s6_2_2015.setNew(true);
 		s6_2_2015.setDate(toMillis(6, 2, 2015));
 		sessionId = dao.insert(s6_2_2015);
-		dao.insert(createLift(sessionId, SQUAT_ID, 302.5, 3, 2));
+		dao.insert(createLift(sessionId, SQUAT_ID, 302, 3, 2));
 		dao.insert(createLift(sessionId, SQUAT_ID, 150, 11, 3));
 
 		Session s6_6_2015 = new Session();
@@ -678,9 +681,9 @@ public class DataLoader
             e = new Exercise();
             e.setNew(true);
             e.setName(name);
-            id = dao.insert(squat);
+            id = dao.insert(e);
         }
-        else id = squat.getId();
+        else id = e.getId();
         return id;
     }
        
