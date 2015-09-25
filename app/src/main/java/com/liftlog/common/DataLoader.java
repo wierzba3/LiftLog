@@ -68,6 +68,7 @@ public class DataLoader
 		HAMMER_CURL_ID = findOrInsert(exerciseMap, "Hammer Curl");
 
         long sessionId;
+<<<<<<< HEAD
 
 				Session s4_22_2015 = new Session();
 		s4_22_2015.setNew(true);
@@ -735,8 +736,6 @@ public class DataLoader
 		dao.insert(createLift(sessionId, SEATED_CALVES_ID, 90, 14, 3));
 		dao.insert(createLift(sessionId, PULLUPS_ID, 235, 7, 1));
 		dao.insert(createLift(sessionId, PULLUPS_ID, 235, 6, 2));
-
-
 		
     }
 
