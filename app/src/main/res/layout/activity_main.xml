@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
-            android:background="#000"
+            android:background="@color/material_blue_300"
             android:paddingBottom="4dp"
             android:paddingTop="4dp"
             android:textColor="#fff" />
