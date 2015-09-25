@@ -69,27 +69,32 @@ public class DataLoader
 
         long sessionId;
 
-		Session s4_22_2015 = new Session();
+				Session s4_22_2015 = new Session();
 		s4_22_2015.setNew(true);
 		s4_22_2015.setDate(toMillis(4, 22, 2015));
 		sessionId = dao.insert(s4_22_2015);
 		dao.insert(createLift(sessionId, BENCH_P_ID, 287, 3, 3));
-		dao.insert(createLift(sessionId, BB_ROW_ID, 195, 5;140, 13));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 195, 5, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 140, 13, 3));
 		dao.insert(createLift(sessionId, OHP_ID, 155, 3, 3));
 
 		Session s4_23_2015 = new Session();
 		s4_23_2015.setNew(true);
 		s4_23_2015.setDate(toMillis(4, 23, 2015));
 		sessionId = dao.insert(s4_23_2015);
+		dao.insert(createLift(sessionId, SQUAT_ID, 410, 5, 1));
+		dao.insert(createLift(sessionId, DEADLIFT_ID, 470, 5, 1));
 		dao.insert(createLift(sessionId, CHINUPS_ID, 230, 9, 3));
-		dao.insert(createLift(sessionId, HAMSTRING_CURLS_ID, 80, 10;65, 15));
+		dao.insert(createLift(sessionId, HAMSTRING_CURLS_ID, 80, 10, 1));
+		dao.insert(createLift(sessionId, HAMSTRING_CURLS_ID, 65, 15, 3));
 
 		Session s4_25_2015 = new Session();
 		s4_25_2015.setNew(true);
 		s4_25_2015.setDate(toMillis(4, 25, 2015));
 		sessionId = dao.insert(s4_25_2015);
 		dao.insert(createLift(sessionId, BENCH_ID, 267, 5, 6));
-		dao.insert(createLift(sessionId, BB_ROW_ID, 200, 5;140, 14));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 200, 5, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 140, 14, 3));
 		dao.insert(createLift(sessionId, OHP_ID, 135, 7, 7));
 		dao.insert(createLift(sessionId, HAMMER_CURL_ID, 35, 13, 3));
 
@@ -99,15 +104,18 @@ public class DataLoader
 		sessionId = dao.insert(s4_26_2015);
 		dao.insert(createLift(sessionId, SQUAT_ID, 375, 5, 5));
 		dao.insert(createLift(sessionId, SUMO_DL_DOH_BL_ID, 365, 5, 3));
-		dao.insert(createLift(sessionId, CHINUPS_ID, 230, 10, 2;230));
-		dao.insert(createLift(sessionId, HAMSTRING_CURLS_ID, 80, 11;80, 10));
+		dao.insert(createLift(sessionId, CHINUPS_ID, 230, 10, 2));
+		dao.insert(createLift(sessionId, CHINUPS_ID, 230, 9, 1));
+		dao.insert(createLift(sessionId, HAMSTRING_CURLS_ID, 80, 11, 1));
+		dao.insert(createLift(sessionId, HAMSTRING_CURLS_ID, 80, 10, 2));
 
 		Session s4_29_2015 = new Session();
 		s4_29_2015.setNew(true);
 		s4_29_2015.setDate(toMillis(4, 29, 2015));
 		sessionId = dao.insert(s4_29_2015);
 		dao.insert(createLift(sessionId, BENCH_P_ID, 290, 3, 3));
-		dao.insert(createLift(sessionId, BB_ROW_ID, 205, 5;140, 15));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 205, 5, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 140, 15, 3));
 		dao.insert(createLift(sessionId, OHP_ID, 160, 3, 3));
 		dao.insert(createLift(sessionId, HAMMER_CURL_ID, 35, 14, 3));
 
@@ -115,6 +123,8 @@ public class DataLoader
 		s4_30_2015.setNew(true);
 		s4_30_2015.setDate(toMillis(4, 30, 2015));
 		sessionId = dao.insert(s4_30_2015);
+		dao.insert(createLift(sessionId, SQUAT_ID, 415, 5, 1));
+		dao.insert(createLift(sessionId, DEADLIFT_ID, 475, 5, 1));
 		dao.insert(createLift(sessionId, SUMO_DL_DOH_BL_ID, 315, 5, 3));
 		dao.insert(createLift(sessionId, CHINUPS_ID, 230, 10, 3));
 		dao.insert(createLift(sessionId, HAMSTRING_CURLS_ID, 80, 11, 3));
@@ -124,7 +134,8 @@ public class DataLoader
 		s5_2_2015.setDate(toMillis(5, 2, 2015));
 		sessionId = dao.insert(s5_2_2015);
 		dao.insert(createLift(sessionId, BENCH_ID, 270, 5, 6));
-		dao.insert(createLift(sessionId, BB_ROW_ID, 210, 5;145, 10));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 210, 5, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 145, 10, 3));
 		dao.insert(createLift(sessionId, OHP_ID, 115, 10, 3));
 		dao.insert(createLift(sessionId, HAMMER_CURL_ID, 35, 15, 3));
 
@@ -142,14 +153,18 @@ public class DataLoader
 		s5_5_2015.setDate(toMillis(5, 5, 2015));
 		sessionId = dao.insert(s5_5_2015);
 		dao.insert(createLift(sessionId, BENCH_P_ID, 292, 3, 2));
-		dao.insert(createLift(sessionId, BB_ROW_ID, 210, 5;145, 11));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 210, 5, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 145, 11, 3));
 		dao.insert(createLift(sessionId, OHP_ID, 120, 10, 3));
-		dao.insert(createLift(sessionId, HAMMER_CURL_ID, 35, 15, 2;35));
+		dao.insert(createLift(sessionId, HAMMER_CURL_ID, 35, 15, 2));
+		dao.insert(createLift(sessionId, HAMMER_CURL_ID, 35, 13, 1));
 
 		Session s5_8_2015 = new Session();
 		s5_8_2015.setNew(true);
 		s5_8_2015.setDate(toMillis(5, 8, 2015));
 		sessionId = dao.insert(s5_8_2015);
+		dao.insert(createLift(sessionId, SQUAT_ID, 420, 5, 1));
+		dao.insert(createLift(sessionId, DEADLIFT_ID, 480, 5, 1));
 		dao.insert(createLift(sessionId, SUMO_DL_DOH_BL_ID, 315, 7, 3));
 		dao.insert(createLift(sessionId, CHINUPS_ID, 235, 6, 3));
 
@@ -157,8 +172,10 @@ public class DataLoader
 		s5_9_2015.setNew(true);
 		s5_9_2015.setDate(toMillis(5, 9, 2015));
 		sessionId = dao.insert(s5_9_2015);
-		dao.insert(createLift(sessionId, BENCH_ID, 315, 1;272, 5));
-		dao.insert(createLift(sessionId, BB_ROW_ID, 215, 5;145, 12));
+		dao.insert(createLift(sessionId, BENCH_ID, 315, 1, 1));
+		dao.insert(createLift(sessionId, BENCH_ID, 272, 5, 4));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 215, 5, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 145, 12, 3));
 		dao.insert(createLift(sessionId, HAMMER_CURL_ID, 40, 10, 3));
 
 		Session s5_10_2015 = new Session();
@@ -175,7 +192,8 @@ public class DataLoader
 		s5_13_2015.setDate(toMillis(5, 13, 2015));
 		sessionId = dao.insert(s5_13_2015);
 		dao.insert(createLift(sessionId, BENCH_P_ID, 295, 3, 2));
-		dao.insert(createLift(sessionId, BB_ROW_ID, 220, 5;145, 13));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 220, 5, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 145, 13, 3));
 		dao.insert(createLift(sessionId, HAMMER_CURL_ID, 40, 11, 3));
 
 		Session s5_14_2015 = new Session();
@@ -183,6 +201,7 @@ public class DataLoader
 		s5_14_2015.setDate(toMillis(5, 14, 2015));
 		sessionId = dao.insert(s5_14_2015);
 		dao.insert(createLift(sessionId, SQUAT_ID, 425, 3, 2));
+		dao.insert(createLift(sessionId, DEADLIFT_ID, 485, 5, 1));
 		dao.insert(createLift(sessionId, SUMO_DL_DOH_BL_ID, 325, 5, 3));
 		dao.insert(createLift(sessionId, CHINUPS_ID, 235, 8, 3));
 		dao.insert(createLift(sessionId, HAMSTRING_CURLS_ID, 80, 14, 3));
@@ -192,7 +211,9 @@ public class DataLoader
 		s5_16_2015.setDate(toMillis(5, 16, 2015));
 		sessionId = dao.insert(s5_16_2015);
 		dao.insert(createLift(sessionId, BENCH_ID, 275, 5, 5));
-		dao.insert(createLift(sessionId, BB_ROW_ID, 225, 5;145, 14;145));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 225, 5, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 145, 14, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 145, 13, 2));
 		dao.insert(createLift(sessionId, HAMMER_CURL_ID, 40, 12, 3));
 
 		Session s5_17_2015 = new Session();
@@ -209,7 +230,8 @@ public class DataLoader
 		s5_20_2015.setDate(toMillis(5, 20, 2015));
 		sessionId = dao.insert(s5_20_2015);
 		dao.insert(createLift(sessionId, BENCH_P_ID, 297, 3, 2));
-		dao.insert(createLift(sessionId, BB_ROW_ID, 230, 5; 145, 14));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 230, 5, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 145, 14, 3));
 		dao.insert(createLift(sessionId, HAMMER_CURL_ID, 40, 13, 3));
 
 		Session s5_21_2015 = new Session();
@@ -217,6 +239,7 @@ public class DataLoader
 		s5_21_2015.setDate(toMillis(5, 21, 2015));
 		sessionId = dao.insert(s5_21_2015);
 		dao.insert(createLift(sessionId, SQUAT_ID, 430, 3, 2));
+		dao.insert(createLift(sessionId, DEADLIFT_ID, 490, 5, 1));
 		dao.insert(createLift(sessionId, SUMO_DL_DOH_BL_ID, 325, 7, 3));
 		dao.insert(createLift(sessionId, CHINUPS_ID, 240, 5, 3));
 		dao.insert(createLift(sessionId, HAMSTRING_CURLS_ID, 95, 10, 3));
@@ -226,7 +249,8 @@ public class DataLoader
 		s5_23_2015.setDate(toMillis(5, 23, 2015));
 		sessionId = dao.insert(s5_23_2015);
 		dao.insert(createLift(sessionId, BENCH_ID, 277, 5, 5));
-		dao.insert(createLift(sessionId, BB_ROW_ID, 235, 5;145, 15));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 235, 5, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 145, 15, 3));
 		dao.insert(createLift(sessionId, HAMMER_CURL_ID, 45, 10, 3));
 
 		Session s5_24_2015 = new Session();
@@ -234,6 +258,7 @@ public class DataLoader
 		s5_24_2015.setDate(toMillis(5, 24, 2015));
 		sessionId = dao.insert(s5_24_2015);
 		dao.insert(createLift(sessionId, SQUAT_ID, 355, 5, 3));
+		dao.insert(createLift(sessionId, DEADLIFT_ID, 565, 1, 1));
 		dao.insert(createLift(sessionId, SUMO_DL_DOH_BL_ID, 325, 8, 3));
 		dao.insert(createLift(sessionId, CHINUPS_ID, 240, 6, 3));
 		dao.insert(createLift(sessionId, HAMSTRING_CURLS_ID, 95, 8, 3));
@@ -243,13 +268,16 @@ public class DataLoader
 		s5_27_2015.setDate(toMillis(5, 27, 2015));
 		sessionId = dao.insert(s5_27_2015);
 		dao.insert(createLift(sessionId, BENCH_P_ID, 300, 3, 2));
-		dao.insert(createLift(sessionId, BB_ROW_ID, 240, 5;145, 16));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 240, 5, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 145, 16, 3));
 		dao.insert(createLift(sessionId, HAMMER_CURL_ID, 45, 11, 3));
 
 		Session s5_28_2015 = new Session();
 		s5_28_2015.setNew(true);
 		s5_28_2015.setDate(toMillis(5, 28, 2015));
 		sessionId = dao.insert(s5_28_2015);
+		dao.insert(createLift(sessionId, SQUAT_ID, 415, 1, 1));
+		dao.insert(createLift(sessionId, DEADLIFT_ID, 475, 1, 1));
 		dao.insert(createLift(sessionId, SUMO_DL_DOH_BL_ID, 335, 5, 3));
 		dao.insert(createLift(sessionId, CHINUPS_ID, 240, 7, 3));
 		dao.insert(createLift(sessionId, HAMSTRING_CURLS_ID, 95, 9, 3));
@@ -259,7 +287,8 @@ public class DataLoader
 		s5_30_2015.setDate(toMillis(5, 30, 2015));
 		sessionId = dao.insert(s5_30_2015);
 		dao.insert(createLift(sessionId, BENCH_ID, 280, 5, 5));
-		dao.insert(createLift(sessionId, BB_ROW_ID, 245, 5;150, 10));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 245, 5, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 150, 10, 3));
 
 		Session s5_31_2015 = new Session();
 		s5_31_2015.setNew(true);
@@ -274,27 +303,32 @@ public class DataLoader
 		s6_2_2015.setNew(true);
 		s6_2_2015.setDate(toMillis(6, 2, 2015));
 		sessionId = dao.insert(s6_2_2015);
-		dao.insert(createLift(sessionId, BENCH_P_ID, 302.5, 3, 2));
-		dao.insert(createLift(sessionId, BB_ROW_ID, 250, 5;150, 11));
+		dao.insert(createLift(sessionId, BENCH_P_ID, 302, 3, 2));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 250, 5, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 150, 11, 3));
 
 		Session s6_6_2015 = new Session();
 		s6_6_2015.setNew(true);
 		s6_6_2015.setDate(toMillis(6, 6, 2015));
 		sessionId = dao.insert(s6_6_2015);
 		dao.insert(createLift(sessionId, BENCH_P_ID, 255, 5, 4));
-		dao.insert(createLift(sessionId, BB_ROW_ID, 185, 5;150, 12));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 185, 5, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 150, 12, 3));
 
 		Session s6_9_2015 = new Session();
 		s6_9_2015.setNew(true);
 		s6_9_2015.setDate(toMillis(6, 9, 2015));
 		sessionId = dao.insert(s6_9_2015);
 		dao.insert(createLift(sessionId, BENCH_P_ID, 185, 5, 3));
-		dao.insert(createLift(sessionId, BB_ROW_ID, 190, 5;150, 13));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 190, 5, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 150, 13, 3));
 
 		Session s6_10_2015 = new Session();
 		s6_10_2015.setNew(true);
 		s6_10_2015.setDate(toMillis(6, 10, 2015));
 		sessionId = dao.insert(s6_10_2015);
+		dao.insert(createLift(sessionId, SQUAT_ID, 415, 1, 1));
+		dao.insert(createLift(sessionId, DEADLIFT_ID, 435, 1, 1));
 		dao.insert(createLift(sessionId, CHINUPS_ID, 245, 5, 3));
 		dao.insert(createLift(sessionId, HAMSTRING_CURLS_ID, 95, 12, 3));
 
@@ -302,8 +336,10 @@ public class DataLoader
 		s6_15_2015.setNew(true);
 		s6_15_2015.setDate(toMillis(6, 15, 2015));
 		sessionId = dao.insert(s6_15_2015);
-		dao.insert(createLift(sessionId, BENCH_P_ID, 330, 1;245, 5));
-		dao.insert(createLift(sessionId, BB_ROW_ID, 195, 5;150, 14));
+		dao.insert(createLift(sessionId, BENCH_P_ID, 330, 1, 1));
+		dao.insert(createLift(sessionId, BENCH_P_ID, 245, 5, 6));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 195, 5, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 150, 14, 3));
 
 		Session s6_16_2015 = new Session();
 		s6_16_2015.setNew(true);
@@ -319,12 +355,15 @@ public class DataLoader
 		s6_19_2015.setDate(toMillis(6, 19, 2015));
 		sessionId = dao.insert(s6_19_2015);
 		dao.insert(createLift(sessionId, BENCH_P_ID, 300, 3, 3));
-		dao.insert(createLift(sessionId, BB_ROW_ID, 200, 5;150, 15));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 200, 5, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 150, 15, 3));
 
 		Session s6_20_2015 = new Session();
 		s6_20_2015.setNew(true);
 		s6_20_2015.setDate(toMillis(6, 20, 2015));
 		sessionId = dao.insert(s6_20_2015);
+		dao.insert(createLift(sessionId, SQUAT_ID, 365, 5, 1));
+		dao.insert(createLift(sessionId, DEADLIFT_ID, 495, 5, 1));
 		dao.insert(createLift(sessionId, SUMO_DL_DOH_BL_ID, 335, 7, 3));
 		dao.insert(createLift(sessionId, CHINUPS_ID, 245, 7, 3));
 		dao.insert(createLift(sessionId, HAMSTRING_CURLS_ID, 65, 13, 3));
@@ -334,7 +373,8 @@ public class DataLoader
 		s6_21_2015.setDate(toMillis(6, 21, 2015));
 		sessionId = dao.insert(s6_21_2015);
 		dao.insert(createLift(sessionId, BENCH_P_ID, 250, 6, 5));
-		dao.insert(createLift(sessionId, BB_ROW_ID, 205, 5;155, 10));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 205, 5, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 155, 10, 3));
 
 		Session s6_22_2015 = new Session();
 		s6_22_2015.setNew(true);
@@ -350,13 +390,16 @@ public class DataLoader
 		s6_25_2015.setDate(toMillis(6, 25, 2015));
 		sessionId = dao.insert(s6_25_2015);
 		dao.insert(createLift(sessionId, BENCH_P_ID, 305, 2, 3));
-		dao.insert(createLift(sessionId, BB_ROW_ID, 210, 5;155, 11));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 210, 5, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 155, 11, 3));
 
 		Session s6_27_2015 = new Session();
 		s6_27_2015.setNew(true);
 		s6_27_2015.setDate(toMillis(6, 27, 2015));
 		sessionId = dao.insert(s6_27_2015);
-		dao.insert(createLift(sessionId, DEADLIFT_ID, 515, 1;455, 5));
+		dao.insert(createLift(sessionId, SQUAT_ID, 405, 5, 1));
+		dao.insert(createLift(sessionId, DEADLIFT_ID, 515, 1, 1));
+		dao.insert(createLift(sessionId, DEADLIFT_ID, 455, 5, 1));
 		dao.insert(createLift(sessionId, SUMO_DL_DOH_BL_ID, 340, 5, 3));
 		dao.insert(createLift(sessionId, CHINUPS_ID, 250, 5, 3));
 		dao.insert(createLift(sessionId, HAMSTRING_CURLS_ID, 65, 15, 3));
@@ -366,7 +409,9 @@ public class DataLoader
 		s6_28_2015.setDate(toMillis(6, 28, 2015));
 		sessionId = dao.insert(s6_28_2015);
 		dao.insert(createLift(sessionId, BENCH_P_ID, 255, 6, 6));
-		dao.insert(createLift(sessionId, BB_ROW_ID, 215, 5;155, 12;155));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 215, 5, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 155, 12, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 155, 11, 2));
 
 		Session s6_30_2015 = new Session();
 		s6_30_2015.setNew(true);
@@ -374,29 +419,37 @@ public class DataLoader
 		sessionId = dao.insert(s6_30_2015);
 		dao.insert(createLift(sessionId, SQUAT_ID, 355, 6, 6));
 		dao.insert(createLift(sessionId, SUMO_DL_DOH_BL_ID, 340, 6, 3));
-		dao.insert(createLift(sessionId, CHINUPS_ID, 250, 6;250, 5));
+		dao.insert(createLift(sessionId, CHINUPS_ID, 250, 6, 1));
+		dao.insert(createLift(sessionId, CHINUPS_ID, 250, 5, 3));
 
 		Session s7_2_2015 = new Session();
 		s7_2_2015.setNew(true);
 		s7_2_2015.setDate(toMillis(7, 2, 2015));
 		sessionId = dao.insert(s7_2_2015);
 		dao.insert(createLift(sessionId, BENCH_P_ID, 307, 2, 3));
-		dao.insert(createLift(sessionId, BB_ROW_ID, 220, 5;155, 12));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 220, 5, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 155, 12, 2));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 155, 11, 1));
 
 		Session s7_3_2015 = new Session();
 		s7_3_2015.setNew(true);
 		s7_3_2015.setDate(toMillis(7, 3, 2015));
 		sessionId = dao.insert(s7_3_2015);
-		dao.insert(createLift(sessionId, DEADLIFT_ID, 520, 1;465, 5));
+		dao.insert(createLift(sessionId, SQUAT_ID, 410, 5, 1));
+		dao.insert(createLift(sessionId, DEADLIFT_ID, 520, 1, 1));
+		dao.insert(createLift(sessionId, DEADLIFT_ID, 465, 5, 1));
 		dao.insert(createLift(sessionId, SUMO_DL_DOH_BL_ID, 340, 7, 3));
-		dao.insert(createLift(sessionId, CHINUPS_ID, 250, 6, 2;250));
+		dao.insert(createLift(sessionId, CHINUPS_ID, 250, 6, 2));
+		dao.insert(createLift(sessionId, CHINUPS_ID, 250, 5, 1));
 
 		Session s7_5_2015 = new Session();
 		s7_5_2015.setNew(true);
 		s7_5_2015.setDate(toMillis(7, 5, 2015));
 		sessionId = dao.insert(s7_5_2015);
-		dao.insert(createLift(sessionId, BENCH_P_ID, 260, 6, 6;295));
-		dao.insert(createLift(sessionId, BB_ROW_ID, 225, 5;155, 12));
+		dao.insert(createLift(sessionId, BENCH_P_ID, 260, 6, 6));
+		dao.insert(createLift(sessionId, BENCH_P_ID, 295, 1, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 225, 5, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 155, 12, 3));
 
 		Session s7_6_2015 = new Session();
 		s7_6_2015.setNew(true);
@@ -410,13 +463,17 @@ public class DataLoader
 		s7_9_2015.setDate(toMillis(7, 9, 2015));
 		sessionId = dao.insert(s7_9_2015);
 		dao.insert(createLift(sessionId, BENCH_P_ID, 310, 2, 3));
-		dao.insert(createLift(sessionId, BB_ROW_ID, 230, 5;155, 13;155));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 230, 5, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 155, 13, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 155, 12, 2));
 
 		Session s7_10_2015 = new Session();
 		s7_10_2015.setNew(true);
 		s7_10_2015.setDate(toMillis(7, 10, 2015));
 		sessionId = dao.insert(s7_10_2015);
-		dao.insert(createLift(sessionId, DEADLIFT_ID, 525, 1;470, 5));
+		dao.insert(createLift(sessionId, SQUAT_ID, 415, 5, 1));
+		dao.insert(createLift(sessionId, DEADLIFT_ID, 525, 1, 1));
+		dao.insert(createLift(sessionId, DEADLIFT_ID, 470, 5, 1));
 		dao.insert(createLift(sessionId, SUMO_DL_DOH_BL_ID, 345, 5, 4));
 		dao.insert(createLift(sessionId, CHINUPS_ID, 250, 6, 3));
 
@@ -424,8 +481,12 @@ public class DataLoader
 		s7_12_2015.setNew(true);
 		s7_12_2015.setDate(toMillis(7, 12, 2015));
 		sessionId = dao.insert(s7_12_2015);
-		dao.insert(createLift(sessionId, BENCH_P_ID, 265, 6, 4;265));
-		dao.insert(createLift(sessionId, BB_ROW_ID, 235, 5;155, 13));
+		dao.insert(createLift(sessionId, BENCH_P_ID, 265, 6, 4));
+		dao.insert(createLift(sessionId, BENCH_P_ID, 265, 5, 1));
+		dao.insert(createLift(sessionId, BENCH_P_ID, 265, 4, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 235, 5, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 155, 13, 2));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 155, 12, 1));
 
 		Session s7_13_2015 = new Session();
 		s7_13_2015.setNew(true);
@@ -433,29 +494,36 @@ public class DataLoader
 		sessionId = dao.insert(s7_13_2015);
 		dao.insert(createLift(sessionId, SQUAT_ID, 365, 6, 6));
 		dao.insert(createLift(sessionId, SUMO_DL_DOH_BL_ID, 345, 6, 3));
-		dao.insert(createLift(sessionId, CHINUPS_ID, 250, 6, 2;250));
+		dao.insert(createLift(sessionId, CHINUPS_ID, 250, 6, 2));
+		dao.insert(createLift(sessionId, CHINUPS_ID, 250, 7, 1));
 
 		Session s7_15_2015 = new Session();
 		s7_15_2015.setNew(true);
 		s7_15_2015.setDate(toMillis(7, 15, 2015));
 		sessionId = dao.insert(s7_15_2015);
 		dao.insert(createLift(sessionId, BENCH_P_ID, 312, 2, 3));
-		dao.insert(createLift(sessionId, BB_ROW_ID, 240, 5;155, 13));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 240, 5, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 155, 13, 3));
 
 		Session s7_17_2015 = new Session();
 		s7_17_2015.setNew(true);
 		s7_17_2015.setDate(toMillis(7, 17, 2015));
 		sessionId = dao.insert(s7_17_2015);
-		dao.insert(createLift(sessionId, DEADLIFT_ID, 530, 1;475, 5));
+		dao.insert(createLift(sessionId, SQUAT_ID, 420, 5, 1));
+		dao.insert(createLift(sessionId, DEADLIFT_ID, 530, 1, 1));
+		dao.insert(createLift(sessionId, DEADLIFT_ID, 475, 5, 1));
 		dao.insert(createLift(sessionId, SUMO_DL_DOH_BL_ID, 345, 7, 3));
-		dao.insert(createLift(sessionId, CHINUPS_ID, 250, 7, 2;250));
+		dao.insert(createLift(sessionId, CHINUPS_ID, 250, 7, 2));
+		dao.insert(createLift(sessionId, CHINUPS_ID, 250, 6, 1));
 
 		Session s7_18_2015 = new Session();
 		s7_18_2015.setNew(true);
 		s7_18_2015.setDate(toMillis(7, 18, 2015));
 		sessionId = dao.insert(s7_18_2015);
 		dao.insert(createLift(sessionId, BENCH_ID, 275, 4, 6));
-		dao.insert(createLift(sessionId, BB_ROW_ID, 245, 5;155, 14;155));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 245, 5, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 155, 14, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 155, 13, 2));
 
 		Session s7_20_2015 = new Session();
 		s7_20_2015.setNew(true);
@@ -470,23 +538,28 @@ public class DataLoader
 		s7_21_2015.setDate(toMillis(7, 21, 2015));
 		sessionId = dao.insert(s7_21_2015);
 		dao.insert(createLift(sessionId, BENCH_ID, 315, 2, 3));
-		dao.insert(createLift(sessionId, BB_ROW_ID, 250, 5;155, 14));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 250, 5, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 155, 14, 3));
 
 		Session s7_23_2015 = new Session();
 		s7_23_2015.setNew(true);
 		s7_23_2015.setDate(toMillis(7, 23, 2015));
 		sessionId = dao.insert(s7_23_2015);
 		dao.insert(createLift(sessionId, SQUAT_ID, 435, 3, 2));
-		dao.insert(createLift(sessionId, DEADLIFT_ID, 530, 1;480, 5));
+		dao.insert(createLift(sessionId, DEADLIFT_ID, 530, 1, 1));
+		dao.insert(createLift(sessionId, DEADLIFT_ID, 480, 5, 1));
 		dao.insert(createLift(sessionId, SUMO_DL_DOH_BL_ID, 350, 5, 3));
-		dao.insert(createLift(sessionId, CHINUPS_ID, 250, 8;250, 7));
+		dao.insert(createLift(sessionId, CHINUPS_ID, 250, 8, 1));
+		dao.insert(createLift(sessionId, CHINUPS_ID, 250, 7, 2));
 
 		Session s7_24_2015 = new Session();
 		s7_24_2015.setNew(true);
 		s7_24_2015.setDate(toMillis(7, 24, 2015));
 		sessionId = dao.insert(s7_24_2015);
 		dao.insert(createLift(sessionId, BENCH_P_ID, 280, 4, 5));
-		dao.insert(createLift(sessionId, BB_ROW_ID, 255, 5;155, 15;155));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 255, 5, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 155, 15, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 155, 14, 2));
 
 		Session s7_26_2015 = new Session();
 		s7_26_2015.setNew(true);
@@ -500,15 +573,19 @@ public class DataLoader
 		s7_27_2015.setNew(true);
 		s7_27_2015.setDate(toMillis(7, 27, 2015));
 		sessionId = dao.insert(s7_27_2015);
-		dao.insert(createLift(sessionId, BENCH_P_ID, 305, 3, 2;315));
-		dao.insert(createLift(sessionId, BB_ROW_ID, 260, 5;155, 15));
+		dao.insert(createLift(sessionId, BENCH_P_ID, 305, 3, 2));
+		dao.insert(createLift(sessionId, BENCH_P_ID, 315, 1, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 260, 5, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 155, 15, 2));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 155, 14, 1));
 
 		Session s7_30_2015 = new Session();
 		s7_30_2015.setNew(true);
 		s7_30_2015.setDate(toMillis(7, 30, 2015));
 		sessionId = dao.insert(s7_30_2015);
 		dao.insert(createLift(sessionId, SQUAT_ID, 445, 2, 2));
-		dao.insert(createLift(sessionId, DEADLIFT_ID, 525, 1;495, 3));
+		dao.insert(createLift(sessionId, DEADLIFT_ID, 525, 1, 1));
+		dao.insert(createLift(sessionId, DEADLIFT_ID, 495, 3, 1));
 		dao.insert(createLift(sessionId, SUMO_DL_DOH_BL_ID, 350, 7, 3));
 		dao.insert(createLift(sessionId, CHINUPS_ID, 250, 7, 3));
 
@@ -517,7 +594,8 @@ public class DataLoader
 		s8_1_2015.setDate(toMillis(8, 1, 2015));
 		sessionId = dao.insert(s8_1_2015);
 		dao.insert(createLift(sessionId, BENCH_P_ID, 295, 3, 3));
-		dao.insert(createLift(sessionId, BB_ROW_ID, 265, 5;155, 15));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 265, 5, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 155, 15, 3));
 
 		Session s8_2_2015 = new Session();
 		s8_2_2015.setNew(true);
@@ -525,12 +603,14 @@ public class DataLoader
 		sessionId = dao.insert(s8_2_2015);
 		dao.insert(createLift(sessionId, SQUAT_ID, 405, 3, 4));
 		dao.insert(createLift(sessionId, SUMO_DL_DOH_BL_ID, 350, 8, 3));
-		dao.insert(createLift(sessionId, CHINUPS_ID, 250, 8;250, 7));
+		dao.insert(createLift(sessionId, CHINUPS_ID, 250, 8, 1));
+		dao.insert(createLift(sessionId, CHINUPS_ID, 250, 7, 2));
 
 		Session s8_5_2015 = new Session();
 		s8_5_2015.setNew(true);
 		s8_5_2015.setDate(toMillis(8, 5, 2015));
 		sessionId = dao.insert(s8_5_2015);
+		dao.insert(createLift(sessionId, SQUAT_ID, 455, 1, 1));
 		dao.insert(createLift(sessionId, BENCH_P_ID, 315, 1, 3));
 		dao.insert(createLift(sessionId, BB_ROW_ID, 135, 12, 3));
 		dao.insert(createLift(sessionId, CHINUPS_ID, 195, 8, 3));
@@ -539,7 +619,9 @@ public class DataLoader
 		s8_8_2015.setNew(true);
 		s8_8_2015.setDate(toMillis(8, 8, 2015));
 		sessionId = dao.insert(s8_8_2015);
+		dao.insert(createLift(sessionId, SQUAT_ID, 425, 1, 1));
 		dao.insert(createLift(sessionId, BENCH_P_ID, 305, 1, 3));
+		dao.insert(createLift(sessionId, DEADLIFT_ID, 475, 1, 1));
 		dao.insert(createLift(sessionId, BB_ROW_ID, 135, 12, 3));
 		dao.insert(createLift(sessionId, CHINUPS_ID, 195, 8, 3));
 
@@ -556,7 +638,8 @@ public class DataLoader
 		s8_23_2015.setDate(toMillis(8, 23, 2015));
 		sessionId = dao.insert(s8_23_2015);
 		dao.insert(createLift(sessionId, BENCH_P_ID, 235, 5, 5));
-		dao.insert(createLift(sessionId, BB_ROW_ID, 225, 5;155, 10));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 225, 5, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 155, 10, 3));
 		dao.insert(createLift(sessionId, BTNP_ID, 95, 8, 3));
 		dao.insert(createLift(sessionId, DIPS_ID, 195, 10, 3));
 		dao.insert(createLift(sessionId, HAMMER_CURL_ID, 35, 12, 3));
@@ -566,20 +649,25 @@ public class DataLoader
 		s8_24_2015.setDate(toMillis(8, 24, 2015));
 		sessionId = dao.insert(s8_24_2015);
 		dao.insert(createLift(sessionId, SQUAT_ID, 325, 5, 5));
-		dao.insert(createLift(sessionId, RDL_ID, 315, 5, 2;225));
+		dao.insert(createLift(sessionId, RDL_ID, 315, 5, 2));
+		dao.insert(createLift(sessionId, RDL_ID, 225, 10, 1));
 		dao.insert(createLift(sessionId, CHINUPS_ID, 240, 6, 3));
 
 		Session s8_26_2015 = new Session();
 		s8_26_2015.setNew(true);
 		s8_26_2015.setDate(toMillis(8, 26, 2015));
 		sessionId = dao.insert(s8_26_2015);
-		dao.insert(createLift(sessionId, BB_ROW_ID, 230, 5;160, 10));
+		dao.insert(createLift(sessionId, BENCH_P_ID, 295, 3, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 230, 5, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 160, 10, 3));
 		dao.insert(createLift(sessionId, BTNP_ID, 95, 9, 3));
 
 		Session s8_27_2015 = new Session();
 		s8_27_2015.setNew(true);
 		s8_27_2015.setDate(toMillis(8, 27, 2015));
 		sessionId = dao.insert(s8_27_2015);
+		dao.insert(createLift(sessionId, SQUAT_ID, 410, 3, 1));
+		dao.insert(createLift(sessionId, DEADLIFT_ID, 485, 3, 1));
 		dao.insert(createLift(sessionId, SUMO_DL_DOH_BL_ID, 345, 5, 3));
 		dao.insert(createLift(sessionId, PULLUPS_ID, 235, 5, 3));
 
@@ -588,8 +676,10 @@ public class DataLoader
 		s8_29_2015.setDate(toMillis(8, 29, 2015));
 		sessionId = dao.insert(s8_29_2015);
 		dao.insert(createLift(sessionId, BENCH_P_ID, 240, 5, 5));
-		dao.insert(createLift(sessionId, BB_ROW_ID, 235, 5;165, 10));
-		dao.insert(createLift(sessionId, BTNP_ID, 95, 10;95, 9));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 235, 5, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 165, 10, 3));
+		dao.insert(createLift(sessionId, BTNP_ID, 95, 10, 1));
+		dao.insert(createLift(sessionId, BTNP_ID, 95, 9, 2));
 
 		Session s8_30_2015 = new Session();
 		s8_30_2015.setNew(true);
@@ -598,14 +688,19 @@ public class DataLoader
 		dao.insert(createLift(sessionId, SQUAT_ID, 330, 5, 5));
 		dao.insert(createLift(sessionId, RDL_ID, 225, 10, 3));
 		dao.insert(createLift(sessionId, SEATED_CALVES_ID, 90, 13, 3));
-		dao.insert(createLift(sessionId, PULLUPS_ID, 235, 6;235, 5));
+		dao.insert(createLift(sessionId, PULLUPS_ID, 235, 6, 1));
+		dao.insert(createLift(sessionId, PULLUPS_ID, 235, 5, 2));
 
 		Session s9_1_2015 = new Session();
 		s9_1_2015.setNew(true);
 		s9_1_2015.setDate(toMillis(9, 1, 2015));
 		sessionId = dao.insert(s9_1_2015);
-		dao.insert(createLift(sessionId, BB_ROW_ID, 250, 5;170, 10));
-		dao.insert(createLift(sessionId, BTNP_ID, 95, 10, 2;95));
+		dao.insert(createLift(sessionId, BENCH_ID, 310, 2, 1));
+		dao.insert(createLift(sessionId, BENCH_P_ID, 310, 2, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 250, 5, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 170, 10, 3));
+		dao.insert(createLift(sessionId, BTNP_ID, 95, 10, 2));
+		dao.insert(createLift(sessionId, BTNP_ID, 95, 9, 1));
 		dao.insert(createLift(sessionId, DIPS_ID, 240, 8, 3));
 		dao.insert(createLift(sessionId, HAMMER_CURL_ID, 35, 13, 5));
 
@@ -614,6 +709,7 @@ public class DataLoader
 		s9_2_2015.setDate(toMillis(9, 2, 2015));
 		sessionId = dao.insert(s9_2_2015);
 		dao.insert(createLift(sessionId, SQUAT_ID, 430, 2, 2));
+		dao.insert(createLift(sessionId, DEADLIFT_ID, 505, 2, 1));
 		dao.insert(createLift(sessionId, SUMO_DL_DOH_BL_ID, 345, 6, 3));
 		dao.insert(createLift(sessionId, PULLUPS_ID, 235, 6, 3));
 
@@ -622,10 +718,12 @@ public class DataLoader
 		s9_4_2015.setDate(toMillis(9, 4, 2015));
 		sessionId = dao.insert(s9_4_2015);
 		dao.insert(createLift(sessionId, BENCH_P_ID, 245, 5, 5));
-		dao.insert(createLift(sessionId, BB_ROW_ID, 245, 5;175, 10));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 245, 5, 1));
+		dao.insert(createLift(sessionId, BB_ROW_ID, 175, 10, 3));
 		dao.insert(createLift(sessionId, BTNP_ID, 95, 10, 3));
 		dao.insert(createLift(sessionId, SEATED_CALVES_ID, 90, 12, 3));
-		dao.insert(createLift(sessionId, DIPS_ID, 240, 9;240, 8));
+		dao.insert(createLift(sessionId, DIPS_ID, 240, 9, 1));
+		dao.insert(createLift(sessionId, DIPS_ID, 240, 8, 2));
 		dao.insert(createLift(sessionId, HAMMER_CURL_ID, 35, 14, 3));
 
 		Session s9_5_2015 = new Session();
@@ -635,7 +733,8 @@ public class DataLoader
 		dao.insert(createLift(sessionId, SQUAT_ID, 335, 5, 5));
 		dao.insert(createLift(sessionId, RDL_ID, 230, 10, 3));
 		dao.insert(createLift(sessionId, SEATED_CALVES_ID, 90, 14, 3));
-		dao.insert(createLift(sessionId, PULLUPS_ID, 235, 7;235, 6));
+		dao.insert(createLift(sessionId, PULLUPS_ID, 235, 7, 1));
+		dao.insert(createLift(sessionId, PULLUPS_ID, 235, 6, 2));
 
 
 		
