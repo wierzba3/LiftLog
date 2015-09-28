@@ -142,7 +142,7 @@ public class Session
         }
     };
 
-    /**
+        /**
      * Calculate the Sessions that have the same day of year date value, and assign it's sequenceNum value.
      * @param sessions The List of sessions.
      */
@@ -193,7 +193,13 @@ public class Session
         {
             session = sessions.get(i);
             long date = session.getDate();
-            long day = date / (1000 * 60 * 60 * 24);
+            
+            long day;
+            
+//            day = date / (1000 * 60 * 60 * 24);
+            dateObj = new DateTime(date);
+            day = Days.daysBetween(epoch, dateObj).getDays();
+            
             value = instanceCount.get(day);
             //if there is more than one Session with the same day value
             if(value != null && value > 1)
@@ -234,9 +240,12 @@ public class Session
     {
         if (id < 0) return "< New Session >";
 
-        Date dateObj = new Date(date);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("E, MMM dd yyyy");
-        String result = dateFormat.format(dateObj);
+        String result;
+        
+//        Date dateObj = new Date(date);
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("E, MMM dd yyyy");
+//        result = dateFormat.format(dateObj);
+
 
         DateTime dt = new DateTime(date);
         DateTimeFormatter dtf = DateTimeFormat.forPattern("E, MMM dd yyyy");

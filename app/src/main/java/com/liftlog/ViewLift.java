@@ -94,7 +94,7 @@ public class ViewLift extends AppCompatActivity implements ExerciseInputDialog.E
         else {
             Lift lift = dao.selectLift(id);
             double w = lift.getWeight();
-            String weightValue = (w == Math.floor(w) ? String.valueOf(w) : String.valueOf((int) w));
+            String weightValue = (w == Math.floor(w) ? String.valueOf((int) w) : String.valueOf(w));
             txtWeight.setText(weightValue);
             pckReps.setValue(lift.getReps());
             pckSets.setValue(lift.getSets());

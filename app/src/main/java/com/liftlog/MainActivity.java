@@ -27,11 +27,13 @@ import com.liftlog.models.Category;
 /**
  * TODO
  * BUGS:
+ * - Switch back delete operations to actually delete records instead of marking them deleted
  * - Session showing (2) when it is the only session with that date
  * - Edit exercise is not updating category id
  *
  * Implement now:
  * - categorize exercises
+ * 	implemented, just need to make "add" dialog have an option to add Exercise|Category
  * - Test out restoring the .db backup
  * - Implement tools tab
  * - Implement View History (via Tools or ViewLift)
@@ -41,20 +43,15 @@ import com.liftlog.models.Category;
  *
  *
  * Implement in the future:
- * - Categorize exercises
  * - Tools
  *      1RM calculator
  *      History of lifts
- * - user authentication
  * - Programmable training routines. Define rules that the user can set for an exercise.
  * Display planned lifts separately from the completed lifts in the sessions.
  * e.g. repeat selected lift every M/W/F, increase weight each day/week
- * - Hi-scores. Users can submit their video of lifts to be reviewed and then entered in high scores.
- * - Settings
+ * - Application settings
  * - "sort by" option on sessions/lifts
  * - Copy option for session
- * - Tabular view of lifts
- * - use stored procedures for security
  */
 
 public class MainActivity extends AppCompatActivity
