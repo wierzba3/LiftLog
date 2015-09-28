@@ -93,7 +93,9 @@ public class ViewLift extends AppCompatActivity implements ExerciseInputDialog.E
         }
         else {
             Lift lift = dao.selectLift(id);
-            txtWeight.setText(String.valueOf(lift.getWeight()));
+            double w = lift.getWeight();
+            String weightValue = (w == Math.floor(w) ? String.valueOf(w) : String.valueOf((int) w));
+            txtWeight.setText(weightValue);
             pckReps.setValue(lift.getReps());
             pckSets.setValue(lift.getSets());
 
@@ -270,7 +272,15 @@ public class ViewLift extends AppCompatActivity implements ExerciseInputDialog.E
     public void doSave(View view)
     {
 //        boolean isWarmup = rbtnWarmup.isChecked();
-        int weight = Integer.parseInt(txtWeight.getText().toString());
+
+        double weight = 0;
+        try
+        {
+            weight = Double.parseDouble(txtWeight.getText().toString());
+        } catch (NumberFormatException e)
+        {
+            e.printStackTrace();
+        }
 
         int reps = pckReps.getValue();
         int sets = pckSets.getValue();

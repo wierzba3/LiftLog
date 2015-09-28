@@ -4,19 +4,18 @@
     android:layout_width="fill_parent"
     android:layout_height="30dp"
     android:orientation="vertical"
-   >
-    <!--
-    android:padding="8dp"
-    android:background="@color/primary_dark_material_light"
-    -->
+
+    >
 
     <TextView
-        android:id="@+id/lbl_lift_group"
+        android:id="@+id/lbl_exercise_group"
         android:layout_width="fill_parent"
         android:layout_height="30dp"
         android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
         android:textSize="20dp"
         android:textColor="@color/white"
-        android:background="@color/material_blue_500"/>
+        android:background="@color/material_blue_500"
+        />
+    <!-- -->
 
 </LinearLayout>

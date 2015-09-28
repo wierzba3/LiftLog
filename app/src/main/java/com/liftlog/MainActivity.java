@@ -21,16 +21,17 @@ import android.content.Intent;
 import android.net.Uri;
 
 import com.liftlog.data.DataAccessObject;
+import com.liftlog.models.Category;
 
 
 /**
  * TODO
  * BUGS:
- * - Session toString is always displaying Sept 07 when trying to setTitle(session.toString()) on ViewSession
- *      even though lifts are loaded correctly
- *
+ * - Session showing (2) when it is the only session with that date
+ * - Edit exercise is not updating category id
  *
  * Implement now:
+ * - categorize exercises
  * - Test out restoring the .db backup
  * - Implement tools tab
  * - Implement View History (via Tools or ViewLift)
@@ -124,6 +125,8 @@ public class MainActivity extends AppCompatActivity
 //                Bundle.EMPTY,
 //                2
 //        );
+
+
 
     }
 

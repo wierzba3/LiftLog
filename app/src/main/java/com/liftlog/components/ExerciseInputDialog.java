@@ -10,11 +10,16 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import com.liftlog.data.DataAccessObject;
 import com.liftlog.R;
+import com.liftlog.models.Category;
 import com.liftlog.models.Exercise;
+
+import java.util.List;
 
 
 public class ExerciseInputDialog extends DialogFragment
@@ -63,13 +68,33 @@ public class ExerciseInputDialog extends DialogFragment
         //the new custom view
         final View customView = inflater.inflate(R.layout.fragment_exercise_input_dialog, null);
 
+        final Spinner spnCategory = (Spinner) customView.findViewById(R.id.spn_category);
         final EditText txtName = (EditText) customView.findViewById(R.id.txt_name);
         final EditText txtDesc = (EditText) customView.findViewById(R.id.txt_description);
 
+
+        final List<Category> categories = dao.selectCategories(false);
+        categories.add(Category.dummy);
         if(currentExercise != null)
         {
             txtName.setText(currentExercise.getName());
             txtDesc.setText(currentExercise.getDescription());
+
+            if(currentExercise.getCategoryId() < 1) currentExercise.setCategoryId(-1l);
+
+            //populate and select Category spinner:
+            ArrayAdapter<Category> categoryItemAdapter = new ArrayAdapter<>(super.getActivity(), android.R.layout.simple_spinner_dropdown_item, categories);
+            categoryItemAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+            spnCategory.setAdapter(categoryItemAdapter);
+            for(int i = 0; i < spnCategory.getAdapter().getCount(); i++)
+            {
+                Category category = (Category) spnCategory.getItemAtPosition(i);
+                if(category != null && category.getId() == currentExercise.getCategoryId())
+                {
+                    spnCategory.setSelection(i);
+                    break;
+                }
+            }
         }
 
         builder.setView(customView);
@@ -77,7 +102,15 @@ public class ExerciseInputDialog extends DialogFragment
         // Add action buttons
         builder.setNegativeButton("Save", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int id) {
+            public void onClick(DialogInterface dialog, int id)
+            {
+                long categoryId = -1;
+                Category category = (Category) spnCategory.getSelectedItem();
+                if(category != null)
+                {
+                    categoryId = category.getId();
+                }
+
                 String name = txtName.getText().toString();
                 String desc = txtDesc.getText().toString();
 
@@ -91,6 +124,7 @@ public class ExerciseInputDialog extends DialogFragment
                     currentExercise.setModified(true);
                 }
                 currentExercise.setId(exerciseId);
+                currentExercise.setCategoryId(categoryId);
                 currentExercise.setName(name);
                 currentExercise.setDescription(desc);
 

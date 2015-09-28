@@ -275,71 +275,22 @@ public class ViewSession extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    private class LiftArrayAdapter extends ArrayAdapter<Lift>
+//
+
+    private class LiftGroupElement
     {
 
-        private ArrayList<Lift> items;
-
-        public LiftArrayAdapter(Context context, int textViewResourceId, ArrayList<Lift> items)
+        public LiftGroupElement()
         {
-            super(context, textViewResourceId, items);
-            this.items = items;
+            lifts = new ArrayList<>();
         }
 
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent)
-        {
-            View v = convertView;
-            if (v == null)
-            {
-                LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                v = vi.inflate(R.layout.lift_item, parent, false);
-            }
-//            v.setMinimumHeight(150);
 
-            final Lift lift = items.get(position);
-
-            TextView lblLift = (TextView) v.findViewById(R.id.lbl_lift);
-            ImageButton btnIncrement = (ImageButton) v.findViewById(R.id.btn_increment);
-
-            if (lift != null)
-            {
-                if (lblLift != null)
-                {
-                    lblLift.setText(lift.toString());
-                }
-
-                //remove the increment button in the <New Lift> dummy item
-                if (lift.getId() == -1)
-                {
-                    btnIncrement.setVisibility(View.GONE);
-                }
-            }
-            else return null;
-
-            lblLift.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    doAdd(lift.getId());
-                }
-            });
-            btnIncrement.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    lift.setSets(lift.getSets() + 1);
-                    dao.update(lift);
-                    loadSession(sessionId);
-                }
-            });
-
-            return v;
-        }
+        private Exercise exercise;
+        private List<Lift> lifts;
 
     }
+
 
     private class LiftExpendableListAdapter extends BaseExpandableListAdapter
     {
@@ -438,6 +389,7 @@ public class ViewSession extends AppCompatActivity
 
         private List<List<Lift>> liftLists;
         private List<Exercise> exercises;
+        private List<LiftGroupElement> elements;
 
         @Override
         public boolean isChildSelectable(int i, int i1)
@@ -544,5 +496,71 @@ public class ViewSession extends AppCompatActivity
             return view;
         }
     }
+
+//    private class LiftArrayAdapter extends ArrayAdapter<Lift>
+//    {
+//
+//        private ArrayList<Lift> items;
+//
+//        public LiftArrayAdapter(Context context, int textViewResourceId, ArrayList<Lift> items)
+//        {
+//            super(context, textViewResourceId, items);
+//            this.items = items;
+//        }
+//
+//        @Override
+//        public View getView(int position, View convertView, ViewGroup parent)
+//        {
+//            View v = convertView;
+//            if (v == null)
+//            {
+//                LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//                v = vi.inflate(R.layout.lift_item, parent, false);
+//            }
+////            v.setMinimumHeight(150);
+//
+//            final Lift lift = items.get(position);
+//
+//            TextView lblLift = (TextView) v.findViewById(R.id.lbl_lift);
+//            ImageButton btnIncrement = (ImageButton) v.findViewById(R.id.btn_increment);
+//
+//            if (lift != null)
+//            {
+//                if (lblLift != null)
+//                {
+//                    lblLift.setText(lift.toString());
+//                }
+//
+//                //remove the increment button in the <New Lift> dummy item
+//                if (lift.getId() == -1)
+//                {
+//                    btnIncrement.setVisibility(View.GONE);
+//                }
+//            }
+//            else return null;
+//
+//            lblLift.setOnClickListener(new View.OnClickListener()
+//            {
+//                @Override
+//                public void onClick(View v)
+//                {
+//                    doAdd(lift.getId());
+//                }
+//            });
+//            btnIncrement.setOnClickListener(new View.OnClickListener()
+//            {
+//                @Override
+//                public void onClick(View v)
+//                {
+//                    lift.setSets(lift.getSets() + 1);
+//                    dao.update(lift);
+//                    loadSession(sessionId);
+//                }
+//            });
+//
+//            return v;
+//        }
+//
+//    }
 
 }
