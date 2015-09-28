@@ -58,9 +58,13 @@ public class DateInputDialog extends DialogFragment
                 int month = pckDate.getMonth();
                 int year = pckDate.getYear();
 
-                Calendar cal = Calendar.getInstance();
-                cal.set(year, month, day);
-                long date = cal.getTimeInMillis();
+                //Calendar cal = Calendar.getInstance();
+                //cal.set(year, month, day);
+				//long date = cal.getTimeInMillis();
+				
+				DateTime dt = new DateTime(year, month, day, 12, 0);
+				long date = dt.getMillis();
+                
 
                 mListener.onDialogSaveClick(DateInputDialog.this, date);
             }
