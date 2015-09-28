@@ -68,9 +68,7 @@ public class DataLoader
 		HAMMER_CURL_ID = findOrInsert(exerciseMap, "Hammer Curl");
 
         long sessionId;
-<<<<<<< HEAD
-
-				Session s4_22_2015 = new Session();
+		Session s4_22_2015 = new Session();
 		s4_22_2015.setNew(true);
 		s4_22_2015.setDate(toMillis(4, 22, 2015));
 		sessionId = dao.insert(s4_22_2015);

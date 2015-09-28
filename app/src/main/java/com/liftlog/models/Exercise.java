@@ -21,6 +21,7 @@ public class Exercise {
     }
 
     private long id;
+    private long categoryId;
     private String name;
     private String description;
     private boolean valid = true;
@@ -34,6 +35,16 @@ public class Exercise {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public long getCategoryId()
+    {
+        return categoryId;
+    }
+
+    public void setCategoryId(long categoryId)
+    {
+        this.categoryId = categoryId;
     }
 
     public String getName() {

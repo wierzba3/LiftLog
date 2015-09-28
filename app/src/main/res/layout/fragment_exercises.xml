@@ -4,10 +4,17 @@
              android:layout_height="match_parent"
              tools:context="com.liftlog.ExercisesFragment">
 
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/list_exercises_fragment"
+    <!--<ListView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/list_exercises_fragment"-->
+        <!--android:clickable="true"-->
+        <!--/>-->
+
+    <ExpandableListView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/exList_exercises"
         android:clickable="true"
         />
 

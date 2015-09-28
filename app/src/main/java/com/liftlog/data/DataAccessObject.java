@@ -6,13 +6,13 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Environment;
 import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -24,6 +24,7 @@ import java.util.Map;
 import com.liftlog.R;
 import com.liftlog.backend.myApi.model.ExerciseAPI;
 import com.liftlog.common.Util;
+import com.liftlog.models.Category;
 import com.liftlog.models.Lift;
 import com.liftlog.models.Exercise;
 import com.liftlog.models.Session;
@@ -100,7 +101,7 @@ public class DataAccessObject extends SQLiteOpenHelper
                     + LIFT_COLUMN_SESSION_FK + " INTEGER, "
                     + LIFT_COLUMN_EXERCISE_FK + " INTEGER, "
                     + LIFT_COLUMN_DATE_CREATED + " INTEGER, "
-                    + LIFT_COLUMN_WEIGHT + " INTEGER, "
+                    + LIFT_COLUMN_WEIGHT + " REAL, "
                     + LIFT_COLUMN_REPS + " INTEGER, "
                     + LIFT_COLUMN_SETS + " INTEGER, "
                     + LIFT_COLUMN_UNIT + " TEXT, "
@@ -133,11 +134,11 @@ public class DataAccessObject extends SQLiteOpenHelper
 
     public static final String EXERCISE_TABLE_NAME = "exercises";
     public static final String EXERCISE_COLUMN_PK = "id";
+    public static final String EXERCISE_COLUMN_CATEGORY_FK = "category_id";
     public static final String EXERCISE_COLUMN_NAME = "name";
     public static final String EXERCISE_COLUMN_DESCRIPTION = "description";
     public static final String EXERCISE_COLUMN_VALID = "valid";
-    public static final String EXERCISE_COLUMN_DATE = "date_created";
-    //    public static final String EXERCISE_COLUMN_STATE = "state";
+    public static final String EXERCISE_COLUMN_DATE_CREATED = "date_created";
     public static final String EXERCISE_COLUMN_NEW = "is_new";
     public static final String EXERCISE_COLUMN_MODIFIED = "is_modified";
     public static final String EXERCISE_COLUMN_DELETED = "is_deleted";
@@ -145,38 +146,54 @@ public class DataAccessObject extends SQLiteOpenHelper
             "CREATE TABLE " + EXERCISE_TABLE_NAME
                     + " ("
                     + EXERCISE_COLUMN_PK + " INTEGER PRIMARY KEY, "
+                    + EXERCISE_COLUMN_CATEGORY_FK + " INTEGER, "
                     + EXERCISE_COLUMN_NAME + " TEXT, "
                     + EXERCISE_COLUMN_DESCRIPTION + " TEXT, "
                     + EXERCISE_COLUMN_VALID + " INTEGER DEFAULT 1, "
-                    + EXERCISE_COLUMN_DATE + " INTEGER, "
+                    + EXERCISE_COLUMN_DATE_CREATED + " INTEGER, "
                     + EXERCISE_COLUMN_NEW + " INTEGER DEFAULT 1, "
                     + EXERCISE_COLUMN_MODIFIED + " INTEGER DEFAULT 0, "
                     + EXERCISE_COLUMN_DELETED + " INTEGER DEFAULT 0"
                     + ")";
 
+    //TODO category
+    public static String CATEGORY_TABLE_NAME = "category";
+    public static String CATEGORY_COLUMN_PK = "id";
+    public static String CATEGORY_COLUMN_NAME = "name";
+    public static String CATEGORY_COLUMN_DATE_CREATED = "date_created";
+    public static final String CATEGORY_COLUMN_NEW = "is_new";
+    public static final String CATEGORY_COLUMN_MODIFIED = "is_modified";
+    public static final String CATEGORY_COLUMN_DELETED = "is_deleted";
+    public static final String CATEGORY_TABLE_CREATE_QUERY =
+            "CREATE TABLE " + CATEGORY_TABLE_NAME
+                    + " ("
+                    + CATEGORY_COLUMN_PK + " INTEGER PRIMARY KEY, "
+                    + CATEGORY_COLUMN_NAME + " TEXT, "
+                    + CATEGORY_COLUMN_DATE_CREATED + " INTEGER, "
+                    + EXERCISE_COLUMN_NEW + " INTEGER DEFAULT 1, "
+                    + EXERCISE_COLUMN_MODIFIED + " INTEGER DEFAULT 0, "
+                    + EXERCISE_COLUMN_DELETED + " INTEGER DEFAULT 0"
+                    + ")";
 
     private static final String LOG_TAG = "LiftLog";
 
-//    private static DataAccessObject instance;
-//    public synchronized static DataAccessObject getInstance(Context context)
-//    {
-//        if(instance == null)
-//        {
-//            instance = new DataAccessObject(context);
-//        }
-//        return instance;
-//    }
-
     public DataAccessObject(Context context) {
-        super(context, DB_NAME, null, 26);
+        super(context, DB_NAME, null, 28);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db)
     {
-        db.execSQL(LIFT_TABLE_CREATE_QUERY);
-        db.execSQL(SESSION_TABLE_CREATE_QUERY);
-        db.execSQL(EXERCISE_TABLE_CREATE_QUERY);
+        try
+        {
+            db.execSQL(LIFT_TABLE_CREATE_QUERY);
+            db.execSQL(SESSION_TABLE_CREATE_QUERY);
+            db.execSQL(EXERCISE_TABLE_CREATE_QUERY);
+            db.execSQL(CATEGORY_TABLE_CREATE_QUERY);
+        } catch (SQLException e)
+        {
+            Log.d(LOG_TAG, "Error creating tables: " + e.getMessage());
+        }
     }
 
     @Override
@@ -184,10 +201,13 @@ public class DataAccessObject extends SQLiteOpenHelper
         List<Session> sessions = null;
         List<Lift> lifts = null;
         Map<Long, Exercise> exercises = null;
+        List<Category> categories = null;
+
         try {
             sessions = selectSessions(db, 0, Integer.MAX_VALUE, true);
             lifts = selectLifts(db, true);
             exercises = selectExercises(db, true);
+            categories = selectCategories(db, true);
         } catch (Exception ex) {
             ex.printStackTrace();
             Log.d(LOG_TAG, "exception in onUpgrade: " + ex.getMessage());
@@ -196,6 +216,7 @@ public class DataAccessObject extends SQLiteOpenHelper
         db.execSQL("DROP TABLE IF EXISTS " + LIFT_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + SESSION_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + EXERCISE_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + CATEGORY_TABLE_NAME);
         onCreate(db);
 
         if (sessions != null)
@@ -222,14 +243,23 @@ public class DataAccessObject extends SQLiteOpenHelper
                 System.out.println(ret);
             }
         }
+        if(categories != null)
+        {
+            for(Category category : categories)
+            {
+                insert(db, category);
+            }
+        }
     }
+
+
+    //BEGIN LIFT METHODS
 
     public long insert(Lift lift)
     {
         SQLiteDatabase db = this.getWritableDatabase();
         return insert(db, lift);
     }
-
     public long insert(SQLiteDatabase db, Lift lift)
     {
         ContentValues values = new ContentValues();
@@ -245,110 +275,6 @@ public class DataAccessObject extends SQLiteOpenHelper
         values.put(LIFT_COLUMN_DELETED, lift.isDeleted() ? 1 : 0);
         return db.insert(LIFT_TABLE_NAME, null, values);
     }
-
-
-    public long insert(Exercise exercise)
-    {
-        SQLiteDatabase db = this.getWritableDatabase();
-        return insert(db, exercise);
-    }
-
-    public long insert(SQLiteDatabase db, Exercise exercise)
-    {
-        ContentValues values = new ContentValues();
-        if(exercise.getId() > 0)
-        {
-            values.put(EXERCISE_COLUMN_PK, exercise.getId());
-        }
-        values.put(EXERCISE_COLUMN_NAME, exercise.getName());
-        values.put(EXERCISE_COLUMN_DESCRIPTION, exercise.getDescription());
-        values.put(EXERCISE_COLUMN_VALID, exercise.isValid() ? 1 : 0);
-        values.put(EXERCISE_COLUMN_DATE, System.currentTimeMillis());
-        values.put(EXERCISE_COLUMN_NEW, exercise.isNew() ? 1 : 0);
-        values.put(EXERCISE_COLUMN_MODIFIED, exercise.isModified() ? 1 : 0);
-        values.put(EXERCISE_COLUMN_DELETED, exercise.isDeleted() ? 1 : 0);
-        long id = db.insert(EXERCISE_TABLE_NAME, null, values);
-        return id;
-    }
-
-    public long insert(SQLiteDatabase db, ExerciseAPI exercise)
-    {
-        ContentValues values = new ContentValues();
-        values.put(EXERCISE_COLUMN_NAME, exercise.getName());
-        values.put(EXERCISE_COLUMN_DESCRIPTION, exercise.getDescription());
-        values.put(EXERCISE_COLUMN_DATE, System.currentTimeMillis());
-        long id = db.insert(EXERCISE_TABLE_NAME, null, values);
-        return id;
-    }
-
-    public boolean update(Exercise exercise)
-    {
-        if (exercise == null || exercise.getId() == -1) return false;
-        SQLiteDatabase db = this.getWritableDatabase();
-//        String qry = "UPDATE " + EXERCISE_TABLE_NAME +
-//                " SET " + EXERCISE_COLUMN_NAME + " = " + exercise.getName() + ", " +
-//                EXERCISE_COLUMN_DESCRIPTION + " = " + exercise.getDescription()  +
-//                " WHERE " + EXERCISE_COLUMN_PK + " = " + exercise.getId();
-        ContentValues values = new ContentValues();
-        values.put(EXERCISE_COLUMN_NAME, exercise.getName());
-        values.put(EXERCISE_COLUMN_DESCRIPTION, exercise.getDescription());
-        values.put(EXERCISE_COLUMN_VALID, exercise.isValid() ? 1 : 0);
-        values.put(EXERCISE_COLUMN_DATE, System.currentTimeMillis());
-        values.put(EXERCISE_COLUMN_NEW, exercise.isNew() ? 1 : 0);
-        values.put(EXERCISE_COLUMN_MODIFIED, exercise.isModified() ? 1 : 0);
-        values.put(EXERCISE_COLUMN_DELETED, exercise.isDeleted() ? 1 : 0);
-        try
-        {
-            db.update(EXERCISE_TABLE_NAME, values, EXERCISE_COLUMN_PK + " = " + exercise.getId(), null);
-//            data.execSQL(qry);
-        } catch (SQLException e)
-        {
-            Log.d(LOG_TAG, "exception in update(Exercise exercise): " + e.getMessage());
-            e.printStackTrace();
-            return false;
-        }
-        return true;
-    }
-
-    public boolean update(Session session)
-    {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(SESSION_COLUMN_DATE, session.getDate());
-        values.put(SESSION_COLUMN_NEW, session.isNew() ? 1 : 0);
-        values.put(SESSION_COLUMN_MODIFIED, session.isModified() ? 1 : 0);
-        values.put(SESSION_COLUMN_DELETED, session.isDeleted() ? 1 : 0);
-        try
-        {
-            db.update(SESSION_TABLE_NAME, values, SESSION_COLUMN_PK + " = " + session.getId(), null);
-        } catch (SQLException e)
-        {
-            Log.d(LOG_TAG, "exception in update(Session): " + e.getMessage());
-            e.printStackTrace();
-            return false;
-        }
-        return true;
-    }
-
-
-    public long insert(Session session)
-    {
-        SQLiteDatabase db = this.getWritableDatabase();
-        return insert(db, session);
-    }
-
-    public long insert(SQLiteDatabase db, Session session)
-    {
-        ContentValues values = new ContentValues();
-        values.put(SESSION_COLUMN_DATE, session.getDate());
-        values.put(SESSION_COLUMN_DATE_CREATED, System.currentTimeMillis());
-        values.put(SESSION_COLUMN_NEW, session.isNew() ? 1 : 0);
-        values.put(SESSION_COLUMN_MODIFIED, session.isModified() ? 1 : 0);
-        values.put(SESSION_COLUMN_DELETED, session.isDeleted() ? 1 : 0);
-        long id = db.insert(SESSION_TABLE_NAME, null, values);
-        return id;
-    }
-
     public boolean update(Lift lift)
     {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -373,100 +299,11 @@ public class DataAccessObject extends SQLiteOpenHelper
         }
         return true;
     }
-
-    public Exercise selectExercise(long id)
-    {
-        Exercise result = null;
-
-        SQLiteDatabase db = this.getReadableDatabase();
-        String qry = "SELECT * FROM " + EXERCISE_TABLE_NAME +
-                " WHERE " + EXERCISE_COLUMN_PK + " = " + id;
-        Cursor cursor = db.rawQuery(qry, null);
-        if (cursor == null)
-        {
-            return null;
-        }
-        cursor.moveToFirst();
-
-        String name = cursor.getString(cursor.getColumnIndex(EXERCISE_COLUMN_NAME));
-        String desc = cursor.getString(cursor.getColumnIndex(EXERCISE_COLUMN_DESCRIPTION));
-        int valid = cursor.getInt(cursor.getColumnIndex(EXERCISE_COLUMN_VALID));
-        boolean isNew = (cursor.getInt(cursor.getColumnIndex(EXERCISE_COLUMN_NEW)) == 1);
-        boolean isModified = (cursor.getInt(cursor.getColumnIndex(EXERCISE_COLUMN_MODIFIED)) == 1);
-        boolean isDeleted = (cursor.getInt(cursor.getColumnIndex(EXERCISE_COLUMN_DELETED)) == 1);
-
-        result = new Exercise();
-        result.setId(id);
-        result.setName(name);
-        result.setValid(valid == 1);
-        result.setDescription(desc);
-        result.setNew(isNew);
-        result.setModified(isModified);
-        result.setDeleted(isDeleted);
-
-        cursor.close();
-
-        return result;
-    }
-
-
-    public Map<Long, Exercise> selectExercises(boolean includeDeleted)
-    {
-        SQLiteDatabase db = this.getReadableDatabase();
-        return selectExercises(db, includeDeleted);
-    }
-
-    public Map<Long, Exercise> selectExercises(SQLiteDatabase db, boolean includeDeleted)
-    {
-//        ArrayList<Exercise> result = new ArrayList<Exercise>();
-        HashMap<Long, Exercise> result = new HashMap<>();
-        String qry = "SELECT * FROM " + EXERCISE_TABLE_NAME;
-        if(!includeDeleted)
-        {
-            qry += " WHERE " + EXERCISE_COLUMN_DELETED + " != 1";
-        }
-        Cursor cursor = db.rawQuery(qry, null);
-
-        if (cursor == null)
-        {
-            return null;
-        }
-
-        boolean hasNext = cursor.moveToFirst();
-        while (hasNext)
-        {
-
-            long id = cursor.getLong(cursor.getColumnIndex(EXERCISE_COLUMN_PK));
-            String name = cursor.getString(cursor.getColumnIndex(EXERCISE_COLUMN_NAME));
-            String desc = cursor.getString(cursor.getColumnIndex(EXERCISE_COLUMN_DESCRIPTION));
-            int valid = cursor.getInt(cursor.getColumnIndex(EXERCISE_COLUMN_VALID));
-            boolean isNew = (cursor.getInt(cursor.getColumnIndex(EXERCISE_COLUMN_NEW)) == 1);
-            boolean isModified = (cursor.getInt(cursor.getColumnIndex(EXERCISE_COLUMN_MODIFIED)) == 1);
-            boolean isDeleted = (cursor.getInt(cursor.getColumnIndex(EXERCISE_COLUMN_DELETED)) == 1);
-
-            Exercise exercise = new Exercise();
-            exercise.setId(id);
-            exercise.setName(name);
-            exercise.setValid(valid == 1 ? true : false);
-            exercise.setDescription(desc);
-            exercise.setNew(isNew);
-            exercise.setModified(isModified);
-            exercise.setDeleted(isDeleted);
-
-            result.put(id, exercise);
-
-            hasNext = cursor.moveToNext();
-        }
-
-        return result;
-    }
-
     public List<Lift> selectLifts(boolean includeDeleted)
     {
         SQLiteDatabase db = this.getReadableDatabase();
         return selectLifts(db, includeDeleted);
     }
-
     public List<Lift> selectLifts(SQLiteDatabase db, boolean includeDeleted)
     {
         ArrayList<Lift> result = new ArrayList<Lift>();
@@ -492,7 +329,7 @@ public class DataAccessObject extends SQLiteOpenHelper
             long id = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_PK));
             long exerciseId = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_EXERCISE_FK));
             long sessionId = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_SESSION_FK));
-            int weight = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_WEIGHT));
+            double weight = cursor.getDouble(cursor.getColumnIndex(LIFT_COLUMN_WEIGHT));
             int sets = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_SETS));
             int reps = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_REPS));
             int warmup = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_WARMUP));
@@ -522,8 +359,532 @@ public class DataAccessObject extends SQLiteOpenHelper
 
         return result;
     }
+    public Lift selectLift(long id)
+    {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String qry = "SELECT * FROM " + LIFT_TABLE_NAME +
+                " WHERE " + LIFT_COLUMN_PK + " = " + id;
+        Cursor cursor = db.rawQuery(qry, null);
+        if (cursor == null)
+        {
+            return null;
+        }
+
+        cursor.moveToFirst();
+
+        long exerciseId = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_EXERCISE_FK));
+        long sessionId = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_SESSION_FK));
+        double weight = cursor.getDouble(cursor.getColumnIndex(LIFT_COLUMN_WEIGHT));
+        int sets = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_SETS));
+        int reps = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_REPS));
+        int warmup = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_WARMUP));
+        long dateCreated = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_DATE_CREATED));
+        boolean isNew = (cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_NEW)) == 1);
+        boolean isModified = (cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_MODIFIED)) == 1);
+        boolean isDeleted = (cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_DELETED)) == 1);
+
+        Lift result = new Lift();
+        result.setId(id);
+        result.setExerciseId(exerciseId);
+        result.setSessionId(sessionId);
+        result.setWeight(weight);
+        result.setSets(sets);
+        result.setReps(reps);
+        result.setWarmup(warmup == 1 ? true : false);
+        result.setDateCreated(dateCreated);
+        result.setNew(isNew);
+        result.setModified(isModified);
+        result.setDeleted(isDeleted);
+
+        return result;
+    }
+    public void clearLiftsTable()
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String qry = "DELETE FROM " + LIFT_TABLE_NAME;
+        db.execSQL(qry);
+    }
+    public boolean deleteLift(long id)
+    {
+        String qry = "DELETE FROM " + LIFT_TABLE_NAME +
+                " WHERE " + LIFT_COLUMN_PK + " = " + id;
+        try
+        {
+            this.getWritableDatabase().execSQL(qry);
+        } catch (SQLException e)
+        {
+            e.printStackTrace();
+            Log.d(LOG_TAG, "Error removing lift id=" + id + ":" + e.getMessage());
+            return false;
+        }
+        return true;
+    }
+
+    //END LIFT METHODS
 
 
+    //BEGIN CATEGORY METHODS
+    public Map<Category, List<Exercise>> selectCategoryMap(boolean includeDeleted)
+    {
+        return selectCategoryMap(this.getReadableDatabase(), includeDeleted);
+    }
+    public Map<Category, List<Exercise>> selectCategoryMap(SQLiteDatabase db, boolean includeDeleted)
+    {
+        String qryCategory = "SELECT * FROM " + CATEGORY_TABLE_NAME;
+        if(!includeDeleted)
+        {
+            qryCategory += " WHERE " + CATEGORY_COLUMN_DELETED + " != 1";
+        }
+
+        Map<Category, List<Exercise>> result = new HashMap<Category, List<Exercise>>();
+
+        Cursor cursorCategory = null;
+        try
+        {
+            cursorCategory = db.rawQuery(qryCategory, null);
+        } catch (Exception e)
+        {
+            Log.d(LOG_TAG, "Error selecting all categories: " + e.getMessage());
+            return null;
+        }
+
+        if(cursorCategory != null)
+        {
+            boolean hasNext = cursorCategory.moveToFirst();
+            while(hasNext)
+            {
+                long id = cursorCategory.getLong(cursorCategory.getColumnIndex(CATEGORY_COLUMN_PK));
+                String name = cursorCategory.getString(cursorCategory.getColumnIndex(CATEGORY_COLUMN_NAME));
+                int isNew = cursorCategory.getInt(cursorCategory.getColumnIndex(CATEGORY_COLUMN_NAME));
+                int isModified = cursorCategory.getInt(cursorCategory.getColumnIndex(CATEGORY_COLUMN_MODIFIED));
+                int isDeleted = cursorCategory.getInt(cursorCategory.getColumnIndex(CATEGORY_COLUMN_DELETED));
+
+                Category category = new Category();
+                category.setId(id);
+                category.setName(name);
+                category.setNew(isNew == 1);
+                category.setModified(isModified == 1);
+                category.setDeleted(isDeleted == 1);
+                result.put(category, new ArrayList<Exercise>());
+
+                hasNext = cursorCategory.moveToNext();
+            }
+        }
+        Category dummyCategory = new Category();
+        dummyCategory.setName("Uncategorized");
+        dummyCategory.setId(-1l);
+        result.put(dummyCategory, new ArrayList<Exercise>());
+
+        String qryExercises = "SELECT * FROM " + EXERCISE_TABLE_NAME;
+        if(!includeDeleted)
+        {
+            qryExercises += " WHERE " + EXERCISE_COLUMN_DELETED + " != 1";
+        }
+
+        Cursor cursorExercises = db.rawQuery(qryExercises, null);
+        if(cursorExercises != null)
+        {
+            boolean hasNext = cursorExercises.moveToFirst();
+            while(hasNext)
+            {
+                long id = cursorExercises.getLong(cursorExercises.getColumnIndex(EXERCISE_COLUMN_PK));
+                long categoryId = cursorExercises.getLong(cursorExercises.getColumnIndex(EXERCISE_COLUMN_CATEGORY_FK));
+                String name = cursorExercises.getString(cursorExercises.getColumnIndex(EXERCISE_COLUMN_NAME));
+                String desc = cursorExercises.getString(cursorExercises.getColumnIndex(EXERCISE_COLUMN_DESCRIPTION));
+                int valid = cursorExercises.getInt(cursorExercises.getColumnIndex(EXERCISE_COLUMN_VALID));
+                boolean isNew = (cursorExercises.getInt(cursorExercises.getColumnIndex(EXERCISE_COLUMN_NEW)) == 1);
+                boolean isModified = (cursorExercises.getInt(cursorExercises.getColumnIndex(EXERCISE_COLUMN_MODIFIED)) == 1);
+                boolean isDeleted = (cursorExercises.getInt(cursorExercises.getColumnIndex(EXERCISE_COLUMN_DELETED)) == 1);
+
+                Exercise exercise = new Exercise();
+                exercise.setId(id);
+                exercise.setCategoryId(categoryId);
+                exercise.setName(name);
+                exercise.setValid(valid == 1);
+                exercise.setDescription(desc);
+                exercise.setNew(isNew);
+                exercise.setModified(isModified);
+                exercise.setDeleted(isDeleted);
+
+                boolean hasCategory = false;
+                for(Category categoryKey : result.keySet())
+                {
+                    if(categoryKey.getId() == categoryId)
+                    {
+                        List<Exercise> exercises = result.get(categoryKey);
+                        if(exercise == null) exercises = new ArrayList<Exercise>();
+                        exercises.add(exercise);
+                        result.put(categoryKey, exercises);
+                        hasCategory = true;
+                    }
+                }
+                //no matching category found, put in "Uncategorized"
+                if(!hasCategory)
+                {
+                    result.get(dummyCategory).add(exercise);
+                }
+
+                hasNext = cursorExercises.moveToNext();
+            }
+        }
+        return result;
+    }
+    public long insert(Category category)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return insert(db, category);
+    }
+    public long insert(SQLiteDatabase db, Category category)
+    {
+        ContentValues values = new ContentValues();
+        values.put(CATEGORY_COLUMN_NAME, category.getName());
+        values.put(CATEGORY_COLUMN_NEW, category.isNew() ? 1 : 0);
+        values.put(CATEGORY_COLUMN_MODIFIED, category.isModified() ? 1 : 0);
+        values.put(CATEGORY_COLUMN_DELETED, category.isDeleted() ? 1 : 0);
+        return db.insert(CATEGORY_TABLE_NAME, null, values);
+    }
+    public boolean update(Category category)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(CATEGORY_COLUMN_NAME, category.getName());
+        values.put(CATEGORY_COLUMN_NEW, category.isNew() ? 1 : 0);
+        values.put(CATEGORY_COLUMN_MODIFIED, category.isModified() ? 1 : 0);
+        values.put(CATEGORY_COLUMN_DELETED, category.isDeleted() ? 1 : 0);
+        try
+        {
+            db.update(CATEGORY_TABLE_NAME, values, CATEGORY_COLUMN_PK + " = " + category.getId(), null);
+        } catch (SQLException e)
+        {
+            Log.d(LOG_TAG, "exception in update(Category): " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+    public List<Category> selectCategories(boolean includeDeleted)
+    {
+        return selectCategories(this.getReadableDatabase(), includeDeleted);
+    }
+    public List<Category> selectCategories(SQLiteDatabase db, boolean includeDeleted)
+    {
+        try
+        {
+            ArrayList<Category> result = new ArrayList<Category>();
+
+            String qry = "SELECT * FROM " + CATEGORY_TABLE_NAME;
+            if(!includeDeleted)
+            {
+                qry += " WHERE " + CATEGORY_COLUMN_DELETED + " != 1";
+            }
+
+            Cursor cursor = db.rawQuery(qry, null);
+            if (cursor == null || cursor.getCount() == 0)
+            {
+                return result;
+            }
+
+            boolean hasNext = cursor.moveToFirst();
+            while (hasNext)
+            {
+
+                Category category = new Category();
+                long id = cursor.getLong(cursor.getColumnIndex(CATEGORY_COLUMN_PK));
+                String name = cursor.getString(cursor.getColumnIndex(CATEGORY_COLUMN_NAME));
+                int isNew = cursor.getInt(cursor.getColumnIndex(CATEGORY_COLUMN_NAME));
+                int isModified = cursor.getInt(cursor.getColumnIndex(CATEGORY_COLUMN_MODIFIED));
+                int isDeleted = cursor.getInt(cursor.getColumnIndex(CATEGORY_COLUMN_DELETED));
+
+                category.setId(id);
+                category.setName(name);
+                category.setNew(isNew == 1);
+                category.setModified(isModified == 1);
+                category.setDeleted(isDeleted == 1);
+                result.add(category);
+
+                hasNext = cursor.moveToNext();
+            }
+
+            cursor.close();
+
+            return result;
+        } catch (SQLiteException e)
+        {
+            Log.d(LOG_TAG, "Erorr selecting all categores: " + e.getMessage());
+            return null;
+        }
+    }
+    public Category selectCategory(long id)
+    {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String qry = "SELECT * FROM " + CATEGORY_TABLE_NAME +
+                " WHERE " + CATEGORY_COLUMN_PK + " = " + id;
+        Cursor cursor = db.rawQuery(qry, null);
+        if (cursor == null)
+        {
+            return null;
+        }
+
+        cursor.moveToFirst();
+
+        String name = cursor.getString(cursor.getColumnIndex(CATEGORY_COLUMN_NAME));
+        int isNew = cursor.getInt(cursor.getColumnIndex(CATEGORY_COLUMN_NAME));
+        int isModified = cursor.getInt(cursor.getColumnIndex(CATEGORY_COLUMN_MODIFIED));
+        int isDeleted = cursor.getInt(cursor.getColumnIndex(CATEGORY_COLUMN_DELETED));
+
+        Category result = new Category();
+        result.setId(id);
+        result.setName(name);
+        result.setNew(isNew == 1);
+        result.setModified(isModified == 1);
+        result.setDeleted(isDeleted == 1);
+
+        return result;
+    }
+    public boolean deleteCategory(long id)
+    {
+        String qry = "DELETE FROM " + CATEGORY_TABLE_NAME +
+                " WHERE " + CATEGORY_COLUMN_PK + " = " + id;
+        try
+        {
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.execSQL(qry);
+        } catch (SQLException e)
+        {
+            e.printStackTrace();
+            Log.d(LOG_TAG, "Error removing category id=" + id + ":" + e.getMessage());
+            return false;
+        }
+        return true;
+    }
+    public void clearCategoryTable()
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String qry = "DELETE FROM " + CATEGORY_TABLE_NAME;
+        db.execSQL(qry);
+    }
+
+    //END CATEGORY METHODS
+
+
+    //BEGIN EXERCISE METHODS
+
+    public long insert(Exercise exercise)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return insert(db, exercise);
+    }
+    public long insert(SQLiteDatabase db, Exercise exercise)
+    {
+        ContentValues values = new ContentValues();
+        if(exercise.getId() > 0)
+        {
+            values.put(EXERCISE_COLUMN_PK, exercise.getId());
+        }
+        values.put(EXERCISE_COLUMN_CATEGORY_FK, exercise.getCategoryId());
+        values.put(EXERCISE_COLUMN_NAME, exercise.getName());
+        values.put(EXERCISE_COLUMN_DESCRIPTION, exercise.getDescription());
+        values.put(EXERCISE_COLUMN_VALID, exercise.isValid() ? 1 : 0);
+        values.put(EXERCISE_COLUMN_DATE_CREATED, System.currentTimeMillis());
+        values.put(EXERCISE_COLUMN_NEW, exercise.isNew() ? 1 : 0);
+        values.put(EXERCISE_COLUMN_MODIFIED, exercise.isModified() ? 1 : 0);
+        values.put(EXERCISE_COLUMN_DELETED, exercise.isDeleted() ? 1 : 0);
+        long id = db.insert(EXERCISE_TABLE_NAME, null, values);
+        return id;
+    }
+//    public long insert(SQLiteDatabase db, ExerciseAPI exercise)
+//    {
+//        ContentValues values = new ContentValues();
+//        values.put(EXERCISE_COLUMN_NAME, exercise.getName());
+//        values.put(EXERCISE_COLUMN_DESCRIPTION, exercise.getDescription());
+//        values.put(EXERCISE_COLUMN_DATE_CREATED, System.currentTimeMillis());
+//        long id = db.insert(EXERCISE_TABLE_NAME, null, values);
+//        return id;
+//    }
+    public boolean update(Exercise exercise)
+    {
+        if (exercise == null || exercise.getId() == -1) return false;
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(EXERCISE_COLUMN_CATEGORY_FK, exercise.getCategoryId());
+        values.put(EXERCISE_COLUMN_NAME, exercise.getName());
+        values.put(EXERCISE_COLUMN_DESCRIPTION, exercise.getDescription());
+        values.put(EXERCISE_COLUMN_VALID, exercise.isValid() ? 1 : 0);
+        values.put(EXERCISE_COLUMN_DATE_CREATED, System.currentTimeMillis());
+        values.put(EXERCISE_COLUMN_NEW, exercise.isNew() ? 1 : 0);
+        values.put(EXERCISE_COLUMN_MODIFIED, exercise.isModified() ? 1 : 0);
+        values.put(EXERCISE_COLUMN_DELETED, exercise.isDeleted() ? 1 : 0);
+        try
+        {
+            db.update(EXERCISE_TABLE_NAME, values, EXERCISE_COLUMN_PK + " = " + exercise.getId(), null);
+//            data.execSQL(qry);
+        } catch (SQLException e)
+        {
+            Log.d(LOG_TAG, "exception in update(Exercise exercise): " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+    public Exercise selectExercise(long id)
+    {
+        Exercise result = null;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        String qry = "SELECT * FROM " + EXERCISE_TABLE_NAME +
+                " WHERE " + EXERCISE_COLUMN_PK + " = " + id;
+        Cursor cursor = db.rawQuery(qry, null);
+        if (cursor == null)
+        {
+            return null;
+        }
+        cursor.moveToFirst();
+
+        long categoryId = cursor.getLong(cursor.getColumnIndex(EXERCISE_COLUMN_CATEGORY_FK));
+        String name = cursor.getString(cursor.getColumnIndex(EXERCISE_COLUMN_NAME));
+        String desc = cursor.getString(cursor.getColumnIndex(EXERCISE_COLUMN_DESCRIPTION));
+        int valid = cursor.getInt(cursor.getColumnIndex(EXERCISE_COLUMN_VALID));
+        boolean isNew = (cursor.getInt(cursor.getColumnIndex(EXERCISE_COLUMN_NEW)) == 1);
+        boolean isModified = (cursor.getInt(cursor.getColumnIndex(EXERCISE_COLUMN_MODIFIED)) == 1);
+        boolean isDeleted = (cursor.getInt(cursor.getColumnIndex(EXERCISE_COLUMN_DELETED)) == 1);
+
+        result = new Exercise();
+        result.setId(id);
+        result.setCategoryId(categoryId);
+        result.setName(name);
+        result.setValid(valid == 1);
+        result.setDescription(desc);
+        result.setNew(isNew);
+        result.setModified(isModified);
+        result.setDeleted(isDeleted);
+
+        cursor.close();
+
+        return result;
+    }
+    public Map<Long, Exercise> selectExercises(boolean includeDeleted)
+    {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return selectExercises(db, includeDeleted);
+    }
+    public Map<Long, Exercise> selectExercises(SQLiteDatabase db, boolean includeDeleted)
+    {
+//        ArrayList<Exercise> result = new ArrayList<Exercise>();
+        HashMap<Long, Exercise> result = new HashMap<>();
+        String qry = "SELECT * FROM " + EXERCISE_TABLE_NAME;
+        if(!includeDeleted)
+        {
+            qry += " WHERE " + EXERCISE_COLUMN_DELETED + " != 1";
+        }
+        Cursor cursor = db.rawQuery(qry, null);
+
+        if (cursor == null)
+        {
+            return null;
+        }
+
+        boolean hasNext = cursor.moveToFirst();
+        while (hasNext)
+        {
+
+            long id = cursor.getLong(cursor.getColumnIndex(EXERCISE_COLUMN_PK));
+            long categoryId = cursor.getLong(cursor.getColumnIndex(EXERCISE_COLUMN_CATEGORY_FK));
+            String name = cursor.getString(cursor.getColumnIndex(EXERCISE_COLUMN_NAME));
+            String desc = cursor.getString(cursor.getColumnIndex(EXERCISE_COLUMN_DESCRIPTION));
+            int valid = cursor.getInt(cursor.getColumnIndex(EXERCISE_COLUMN_VALID));
+            boolean isNew = (cursor.getInt(cursor.getColumnIndex(EXERCISE_COLUMN_NEW)) == 1);
+            boolean isModified = (cursor.getInt(cursor.getColumnIndex(EXERCISE_COLUMN_MODIFIED)) == 1);
+            boolean isDeleted = (cursor.getInt(cursor.getColumnIndex(EXERCISE_COLUMN_DELETED)) == 1);
+
+            Exercise exercise = new Exercise();
+            exercise.setId(id);
+            exercise.setCategoryId(categoryId);
+            exercise.setName(name);
+            exercise.setValid(valid == 1 ? true : false);
+            exercise.setDescription(desc);
+            exercise.setNew(isNew);
+            exercise.setModified(isModified);
+            exercise.setDeleted(isDeleted);
+
+            result.put(id, exercise);
+
+            hasNext = cursor.moveToNext();
+        }
+
+        return result;
+    }
+    /**
+     * Delete the Exercise matching the id.
+     *
+     * @param id The id of the session
+     * @return True on success
+     */
+    public boolean deleteExercise(long id)
+    {
+        String qry = "DELETE FROM " + EXERCISE_TABLE_NAME +
+                " WHERE " + EXERCISE_COLUMN_PK + " = " + id;
+        try
+        {
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.execSQL(qry);
+        } catch (SQLException e)
+        {
+            e.printStackTrace();
+            Log.d(LOG_TAG, "Error removing exercise id=" + id + ":" + e.getMessage());
+            return false;
+        }
+        return true;
+    }
+    public void clearExerciseTable()
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String qry = "DELETE FROM " + EXERCISE_TABLE_NAME;
+        db.execSQL(qry);
+    }
+
+    //END EXERCISE METHODS
+
+
+
+
+    //BEGIN SESSION METHODS
+
+    public boolean update(Session session)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(SESSION_COLUMN_DATE, session.getDate());
+        values.put(SESSION_COLUMN_NEW, session.isNew() ? 1 : 0);
+        values.put(SESSION_COLUMN_MODIFIED, session.isModified() ? 1 : 0);
+        values.put(SESSION_COLUMN_DELETED, session.isDeleted() ? 1 : 0);
+        try
+        {
+            db.update(SESSION_TABLE_NAME, values, SESSION_COLUMN_PK + " = " + session.getId(), null);
+        } catch (SQLException e)
+        {
+            Log.d(LOG_TAG, "exception in update(Session): " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+    public long insert(Session session)
+    {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return insert(db, session);
+    }
+    public long insert(SQLiteDatabase db, Session session)
+    {
+        ContentValues values = new ContentValues();
+        values.put(SESSION_COLUMN_DATE, session.getDate());
+        values.put(SESSION_COLUMN_DATE_CREATED, System.currentTimeMillis());
+        values.put(SESSION_COLUMN_NEW, session.isNew() ? 1 : 0);
+        values.put(SESSION_COLUMN_MODIFIED, session.isModified() ? 1 : 0);
+        values.put(SESSION_COLUMN_DELETED, session.isDeleted() ? 1 : 0);
+        long id = db.insert(SESSION_TABLE_NAME, null, values);
+        return id;
+    }
     public List<Session> selectSessions(boolean includeDeleted)
     {
         try
@@ -536,8 +897,6 @@ public class DataAccessObject extends SQLiteOpenHelper
             return null;
         }
     }
-
-
     /**
      * Select all training sessions
      *
@@ -547,7 +906,6 @@ public class DataAccessObject extends SQLiteOpenHelper
     {
         return selectSessions(db, 0, Integer.MAX_VALUE, includeDeleted);
     }
-
     public List<Session> selectSessions(SQLiteDatabase db, int startDate, int endDate, boolean includeDeleted)
     {
         ArrayList<Session> result = null;
@@ -598,11 +956,11 @@ public class DataAccessObject extends SQLiteOpenHelper
 
         return result;
     }
-
     public Session selectSession(long id)
     {
         SQLiteDatabase db = this.getReadableDatabase();
-        String qrySession = "SELECT * FROM " + SESSION_TABLE_NAME;
+        String qrySession = "SELECT * FROM " + SESSION_TABLE_NAME
+                + " WHERE " + SESSION_COLUMN_PK + " = " + id;
         Cursor cursorSession = db.rawQuery(qrySession, null);
         if (cursorSession == null)
         {
@@ -660,7 +1018,7 @@ public class DataAccessObject extends SQLiteOpenHelper
             long liftId = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_PK));
             long exerciseId = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_EXERCISE_FK));
             long sessionId = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_SESSION_FK));
-            int weight = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_WEIGHT));
+            double weight = cursor.getDouble(cursor.getColumnIndex(LIFT_COLUMN_WEIGHT));
             int reps = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_REPS));
             int sets = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_SETS));
             int warmup = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_WARMUP));
@@ -668,6 +1026,7 @@ public class DataAccessObject extends SQLiteOpenHelper
             boolean isNew = (cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_NEW)) == 1);
             boolean isModified = (cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_MODIFIED)) == 1);
             boolean isDeleted = (cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_DELETED)) == 1);
+//            long date = cursor.getLong(cursor.getColumnIndex(SESSION_COLUMN_DATE));
 
             Lift lift = new Lift();
             lift.setId(liftId);
@@ -698,73 +1057,6 @@ public class DataAccessObject extends SQLiteOpenHelper
         cursor.close();
         return result;
     }
-
-    public Lift selectLift(long id)
-    {
-
-
-        SQLiteDatabase db = this.getReadableDatabase();
-        String qry = "SELECT * FROM " + LIFT_TABLE_NAME +
-                " WHERE " + LIFT_COLUMN_PK + " = " + id;
-        Cursor cursor = db.rawQuery(qry, null);
-        if (cursor == null)
-        {
-            return null;
-        }
-
-        cursor.moveToFirst();
-
-        long exerciseId = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_EXERCISE_FK));
-        long sessionId = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_SESSION_FK));
-        int weight = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_WEIGHT));
-        int sets = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_SETS));
-        int reps = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_REPS));
-        int warmup = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_WARMUP));
-        long dateCreated = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_DATE_CREATED));
-        boolean isNew = (cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_NEW)) == 1);
-        boolean isModified = (cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_MODIFIED)) == 1);
-        boolean isDeleted = (cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_DELETED)) == 1);
-
-        Lift result = new Lift();
-        result.setId(id);
-        result.setExerciseId(exerciseId);
-        result.setSessionId(sessionId);
-        result.setWeight(weight);
-        result.setSets(sets);
-        result.setReps(reps);
-        result.setWarmup(warmup == 1 ? true : false);
-        result.setDateCreated(dateCreated);
-        result.setNew(isNew);
-        result.setModified(isModified);
-        result.setDeleted(isDeleted);
-
-        return result;
-    }
-
-
-    public void clearLiftsTable()
-    {
-        SQLiteDatabase db = this.getWritableDatabase();
-        String qry = "DELETE FROM " + LIFT_TABLE_NAME;
-        db.execSQL(qry);
-    }
-
-    public boolean deleteLift(long id)
-    {
-        String qry = "DELETE FROM " + LIFT_TABLE_NAME +
-                " WHERE " + LIFT_COLUMN_PK + " = " + id;
-        try
-        {
-            this.getWritableDatabase().execSQL(qry);
-        } catch (SQLException e)
-        {
-            e.printStackTrace();
-            Log.d(LOG_TAG, "Error removing session id=" + id + ":" + e.getMessage());
-            return false;
-        }
-        return true;
-    }
-
     /**
      * Delete the Session matching the id. Also, delete all Lifts related to the Session.
      *
@@ -790,29 +1082,41 @@ public class DataAccessObject extends SQLiteOpenHelper
         }
         return true;
     }
-
-    /**
-     * Delete the Exercise matching the id.
-     *
-     * @param id The id of the session
-     * @return True on success
-     */
-    public boolean deleteExercise(long id)
+    public void clearSessionsTable()
     {
-        String qry = "DELETE FROM " + EXERCISE_TABLE_NAME +
-                " WHERE " + EXERCISE_COLUMN_PK + " = " + id;
-        try
-        {
-            SQLiteDatabase db = this.getWritableDatabase();
-            db.execSQL(qry);
-        } catch (SQLException e)
-        {
-            e.printStackTrace();
-            Log.d(LOG_TAG, "Error removing exercise id=" + id + ":" + e.getMessage());
-            return false;
-        }
-        return true;
+        SQLiteDatabase db = this.getWritableDatabase();
+        String qry = "DELETE FROM " + SESSION_TABLE_NAME;
+        db.execSQL(qry);
     }
+
+    //END SESSION METHODS
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public void createBackupCopy(Context ctx)
     {
@@ -894,19 +1198,7 @@ public class DataAccessObject extends SQLiteOpenHelper
     }
 
 
-    public void clearExerciseTable()
-    {
-        SQLiteDatabase db = this.getWritableDatabase();
-        String qry = "DELETE FROM " + EXERCISE_TABLE_NAME;
-        db.execSQL(qry);
-    }
 
-    public void clearSessionsTable()
-    {
-        SQLiteDatabase db = this.getWritableDatabase();
-        String qry = "DELETE FROM " + SESSION_TABLE_NAME;
-        db.execSQL(qry);
-    }
 
 
 

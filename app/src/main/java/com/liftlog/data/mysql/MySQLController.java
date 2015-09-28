@@ -236,7 +236,7 @@ public class MySQLController
         long id = lift.getId();
         long sessionId = lift.getSessionId();
         long exerciseId = lift.getExerciseId();
-        int weight = lift.getWeight();
+        double weight = lift.getWeight();
         int reps = lift.getReps();
         int sets = lift.getSets();
         String unit = lift.getUnit() == null ? "lb" : lift.getUnit().toString().toUpperCase();
@@ -276,7 +276,7 @@ public class MySQLController
         long id = lift.getId();
         long sessionId = lift.getSessionId();
         long exerciseId = lift.getExerciseId();
-        int weight = lift.getWeight();
+        double weight = lift.getWeight();
         int reps = lift.getReps();
         int sets = lift.getSets();
         String unit = lift.getUnit() == null ? "lb" : lift.getUnit().toString().toUpperCase();

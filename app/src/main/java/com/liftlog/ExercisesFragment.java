@@ -3,6 +3,7 @@ package com.liftlog;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -16,11 +17,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListView;
+import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +35,7 @@ import com.liftlog.R;
 
 import com.liftlog.data.DataAccessObject;
 import com.liftlog.components.ExerciseInputDialog;
+import com.liftlog.models.Category;
 import com.liftlog.models.Exercise;
 import com.liftlog.models.Lift;
 
@@ -40,7 +48,8 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
 
 //    public static final int REQUEST_CODE = 1;
 
-    ListView listExercises;
+//    private ListView listExercises;
+    private ExpandableListView exListExercises;
 
     DataAccessObject dao;
 
@@ -71,7 +80,8 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
     {
         setHasOptionsMenu(true);
 
-        listExercises = (ListView) view.findViewById(R.id.list_exercises_fragment);
+
+
 
         ActionBar actionBar = super.getActivity().getActionBar();
 //        if(actionBar == null) actionBar =
@@ -82,17 +92,23 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
             actionBar.show();
         }
 
+//        listExercises = (ListView) view.findViewById(R.id.list_exercises_fragment);
+//        listExercises.setOnItemClickListener(new AdapterView.OnItemClickListener()
+//        {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
+//            {
+//                Exercise exercise = (Exercise) parent.getItemAtPosition(position);
+//                doEdit(exercise);
+//            }
+//
+//        });
 
-        listExercises.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-            {
-                Exercise exercise = (Exercise) parent.getItemAtPosition(position);
-                doEdit(exercise);
-            }
 
-        });
+        exListExercises = (ExpandableListView) view.findViewById(R.id.exList_exercises);
+        Map<Category, List<Exercise>> categoryMap = dao.selectCategoryMap(false);
+        ExerciseExpendableListAdapter exListAdapter = new ExerciseExpendableListAdapter(super.getActivity(), categoryMap);
+        exListExercises.setAdapter(exListAdapter);
     }
 
     public void loadExercises()
@@ -116,8 +132,12 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
         exerciseList.add(dummyExercise);
         Collections.sort(exerciseList, Exercise.byNameDummyFirst);
 
-        ArrayAdapter<Exercise> adapter = new ArrayAdapter<Exercise>(super.getActivity(), android.R.layout.simple_list_item_1, exerciseList);
-        listExercises.setAdapter(adapter);
+//        ArrayAdapter<Exercise> adapter = new ArrayAdapter<Exercise>(super.getActivity(), android.R.layout.simple_list_item_1, exerciseList);
+//        listExercises.setAdapter(adapter);
+
+        Map<Category, List<Exercise>> categoryMap = dao.selectCategoryMap(false);
+        ExerciseExpendableListAdapter exListAdapter = new ExerciseExpendableListAdapter(super.getActivity(), categoryMap);
+        exListExercises.setAdapter(exListAdapter);
     }
 
 
@@ -279,5 +299,140 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
         }
 
     }
+
+
+    private class ExerciseExpendableListAdapter extends BaseExpandableListAdapter
+    {
+        public ExerciseExpendableListAdapter(Context ctx, Map<Category, List<Exercise>> categoryMap)
+        {
+            categories = new ArrayList<Category>();
+            exerciseLists = new ArrayList<List<Exercise>>();
+
+            if(categoryMap == null) return;
+//            Collections.sort(allLifts);
+
+
+            for(Category category : categoryMap.keySet())
+            {
+                List<Exercise> exercises = categoryMap.get(category);
+
+                //add the Category, List<Exercise> in parallel
+                categories.add(category);
+                exerciseLists.add(exercises);
+            }
+
+
+
+        }
+
+//        private Comparator<List<Lift>> liftsComparator = new Comparator<List<Lift>>(){
+//            @Override
+//            public int compare(List<Lift> l1, List<Lift> l2)
+//            {
+//                if((l1 == null || l1.size() == 0) && (l2 == null || l2.size() == 0)) return 0;
+//                else if(l1 == null || l1.size() == 0) return -1;
+//                else if(l2 == null || l2.size() == 0) return 1;
+//                return l1.get(0).compareTo(l2.get(0));
+//            }
+//        };
+
+        private List<List<Exercise>> exerciseLists;
+        private List<Category> categories;
+
+        @Override
+        public boolean isChildSelectable(int i, int i1)
+        {
+            return true;
+        }
+
+        @Override
+        public int getGroupCount()
+        {
+            return categories.size();
+        }
+
+        @Override
+        public int getChildrenCount(int i)
+        {
+            List<Exercise> exercises = exerciseLists.get(i);
+            if(exercises == null) return 0;
+            return exercises.size();
+        }
+
+        @Override
+        public Object getGroup(int i)
+        {
+            return categories.get(i);
+        }
+
+        @Override
+        public Object getChild(int i, int j)
+        {
+            return exerciseLists.get(i).get(j);
+        }
+
+        @Override
+        public long getGroupId(int i)
+        {
+            return categories.get(i).getId();
+        }
+
+        @Override
+        public long getChildId(int i, int j)
+        {
+            return exerciseLists.get(i).get(j).getId();
+        }
+
+        @Override
+        public boolean hasStableIds()
+        {
+            return false;
+        }
+
+        @Override
+        public View getGroupView(int i, boolean b, View view, ViewGroup viewGroup)
+        {
+            if (view == null)
+            {
+                LayoutInflater vi = (LayoutInflater) ExercisesFragment.super.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                view = vi.inflate(R.layout.exercise_group_item, viewGroup, false);
+            }
+
+            Category category = categories.get(i);
+            TextView lblCategory = (TextView) view.findViewById(R.id.lbl_exercise_group);
+            lblCategory.setText(category.getName());
+
+
+            return view;
+        }
+
+        @Override
+        public View getChildView(int i, int j, boolean b, View view, ViewGroup viewGroup)
+        {
+            if (view == null)
+            {
+                LayoutInflater vi = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                view = vi.inflate(R.layout.exercise_item, viewGroup, false);
+            }
+
+            final Exercise exercise = exerciseLists.get(i).get(j);
+
+
+            TextView lblExercise = (TextView) view.findViewById(R.id.lbl_exercise);
+            lblExercise.setText(exercise.toString());
+
+            lblExercise.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(View v)
+                {
+                    doEdit(exercise);
+                }
+            });
+
+            return view;
+        }
+    }
+
 
 }

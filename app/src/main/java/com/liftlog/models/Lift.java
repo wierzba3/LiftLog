@@ -25,7 +25,7 @@ public class Lift implements Comparable<Lift> {
     private long exerciseId;
     private long sessionId;
     private String exerciseName;
-    private int weight;
+    private double weight;
     private Unit unit;
     private int sets;
     private int reps;
@@ -105,12 +105,12 @@ public class Lift implements Comparable<Lift> {
         this.unit = unit;
     }
 
-    public int getWeight()
+    public double getWeight()
     {
         return weight;
     }
 
-    public void setWeight(int weight)
+    public void setWeight(double weight)
     {
         this.weight = weight;
     }
@@ -226,7 +226,17 @@ public class Lift implements Comparable<Lift> {
         if(id == -1) return "< Add Lift >";
 //        Exercise exercise = DataAccessObject.exerciseMap.get(exerciseId);
 //        return (exerciseName != null ? exerciseName : "?") + " " + weight + " x " + reps + " x " + sets;
-        return String.valueOf(weight) + " x " + String.valueOf(reps) + "reps x " + String.valueOf(sets) + " sets";
+        String result = "";
+        if(weight == Math.floor(weight))
+        {
+            result += (int)weight;
+        }
+        else
+        {
+            result += weight;
+        }
+        result += " x " + String.valueOf(reps) + " reps x " + String.valueOf(sets) + " sets";
+        return result;
     }
 
     @Override
