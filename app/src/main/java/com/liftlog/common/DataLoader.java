@@ -40,7 +40,7 @@ public class DataLoader
 	private static long HAMMER_CURL_ID;
 	
     //TODO
-    public static void reload(Context ctx)
+    public static void load(Context ctx)
     {
         dao = new DataAccessObject(ctx);
         dao.clearExerciseTable();
@@ -58,14 +58,14 @@ public class DataLoader
 		BB_ROW_ID = findOrInsert(exerciseMap, "BB Row");
         BTNP_ID = findOrInsert(exerciseMap, "BTNP");
         RDL_ID = findOrInsert(exerciseMap, "RDL");
-        SEATED_CALVES_ID = findOrInsert(exerciseMap, "Seated Calve");
-        PULLUPS_ID = findOrInsert(exerciseMap, "Pullup");
-        DIPS_ID = findOrInsert(exerciseMap, "Dip");
+        SEATED_CALVES_ID = findOrInsert(exerciseMap, "Seated Calves");
+        PULLUPS_ID = findOrInsert(exerciseMap, "Pullups");
+        DIPS_ID = findOrInsert(exerciseMap, "Dips");
         OHP_ID = findOrInsert(exerciseMap, "OHP");
-		CHINUPS_ID = findOrInsert(exerciseMap, "Chinup");
-		HAMSTRING_CURLS_ID  = findOrInsert(exerciseMap, "Hamstring Curl");
-		SUMO_DL_DOH_BL_ID = findOrInsert(exerciseMap, "Sumo DL(DOH)(BL)");
-		HAMMER_CURL_ID = findOrInsert(exerciseMap, "Hammer Curl");
+		CHINUPS_ID = findOrInsert(exerciseMap, "Chinups");
+		HAMSTRING_CURLS_ID  = findOrInsert(exerciseMap, "Hamstring Curls(1)");
+		SUMO_DL_DOH_BL_ID = findOrInsert(exerciseMap, "Sumo Deadlift(DOH)(BL)");
+		HAMMER_CURL_ID = findOrInsert(exerciseMap, "Hammer Curls");
 
         long sessionId;
 		Session s4_22_2015 = new Session();

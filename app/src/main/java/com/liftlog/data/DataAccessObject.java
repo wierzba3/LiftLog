@@ -1127,7 +1127,7 @@ public class DataAccessObject extends SQLiteOpenHelper
 
         int diff = daysSinceEpoch - lastUpdate;
 
-        if(lastUpdate == -1 || diff < dbBackupFrequency)
+        if(lastUpdate != -1 && diff < dbBackupFrequency)
         {
             //if not enough time has passed, don't backup the db
             return;

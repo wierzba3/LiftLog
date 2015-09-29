@@ -109,6 +109,11 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
         Map<Category, List<Exercise>> categoryMap = dao.selectCategoryMap(false);
         ExerciseExpendableListAdapter exListAdapter = new ExerciseExpendableListAdapter(super.getActivity(), categoryMap);
         exListExercises.setAdapter(exListAdapter);
+
+        for(int i = 0; i < exListAdapter.getGroupCount(); i++)
+        {
+            exListExercises.expandGroup(i);
+        }
     }
 
     public void loadExercises()
@@ -315,6 +320,7 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
             for(Category category : categoryMap.keySet())
             {
                 List<Exercise> exercises = categoryMap.get(category);
+                Collections.sort(exercises, Exercise.byNameDummyLast);
 
                 //add the Category, List<Exercise> in parallel
                 categories.add(category);

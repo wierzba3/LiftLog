@@ -20,6 +20,7 @@ import android.content.Intent;
 
 import android.net.Uri;
 
+import com.liftlog.common.DataLoader;
 import com.liftlog.data.DataAccessObject;
 import com.liftlog.models.Category;
 
@@ -33,7 +34,8 @@ import com.liftlog.models.Category;
  *
  * Implement now:
  * - categorize exercises
- * 	implemented, just need to make "add" dialog have an option to add Exercise|Category
+ * 	    implemented, just need to make "add" dialog have an option to add Exercise|Category
+ * 	        the view is implemented, need to implement java side now (CategoryExerciseChoiceDialog)
  * - Test out restoring the .db backup
  * - Implement tools tab
  * - Implement View History (via Tools or ViewLift)
@@ -124,7 +126,8 @@ public class MainActivity extends AppCompatActivity
 //        );
 
 
-
+        DataLoader.load(this);
+        //dao.restoreBackupCopy(this);
     }
 
 
