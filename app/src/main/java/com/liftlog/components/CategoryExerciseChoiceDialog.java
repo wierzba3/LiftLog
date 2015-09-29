@@ -22,9 +22,9 @@ import com.liftlog.R;
 import org.joda.time.DateTime;
 
 /**
- * Created by James Wierzba on 7/12/2015.
+ * Created by James Wierzba on 09/28/2015.
  */
-public class DateInputDialog extends DialogFragment
+public class CategoryExerciseChoiceDialog extends DialogFragment
 {
 
     public static DateInputDialog newInstance()
@@ -62,13 +62,13 @@ public class DateInputDialog extends DialogFragment
 
                 //Calendar cal = Calendar.getInstance();
                 //cal.set(year, month, day);
-				//long date = cal.getTimeInMillis();
-				
-				DateTime dt = new DateTime(year, month, day, 12, 0);
-				long date = dt.getMillis();
-                
+                //long date = cal.getTimeInMillis();
 
-                mListener.onDialogSaveClick(DateInputDialog.this, date);
+                DateTime dt = new DateTime(year, month, day, 12, 0);
+                long date = dt.getMillis();
+
+
+                mListener.onDialogSaveClick(CategoryExerciseChoiceDialog.this, date);
             }
         });
 
@@ -76,7 +76,7 @@ public class DateInputDialog extends DialogFragment
         {
             public void onClick(DialogInterface dialog, int id)
             {
-                mListener.onDialogCancelClick(DateInputDialog.this);
+                mListener.onDialogCancelClick(CategoryExerciseChoiceDialog.this);
             }
         });
 
@@ -95,12 +95,12 @@ public class DateInputDialog extends DialogFragment
         //if called from a fragment
         if(callingFragment != null)
         {
-            mListener = (DateInputDialogListener) getTargetFragment();
+            mListener = (CategoryExerciseChoiceDialogListener) getTargetFragment();
         }
         //else called from an activity
         else
         {
-            mListener = (DateInputDialogListener) activity;
+            mListener = (CategoryExerciseChoiceDialogListener) activity;
         }
     }
 
@@ -109,7 +109,7 @@ public class DateInputDialog extends DialogFragment
      * implement this interface in order to receive event callbacks.
      * Each method passes the DialogFragment in case the host needs to query it.
      */
-    public interface DateInputDialogListener
+    public interface CategoryExerciseChoiceDialogListener
     {
         /**
          *
@@ -125,6 +125,6 @@ public class DateInputDialog extends DialogFragment
         public void onDialogCancelClick(DialogFragment dialog);
 
     }
-    private DateInputDialogListener mListener;
+    private CategoryExerciseChoiceDialogListener mListener;
 
 }

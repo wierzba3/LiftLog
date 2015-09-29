@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              tools:context="com.liftlog.components.DateInputDialog">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Choose what to add"
+        android:gravity="center"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        android:orientation="horizontal"
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Category"
+            android:background="@color/material_blue_500"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Exercise"
+            android:background="@color/material_blue_500"
+            android:paddingRight="10dp"
+            android:paddingLeft="10dp"
+            />
+
+    </LinearLayout>
+
+
+</LinearLayout>
