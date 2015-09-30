@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity
 //        );
 
 
-        DataLoader.load(this);
+//        DataLoader.load(this);
         //dao.restoreBackupCopy(this);
     }
 

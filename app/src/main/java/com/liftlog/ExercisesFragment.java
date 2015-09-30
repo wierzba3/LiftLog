@@ -1,13 +1,13 @@
 package com.liftlog;
 
 import android.app.ActionBar;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,23 +15,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.EditText;
 import android.widget.ExpandableListView;
-import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.liftlog.R;
 
 import com.liftlog.data.DataAccessObject;
 import com.liftlog.components.ExerciseInputDialog;
@@ -52,6 +45,12 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
     private ExpandableListView exListExercises;
 
     DataAccessObject dao;
+
+    private enum InputChoice
+    {
+        EXERCISE,
+        CATEGORY;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -146,16 +145,92 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
     }
 
 
-    private void doAdd(long id)
+    private void doAddExercise(long id)
     {
-
         Exercise exercise = new Exercise();
         exercise.setNew(true);
         exercise.setId(id);
+
         ExerciseInputDialog dialog = ExerciseInputDialog.newInstance(exercise);
         dialog.setTargetFragment(this, ExerciseInputDialog.RequestType.DEFAULT.getValue());
         dialog.show(getFragmentManager().beginTransaction(), "ExerciseInputDialog");
 
+    }
+
+
+    private void doAddCategory()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(super.getActivity());
+        builder.setTitle("New Category Name");
+
+        // Set up the input
+        final EditText input = new EditText(super.getActivity());
+
+        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        builder.setView(input);
+
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                String categoryInput = input.getText().toString();
+                addCategory(categoryInput);
+                ExercisesFragment.this.loadExercises();
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                dialog.cancel();
+            }
+        });
+        builder.show();
+    }
+
+    public void addCategory(String name)
+    {
+        Category category = new Category();
+        category.setName(name);
+        category.setNew(true);
+        dao.insert(category);
+    }
+
+
+
+    public void promptExerciseOrCategory()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(super.getActivity());
+        builder.setTitle("Type to add");
+        builder.setPositiveButton("Exercise", new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                //do nothing
+                // doAddExercise(-1);
+            }
+        });
+//        builder.setNegativeButton("Exercise", new DialogInterface.OnClickListener()
+//        {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which)
+//            {
+//
+//            }
+//        });
+        builder.setNeutralButton("Category", new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                doAddCategory();
+            }
+        });
+        builder.show();
     }
 
     public void doEdit(Exercise exercise)
@@ -185,7 +260,8 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
         switch (id)
         {
             case R.id.action_add_exercise:
-                doAdd(-1);
+//                doAddExercise(-1);
+                promptExerciseOrCategory();
                 break;
         }
 
@@ -317,17 +393,31 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
 //            Collections.sort(allLifts);
 
 
+            Category uncategorized = null;
+            List<Exercise> uncategorizedExercises = null;
             for(Category category : categoryMap.keySet())
             {
                 List<Exercise> exercises = categoryMap.get(category);
+
+                if(category.getId() == -1)
+                {
+                    uncategorized = category;
+                    uncategorizedExercises = exercises;
+                    continue;
+                }
+
+
                 Collections.sort(exercises, Exercise.byNameDummyLast);
 
                 //add the Category, List<Exercise> in parallel
                 categories.add(category);
                 exerciseLists.add(exercises);
             }
-
-
+            if(uncategorized != null)
+            {
+                categories.add(uncategorized);
+                exerciseLists.add(uncategorizedExercises);
+            }
 
         }
 
