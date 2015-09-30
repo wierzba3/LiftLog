@@ -211,7 +211,7 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
             public void onClick(DialogInterface dialog, int which)
             {
                 //do nothing
-                // doAddExercise(-1);
+                doAddExercise(-1);
             }
         });
 //        builder.setNegativeButton("Exercise", new DialogInterface.OnClickListener()

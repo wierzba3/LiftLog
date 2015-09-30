@@ -86,10 +86,9 @@ public class ViewLift extends AppCompatActivity implements ExerciseInputDialog.E
     {
         if(id < 0)
         {
-            txtWeight.setText(String.valueOf(0));
+            //txtWeight.setText(String.valueOf(0));
             pckReps.setValue(5);
             pckSets.setValue(1);
-//            rbtnWarmup.setChecked(false);
         }
         else {
             Lift lift = dao.selectLift(id);

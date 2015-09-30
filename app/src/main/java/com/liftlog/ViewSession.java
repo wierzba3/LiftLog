@@ -277,23 +277,94 @@ public class ViewSession extends AppCompatActivity
 
 //
 
+	/**
+		Encapsulates the elements of the ExpandableListView (Lifts categorized by the exercise type)
+	*/
     private class LiftGroupElement
     {
 
         public LiftGroupElement()
         {
-            lifts = new ArrayList<>();
         }
 
 
         private Exercise exercise;
         private List<Lift> lifts;
+		
+		public void setLifts(List<Lift> value)
+		{
+			lifts = value;
+		}
+		public List<Lift> getLifts()
+		{
+			return lifts;
+		}
+		
+		public Exercise getExercise()
+		{
+			return exercise;
+		}
+		public void setExercise(Exercise value)
+		{
+			exercise = value;
+		}
 
     }
 
 
     private class LiftExpendableListAdapter extends BaseExpandableListAdapter
     {
+		
+		//TODO use this constructor instead
+		public LiftExpendableListAdapter(Context ctx, List<Lift> allLifts, Map<Long, Exercise> exerciseMap)
+		{
+			elements = new ArrayList<LiftGroupElement>();
+			
+            if(allLifts == null) return;
+			
+			//map the exercise ID to the list of lifts whose ID is equal to it
+            Map<Long, List<Lift>> map = new HashMap<Long, List<Lift>>();
+            for(Lift lift : allLifts)
+            {
+                if(lift.getId() < 0) continue;
+                List<Lift> lifts = map.get(lift.getExerciseId());
+
+                if(lifts == null)
+                {
+                    lifts = new ArrayList<Lift>();
+                }
+                lifts.add(lift);
+
+                map.put(lift.getExerciseId(), lifts);
+            }
+			
+			LiftGroupElement uncategorized = null;
+			Exercise dummy = new Exercise();
+			dummy.setId(-1l);
+			dummy.setName("Uncategorized");
+			for(long exerciseId : map.keySet())
+            {
+				
+				List<Lift> lifts = map.get(exerciseId);
+				if(lifts == null || lifts.size() == 0) continue;
+				if(exerciseId == -1)
+				{
+					uncategorized = new LiftGroupElement();
+					uncategorized.setLifts(lifts);
+					uncategorized.setExercise(dummy);
+					elements.add(uncategorized);
+				}
+				else
+				{
+					LiftGroupElement element = new LiftGroupElement();
+					Exercise exercise = exerciseMap.get(exerciseId);
+					element.setExercise(exercise);
+					element.setLifts(lifts);
+					elements.add(element);
+				}
+			}
+		}
+		
         public LiftExpendableListAdapter(Context ctx, List<Lift> allLifts, Map<Long, Exercise> exerciseMap)
         {
             exercises = new ArrayList<Exercise>();
@@ -303,9 +374,7 @@ public class ViewSession extends AppCompatActivity
             Collections.sort(allLifts);
 
             Map<Long, List<Lift>> map = new HashMap<Long, List<Lift>>();
-
             for(Lift lift : allLifts)
-
             {
                 if(lift.getId() < 0) continue;
                 List<Lift> lifts = map.get(lift.getExerciseId());
@@ -321,13 +390,11 @@ public class ViewSession extends AppCompatActivity
                 lifts.add(lift);
 
                 map.put(lift.getExerciseId(), lifts);
-
             }
 
             List<Lift> unknownLifts = new ArrayList<Lift>();
 
             for(long exerciseId : map.keySet())
-
             {
 
                 List<Lift> lifts = map.get(exerciseId);
@@ -383,10 +450,38 @@ public class ViewSession extends AppCompatActivity
                 if((l1 == null || l1.size() == 0) && (l2 == null || l2.size() == 0)) return 0;
                 else if(l1 == null || l1.size() == 0) return -1;
                 else if(l2 == null || l2.size() == 0) return 1;
-                return l1.get(0).compareTo(l2.get(0));
+				
+				int result = 0;
+				long minDate = Long.MAX_VALUE;
+				for(Lift lift : l1)
+				{
+					if(lift.getDateCreated() < minDate)
+					{
+						minDate = lift.getDateCreated();
+						result = -1;
+					}
+				}
+				for(Lift lift : l2)
+				{
+					if(lift.getDateCreated() < minDate)
+					{
+						minDate = lift.getDateCreated();
+						result = 1;
+					}
+				}
+                return result;
             }
         };
+		
 
+        private Comparator<LiftGroupElement> liftsComparator = new Comparator<LiftGroupElement>(){
+            @Override
+            public int compare(LiftGroupElement e1, LiftGroupElement e2)
+            {
+				//TODO
+				return 0;
+			}
+		};
         private List<List<Lift>> liftLists;
         private List<Exercise> exercises;
         private List<LiftGroupElement> elements;
