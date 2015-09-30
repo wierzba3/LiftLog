@@ -43,9 +43,9 @@ public class DataLoader
     public static void load(Context ctx)
     {
         dao = new DataAccessObject(ctx);
-        dao.clearExerciseTable();
-        dao.clearLiftsTable();
-        dao.clearSessionsTable();
+//        dao.clearExerciseTable();
+//        dao.clearLiftsTable();
+//        dao.clearSessionsTable();
 
 		Map<Long, Exercise> exerciseMap = dao.selectExercises(false);
 	

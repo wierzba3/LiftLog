@@ -46,7 +46,7 @@ public class CategoryExerciseChoiceDialog extends DialogFragment
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
         //the new custom view
-        final View customView = inflater.inflate(R.layout.fragment_date_input_dialog, null);
+        final View customView = inflater.inflate(R.layout.fragment_exercise_category_dialog, null);
         builder.setView(customView);
 
         final DatePicker pckDate = (DatePicker) customView.findViewById(R.id.pckdate_input_dialog);
