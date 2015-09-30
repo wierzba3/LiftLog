@@ -57,7 +57,7 @@ public class DateInputDialog extends DialogFragment
             @Override
             public void onClick(DialogInterface dialog, int id) {
                 int day = pckDate.getDayOfMonth();
-                int month = pckDate.getMonth();
+                int month = pckDate.getMonth() + 1;
                 int year = pckDate.getYear();
 
                 //Calendar cal = Calendar.getInstance();
