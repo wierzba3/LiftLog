@@ -30,6 +30,7 @@ import com.liftlog.models.Category;
  * BUGS:
  * - Switch back delete operations to actually delete records instead of marking them deleted
  * - Session showing (2) when it is the only session with that date (fixed..??)
+ * - Despite explicitly expanding the categories in ExerciseFragment, they are closed by default?
  *
  * Implement now:
  * - Make Save/Cancel/Delete buttons blue, and larger
