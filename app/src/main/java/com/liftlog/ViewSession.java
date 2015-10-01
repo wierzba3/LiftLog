@@ -316,54 +316,54 @@ public class ViewSession extends AppCompatActivity
     {
 		
 		//TODO use this constructor instead
-		public LiftExpendableListAdapter(Context ctx, List<Lift> allLifts, Map<Long, Exercise> exerciseMap)
-		{
-			elements = new ArrayList<LiftGroupElement>();
-			
-            if(allLifts == null) return;
-			
-			//map the exercise ID to the list of lifts whose ID is equal to it
-            Map<Long, List<Lift>> map = new HashMap<Long, List<Lift>>();
-            for(Lift lift : allLifts)
-            {
-                if(lift.getId() < 0) continue;
-                List<Lift> lifts = map.get(lift.getExerciseId());
-
-                if(lifts == null)
-                {
-                    lifts = new ArrayList<Lift>();
-                }
-                lifts.add(lift);
-
-                map.put(lift.getExerciseId(), lifts);
-            }
-			
-			LiftGroupElement uncategorized = null;
-			Exercise dummy = new Exercise();
-			dummy.setId(-1l);
-			dummy.setName("Uncategorized");
-			for(long exerciseId : map.keySet())
-            {
-				
-				List<Lift> lifts = map.get(exerciseId);
-				if(lifts == null || lifts.size() == 0) continue;
-				if(exerciseId == -1)
-				{
-					uncategorized = new LiftGroupElement();
-					uncategorized.setLifts(lifts);
-					uncategorized.setExercise(dummy);
-					elements.add(uncategorized);
-				}
-				else
-				{
-					LiftGroupElement element = new LiftGroupElement();
-					Exercise exercise = exerciseMap.get(exerciseId);
-					element.setExercise(exercise);
-					element.setLifts(lifts);
-					elements.add(element);
-				}
-			}
-		}
+//		public LiftExpendableListAdapter(Context ctx, List<Lift> allLifts, Map<Long, Exercise> exerciseMap)
+//		{
+//			elements = new ArrayList<LiftGroupElement>();
+//
+//            if(allLifts == null) return;
+//
+//			//map the exercise ID to the list of lifts whose ID is equal to it
+//            Map<Long, List<Lift>> map = new HashMap<Long, List<Lift>>();
+//            for(Lift lift : allLifts)
+//            {
+//                if(lift.getId() < 0) continue;
+//                List<Lift> lifts = map.get(lift.getExerciseId());
+//
+//                if(lifts == null)
+//                {
+//                    lifts = new ArrayList<Lift>();
+//                }
+//                lifts.add(lift);
+//
+//                map.put(lift.getExerciseId(), lifts);
+//            }
+//
+//			LiftGroupElement uncategorized = null;
+//			Exercise dummy = new Exercise();
+//			dummy.setId(-1l);
+//			dummy.setName("Uncategorized");
+//			for(long exerciseId : map.keySet())
+//            {
+//
+//				List<Lift> lifts = map.get(exerciseId);
+//				if(lifts == null || lifts.size() == 0) continue;
+//				if(exerciseId == -1)
+//				{
+//					uncategorized = new LiftGroupElement();
+//					uncategorized.setLifts(lifts);
+//					uncategorized.setExercise(dummy);
+//					elements.add(uncategorized);
+//				}
+//				else
+//				{
+//					LiftGroupElement element = new LiftGroupElement();
+//					Exercise exercise = exerciseMap.get(exerciseId);
+//					element.setExercise(exercise);
+//					element.setLifts(lifts);
+//					elements.add(element);
+//				}
+//			}
+//		}
 		
         public LiftExpendableListAdapter(Context ctx, List<Lift> allLifts, Map<Long, Exercise> exerciseMap)
         {
@@ -474,14 +474,14 @@ public class ViewSession extends AppCompatActivity
         };
 		
 
-        private Comparator<LiftGroupElement> liftsComparator = new Comparator<LiftGroupElement>(){
-            @Override
-            public int compare(LiftGroupElement e1, LiftGroupElement e2)
-            {
-				//TODO
-				return 0;
-			}
-		};
+//        private Comparator<LiftGroupElement> liftsComparator = new Comparator<LiftGroupElement>(){
+//            @Override
+//            public int compare(LiftGroupElement e1, LiftGroupElement e2)
+//            {
+//				//TODO
+//				return 0;
+//			}
+//		};
         private List<List<Lift>> liftLists;
         private List<Exercise> exercises;
         private List<LiftGroupElement> elements;
