@@ -43,6 +43,7 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
 
 //    private ListView listExercises;
     private ExpandableListView exListExercises;
+    private ExerciseExpendableListAdapter exListAdapter;
 
     DataAccessObject dao;
 
@@ -106,14 +107,21 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
 
         exListExercises = (ExpandableListView) view.findViewById(R.id.exList_exercises);
         Map<Category, List<Exercise>> categoryMap = dao.selectCategoryMap(false);
-        ExerciseExpendableListAdapter exListAdapter = new ExerciseExpendableListAdapter(super.getActivity(), categoryMap);
+        exListAdapter = new ExerciseExpendableListAdapter(super.getActivity(), categoryMap);
         exListExercises.setAdapter(exListAdapter);
 
+
+    }
+
+    public void expandListGroupItems()
+    {
+        if(exListAdapter == null || exListExercises == null) return;
         for(int i = 0; i < exListAdapter.getGroupCount(); i++)
         {
             exListExercises.expandGroup(i);
         }
     }
+
 
     public void loadExercises()
     {
@@ -167,7 +175,7 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
         final EditText input = new EditText(super.getActivity());
 
         // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
         builder.setView(input);
 
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener()

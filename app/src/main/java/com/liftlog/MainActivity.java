@@ -29,11 +29,9 @@ import com.liftlog.models.Category;
  * TODO
  * BUGS:
  * - Switch back delete operations to actually delete records instead of marking them deleted
- * - Session showing (2) when it is the only session with that date (fixed..??)
- * - Despite explicitly expanding the categories in ExerciseFragment, they are closed by default?
  *
  * Implement now:
- * - Make Save/Cancel/Delete buttons blue, and larger
+ * - Provide way to delete category
  * - Option to create and restore backup (don't keep doing it automatically? because it might do a backup after the user lost data...)
  * - Implement tools tab
  * - Implement View History (via Tools or ViewLift)
@@ -107,6 +105,27 @@ public class MainActivity extends AppCompatActivity
         mCustomPagerAdapter = new FragmentPagerAdapter();
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mCustomPagerAdapter);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
+        {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
+            {
+
+            }
+            @Override
+            public void onPageSelected(int position)
+            {
+               if(position == FragmentPagerAdapter.EXERCISES_INDEX)
+               {
+                   mCustomPagerAdapter.getExercisesFragment().expandListGroupItems();
+               }
+            }
+            @Override
+            public void onPageScrollStateChanged(int state)
+            {
+
+            }
+        });
 
         accountType = getString(R.string.accountType);
         mAccount = CreateSyncAccount(this);
@@ -177,6 +196,9 @@ public class MainActivity extends AppCompatActivity
                         "Exercises"
                 };
 
+        public static final int SESSIONS_INDEX = 0;
+        public static final int EXERCISES_INDEX = 1;
+
         private SessionsFragment sessionsFragment;
         private ExercisesFragment exercisesFragment;
 
@@ -214,9 +236,9 @@ public class MainActivity extends AppCompatActivity
         {
             switch (position)
             {
-                case 0:
+                case SESSIONS_INDEX:
                     return sessionsFragment;
-                case 1:
+                case EXERCISES_INDEX:
                     return exercisesFragment;
                 default:
                     return null;
