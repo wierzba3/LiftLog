@@ -363,85 +363,87 @@ public class ViewSession extends AppCompatActivity
 					elements.add(element);
 				}
 			}
+			
+			Collections.sort(elements, liftsComparator);
 		}
 		
-        public LiftExpendableListAdapter(Context ctx, List<Lift> allLifts, Map<Long, Exercise> exerciseMap)
-        {
-            exercises = new ArrayList<Exercise>();
-            liftLists = new ArrayList<List<Lift>>();
-
-            if(allLifts == null) return;
-            Collections.sort(allLifts);
-
-            Map<Long, List<Lift>> map = new HashMap<Long, List<Lift>>();
-            for(Lift lift : allLifts)
-            {
-                if(lift.getId() < 0) continue;
-                List<Lift> lifts = map.get(lift.getExerciseId());
-
-                if(lifts == null)
-
-                {
-
-                    lifts = new ArrayList<Lift>();
-
-                }
-
-                lifts.add(lift);
-
-                map.put(lift.getExerciseId(), lifts);
-            }
-
-            List<Lift> unknownLifts = new ArrayList<Lift>();
-
-            for(long exerciseId : map.keySet())
-            {
-
-                List<Lift> lifts = map.get(exerciseId);
-
-                Exercise exercise = exerciseMap.get(exerciseId);
-
-                if(exercise == null)
-
-                {
-
-                    unknownLifts.addAll(lifts);
-
-                    break;
-
-                }
-
-                Collections.sort(lifts);
-
-                liftLists.add(lifts);
-
-            }
-
-            Collections.sort(liftLists, liftsComparator);
-            for(List<Lift> lifts : liftLists)
-            {
-                if(lifts != null && !lifts.isEmpty())
-                {
-                    long exerciseId = lifts.get(0).getExerciseId();
-                    Exercise exercise = exerciseMap.get(exerciseId);
-                    exercises.add(exercise);
-                }
-            }
-
-            if(unknownLifts.size() > 0)
-
-            {
-
-                Exercise unknown = new Exercise();
-                unknown.setName("Unknown");
-
-                exercises.add(unknown);
-
-                liftLists.add(unknownLifts);
-            }
-
-
-        }
+        //public LiftExpendableListAdapter(Context ctx, List<Lift> allLifts, Map<Long, Exercise> exerciseMap)
+//{
+//    exercises = new ArrayList<Exercise>();
+//    liftLists = new ArrayList<List<Lift>>();
+//
+//    if(allLifts == null) return;
+//    Collections.sort(allLifts);
+//
+//    Map<Long, List<Lift>> map = new HashMap<Long, List<Lift>>();
+//    for(Lift lift : allLifts)
+//    {
+//        if(lift.getId() < 0) continue;
+//        List<Lift> lifts = map.get(lift.getExerciseId());
+//
+//        if(lifts == null)
+//
+//        {
+//
+//            lifts = new ArrayList<Lift>();
+//
+//        }
+//
+//        lifts.add(lift);
+//
+//        map.put(lift.getExerciseId(), lifts);
+//    }
+//
+//    List<Lift> unknownLifts = new ArrayList<Lift>();
+//
+//    for(long exerciseId : map.keySet())
+//    {
+//
+//        List<Lift> lifts = map.get(exerciseId);
+//
+//        Exercise exercise = exerciseMap.get(exerciseId);
+//
+//        if(exercise == null)
+//
+//        {
+//
+//            unknownLifts.addAll(lifts);
+//
+//            break;
+//
+//        }
+//
+//        Collections.sort(lifts);
+//
+//        liftLists.add(lifts);
+//
+//    }
+//
+//    Collections.sort(liftLists, liftsComparator);
+//    for(List<Lift> lifts : liftLists)
+//    {
+//        if(lifts != null && !lifts.isEmpty())
+//        {
+//            long exerciseId = lifts.get(0).getExerciseId();
+//            Exercise exercise = exerciseMap.get(exerciseId);
+//            exercises.add(exercise);
+//        }
+//    }
+//
+//    if(unknownLifts.size() > 0)
+//
+//    {
+//
+//        Exercise unknown = new Exercise();
+//        unknown.setName("Unknown");
+//
+//        exercises.add(unknown);
+//
+//        liftLists.add(unknownLifts);
+//    }
+//
+//
+//}
 
         private Comparator<List<Lift>> liftsComparator = new Comparator<List<Lift>>(){
             @Override
@@ -482,8 +484,9 @@ public class ViewSession extends AppCompatActivity
 				return 0;
 			}
 		};
-        private List<List<Lift>> liftLists;
-        private List<Exercise> exercises;
+		
+        //private List<List<Lift>> liftLists;
+        //private List<Exercise> exercises;
         private List<LiftGroupElement> elements;
 
         @Override
