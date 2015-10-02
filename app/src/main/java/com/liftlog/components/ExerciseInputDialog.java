@@ -73,8 +73,7 @@ public class ExerciseInputDialog extends DialogFragment
         final EditText txtDesc = (EditText) customView.findViewById(R.id.txt_description);
 
 
-        final List<Category> categories = dao.selectCategories(false);
-        categories.add(Category.dummy);
+
         if(currentExercise != null)
         {
             txtName.setText(currentExercise.getName());
@@ -82,18 +81,24 @@ public class ExerciseInputDialog extends DialogFragment
 
             if(currentExercise.getCategoryId() < 1) currentExercise.setCategoryId(-1l);
 
-            //populate and select Category spinner:
-            ArrayAdapter<Category> categoryItemAdapter = new ArrayAdapter<>(super.getActivity(), android.R.layout.simple_spinner_dropdown_item, categories);
-            categoryItemAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-            spnCategory.setAdapter(categoryItemAdapter);
-            for(int i = 0; i < spnCategory.getAdapter().getCount(); i++)
+
+        }
+
+
+        //populate and select Category spinner:
+        final List<Category> categories = dao.selectCategories(false);
+        categories.add(Category.dummy);
+        ArrayAdapter<Category> categoryItemAdapter = new ArrayAdapter<>(super.getActivity(), android.R.layout.simple_spinner_dropdown_item, categories);
+        categoryItemAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        spnCategory.setAdapter(categoryItemAdapter);
+        long currentCategoryId = (currentExercise == null ? -1l : currentExercise.getCategoryId());
+        for(int i = 0; i < spnCategory.getAdapter().getCount(); i++)
+        {
+            Category category = (Category) spnCategory.getItemAtPosition(i);
+            if(category != null && category.getId() == currentCategoryId)
             {
-                Category category = (Category) spnCategory.getItemAtPosition(i);
-                if(category != null && category.getId() == currentExercise.getCategoryId())
-                {
-                    spnCategory.setSelection(i);
-                    break;
-                }
+                spnCategory.setSelection(i);
+                break;
             }
         }
 
