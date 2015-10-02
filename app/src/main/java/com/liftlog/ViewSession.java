@@ -475,7 +475,6 @@ public class ViewSession extends AppCompatActivity
             }
         };
 		
-
         private Comparator<LiftGroupElement> liftsComparator = new Comparator<LiftGroupElement>(){
             @Override
             public int compare(LiftGroupElement e1, LiftGroupElement e2)
@@ -485,6 +484,7 @@ public class ViewSession extends AppCompatActivity
 			}
 		};
 		
+
         //private List<List<Lift>> liftLists;
         //private List<Exercise> exercises;
         private List<LiftGroupElement> elements;
@@ -498,39 +498,47 @@ public class ViewSession extends AppCompatActivity
         @Override
         public int getGroupCount()
         {
-            return exercises.size();
+            //return exercises.size();
+			return elements.size();
         }
 
         @Override
         public int getChildrenCount(int i)
         {
-            List<Lift> lifts = liftLists.get(i);
-            if(lifts == null) return 0;
-            return lifts.size();
+            //List<Lift> lifts = liftLists.get(i);
+            //if(lifts == null) return 0;
+            //return lifts.size();
+			LiftGroupElement e = elements.get(i);
+			if(e == null || e.getLifts() == null) return 0;
+			return e.getLifts().size();
         }
 
         @Override
         public Object getGroup(int i)
         {
-            return exercises.get(i);
+            //return exercises.get(i);
+			return elements.get(i);
         }
 
         @Override
         public Object getChild(int i, int j)
         {
-            return liftLists.get(i).get(j);
+			//return liftLists.get(i).get(j);
+			return elements.get(i).getLifts().get(j);
         }
 
         @Override
         public long getGroupId(int i)
         {
-            return exercises.get(i).getId();
+            //return exercises.get(i).getId();
+			return elements.get(i).getExercise().getId();
         }
 
         @Override
         public long getChildId(int i, int j)
         {
             return liftLists.get(i).get(j).getId();
+			return elements.get(i).getLifts().get(j).getId();
         }
 
         @Override
@@ -548,7 +556,8 @@ public class ViewSession extends AppCompatActivity
                 view = vi.inflate(R.layout.lift_group_item, viewGroup, false);
             }
 
-            Exercise exercise = exercises.get(i);
+            //Exercise exercise = exercises.get(i);
+			Exercise exercise = elements.get(i).getExercise();
             TextView lblExercise = (TextView) view.findViewById(R.id.lbl_lift_group);
             lblExercise.setText(exercise.getName());
 
@@ -565,8 +574,8 @@ public class ViewSession extends AppCompatActivity
                 view = vi.inflate(R.layout.lift_item, viewGroup, false);
             }
 
-            final Lift lift = liftLists.get(i).get(j);
-
+            //final Lift lift = liftLists.get(i).get(j);
+			final Lift lift = elements.get(i).getLifts().get(j);
 
             TextView lblLift = (TextView) view.findViewById(R.id.lbl_lift);
             lblLift.setText(lift.toString());
