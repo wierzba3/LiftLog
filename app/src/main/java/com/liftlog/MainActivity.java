@@ -188,25 +188,29 @@ public class MainActivity extends AppCompatActivity
 
     public class FragmentPagerAdapter extends android.support.v4.app.FragmentPagerAdapter
     {
-        final int PAGE_COUNT = 2;
+        final int PAGE_COUNT = 3;
 
-        private final String[] PAGE_TITLES =
+        public final String[] PAGE_TITLES =
                 {
                         "Log",
-                        "Exercises"
+                        "Exercises",
+                        "Tools"
                 };
 
         public static final int SESSIONS_INDEX = 0;
         public static final int EXERCISES_INDEX = 1;
+        public static final int TOOLS_INDEX = 2;
 
         private SessionsFragment sessionsFragment;
         private ExercisesFragment exercisesFragment;
+        private ToolsFragment toolsFragment;
 
         public FragmentPagerAdapter()
         {
             super(getSupportFragmentManager());
             sessionsFragment = new SessionsFragment();
             exercisesFragment = new ExercisesFragment();
+            toolsFragment = new ToolsFragment();
         }
 
         public SessionsFragment getSessionsFragment()
@@ -218,6 +222,12 @@ public class MainActivity extends AppCompatActivity
         {
             return exercisesFragment;
         }
+
+        public ToolsFragment getToolsFragment()
+        {
+            return toolsFragment;
+        }
+
 
         @Override
         public int getCount()
@@ -240,6 +250,8 @@ public class MainActivity extends AppCompatActivity
                     return sessionsFragment;
                 case EXERCISES_INDEX:
                     return exercisesFragment;
+                case TOOLS_INDEX:
+                    return toolsFragment;
                 default:
                     return null;
             }
