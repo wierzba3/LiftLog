@@ -15,9 +15,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +29,8 @@ import com.liftlog.data.DataAccessObject;
 import com.liftlog.models.Category;
 import com.liftlog.models.Exercise;
 import com.liftlog.models.Lift;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,6 +45,28 @@ public class ToolsFragment extends Fragment
 
 
     DataAccessObject dao;
+
+    private ListView listTools;
+
+    enum Tool
+    {
+        VIEW_HISTORY("View History"),
+        BACKUP("Data Backup");
+
+        Tool(String name)
+        {
+            this.name = name;
+        }
+
+        private String name;
+
+        public String getName()
+        {
+            return name;
+        }
+
+
+    }
 
 
     @Override
@@ -75,6 +102,30 @@ public class ToolsFragment extends Fragment
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.show();
         }
+
+        listTools = (ListView) view.findViewById(R.id.list_tools);
+
+        final List<Tool> tools = new ArrayList<Tool>();
+        tools.add(Tool.VIEW_HISTORY);
+        tools.add(Tool.BACKUP);
+        ToolArrayAdapter adapter = new ToolArrayAdapter(super.getActivity(), android.R.layout.simple_list_item_1, tools);
+        listTools.setAdapter(adapter);
+        listTools.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
+            {
+                Tool tool = tools.get(i);
+                //TODO launch the activity
+                switch(tool)
+                {
+                    case VIEW_HISTORY:
+                        break;
+                    case BACKUP:
+                        break;
+                }
+            }
+        });
     }
 
     @Override
@@ -102,6 +153,47 @@ public class ToolsFragment extends Fragment
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public class ToolArrayAdapter extends ArrayAdapter<Tool>
+    {
+
+        public ToolArrayAdapter(Context context, int textViewResourceId, List<Tool> tools) {
+            super(context, textViewResourceId, tools);
+            this.tools = tools;
+        }
+
+        List<Tool> tools;
+
+        @Override
+        public View getView(final int position, View convertView, final ViewGroup parent)
+        {
+            View view = convertView;
+            if (view == null) {
+                LayoutInflater vi = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                view = vi.inflate(R.layout.tool_item, parent, false);
+            }
+
+            Tool tool = tools.get(position);
+
+            TextView lblTool = (TextView) view.findViewById(R.id.lbl_tool);
+            lblTool.setText(tool.getName());
+
+            return view;
+        }
+
+
+        @Override
+        public long getItemId(int position)
+        {
+           return position;
+        }
+
+        @Override
+        public boolean hasStableIds() {
+            return true;
+        }
+
     }
 
 }
