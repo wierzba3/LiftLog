@@ -316,63 +316,13 @@ public class ViewSession extends AppCompatActivity
     {
 		
 		//TODO use this constructor instead
-//		public LiftExpendableListAdapter(Context ctx, List<Lift> allLifts, Map<Long, Exercise> exerciseMap)
-//		{
-//			elements = new ArrayList<LiftGroupElement>();
-//
-//            if(allLifts == null) return;
-//
-//			//map the exercise ID to the list of lifts whose ID is equal to it
-//            Map<Long, List<Lift>> map = new HashMap<Long, List<Lift>>();
-//            for(Lift lift : allLifts)
-//            {
-//                if(lift.getId() < 0) continue;
-//                List<Lift> lifts = map.get(lift.getExerciseId());
-//
-//                if(lifts == null)
-//                {
-//                    lifts = new ArrayList<Lift>();
-//                }
-//                lifts.add(lift);
-//
-//                map.put(lift.getExerciseId(), lifts);
-//            }
-//
-//			LiftGroupElement uncategorized = null;
-//			Exercise dummy = new Exercise();
-//			dummy.setId(-1l);
-//			dummy.setName("Uncategorized");
-//			for(long exerciseId : map.keySet())
-//            {
-//
-//				List<Lift> lifts = map.get(exerciseId);
-//				if(lifts == null || lifts.size() == 0) continue;
-//				if(exerciseId == -1)
-//				{
-//					uncategorized = new LiftGroupElement();
-//					uncategorized.setLifts(lifts);
-//					uncategorized.setExercise(dummy);
-//					elements.add(uncategorized);
-//				}
-//				else
-//				{
-//					LiftGroupElement element = new LiftGroupElement();
-//					Exercise exercise = exerciseMap.get(exerciseId);
-//					element.setExercise(exercise);
-//					element.setLifts(lifts);
-//					elements.add(element);
-//				}
-//			}
-//		}
-		
-        public LiftExpendableListAdapter(Context ctx, List<Lift> allLifts, Map<Long, Exercise> exerciseMap)
-        {
-            exercises = new ArrayList<Exercise>();
-            liftLists = new ArrayList<List<Lift>>();
-
+		public LiftExpendableListAdapter(Context ctx, List<Lift> allLifts, Map<Long, Exercise> exerciseMap)
+		{
+			elements = new ArrayList<LiftGroupElement>();
+			
             if(allLifts == null) return;
-            Collections.sort(allLifts);
-
+			
+			//map the exercise ID to the list of lifts whose ID is equal to it
             Map<Long, List<Lift>> map = new HashMap<Long, List<Lift>>();
             for(Lift lift : allLifts)
             {
@@ -380,68 +330,120 @@ public class ViewSession extends AppCompatActivity
                 List<Lift> lifts = map.get(lift.getExerciseId());
 
                 if(lifts == null)
-
                 {
-
                     lifts = new ArrayList<Lift>();
-
                 }
-
                 lifts.add(lift);
 
                 map.put(lift.getExerciseId(), lifts);
             }
-
-            List<Lift> unknownLifts = new ArrayList<Lift>();
-
-            for(long exerciseId : map.keySet())
+			
+			LiftGroupElement uncategorized = null;
+			Exercise dummy = new Exercise();
+			dummy.setId(-1l);
+			dummy.setName("Uncategorized");
+			for(long exerciseId : map.keySet())
             {
-
-                List<Lift> lifts = map.get(exerciseId);
-
-                Exercise exercise = exerciseMap.get(exerciseId);
-
-                if(exercise == null)
-
-                {
-
-                    unknownLifts.addAll(lifts);
-
-                    break;
-
-                }
-
-                Collections.sort(lifts);
-
-                liftLists.add(lifts);
-
-            }
-
-            Collections.sort(liftLists, liftsComparator);
-            for(List<Lift> lifts : liftLists)
-            {
-                if(lifts != null && !lifts.isEmpty())
-                {
-                    long exerciseId = lifts.get(0).getExerciseId();
-                    Exercise exercise = exerciseMap.get(exerciseId);
-                    exercises.add(exercise);
-                }
-            }
-
-            if(unknownLifts.size() > 0)
-
-            {
-
-                Exercise unknown = new Exercise();
-                unknown.setName("Unknown");
-
-                exercises.add(unknown);
-
-                liftLists.add(unknownLifts);
-            }
-
-
-        }
+				
+				List<Lift> lifts = map.get(exerciseId);
+				if(lifts == null || lifts.size() == 0) continue;
+				if(exerciseId == -1)
+				{
+					uncategorized = new LiftGroupElement();
+					uncategorized.setLifts(lifts);
+					uncategorized.setExercise(dummy);
+					elements.add(uncategorized);
+				}
+				else
+				{
+					LiftGroupElement element = new LiftGroupElement();
+					Exercise exercise = exerciseMap.get(exerciseId);
+					element.setExercise(exercise);
+					element.setLifts(lifts);
+					elements.add(element);
+				}
+			}
+			
+			Collections.sort(elements, liftsComparator);
+		}
+		
+        //public LiftExpendableListAdapter(Context ctx, List<Lift> allLifts, Map<Long, Exercise> exerciseMap)
+//{
+//    exercises = new ArrayList<Exercise>();
+//    liftLists = new ArrayList<List<Lift>>();
+//
+//    if(allLifts == null) return;
+//    Collections.sort(allLifts);
+//
+//    Map<Long, List<Lift>> map = new HashMap<Long, List<Lift>>();
+//    for(Lift lift : allLifts)
+//    {
+//        if(lift.getId() < 0) continue;
+//        List<Lift> lifts = map.get(lift.getExerciseId());
+//
+//        if(lifts == null)
+//
+//        {
+//
+//            lifts = new ArrayList<Lift>();
+//
+//        }
+//
+//        lifts.add(lift);
+//
+//        map.put(lift.getExerciseId(), lifts);
+//    }
+//
+//    List<Lift> unknownLifts = new ArrayList<Lift>();
+//
+//    for(long exerciseId : map.keySet())
+//    {
+//
+//        List<Lift> lifts = map.get(exerciseId);
+//
+//        Exercise exercise = exerciseMap.get(exerciseId);
+//
+//        if(exercise == null)
+//
+//        {
+//
+//            unknownLifts.addAll(lifts);
+//
+//            break;
+//
+//        }
+//
+//        Collections.sort(lifts);
+//
+//        liftLists.add(lifts);
+//
+//    }
+//
+//    Collections.sort(liftLists, liftsComparator);
+//    for(List<Lift> lifts : liftLists)
+//    {
+//        if(lifts != null && !lifts.isEmpty())
+//        {
+//            long exerciseId = lifts.get(0).getExerciseId();
+//            Exercise exercise = exerciseMap.get(exerciseId);
+//            exercises.add(exercise);
+//        }
+//    }
+//
+//    if(unknownLifts.size() > 0)
+//
+//    {
+//
+//        Exercise unknown = new Exercise();
+//        unknown.setName("Unknown");
+//
+//        exercises.add(unknown);
+//
+//        liftLists.add(unknownLifts);
+//    }
+//
+//
+//}
 
         private Comparator<List<Lift>> liftsComparator = new Comparator<List<Lift>>(){
             @Override
@@ -473,17 +475,18 @@ public class ViewSession extends AppCompatActivity
             }
         };
 		
+        private Comparator<LiftGroupElement> liftsComparator = new Comparator<LiftGroupElement>(){
+            @Override
+            public int compare(LiftGroupElement e1, LiftGroupElement e2)
+            {
+				//TODO
+				return 0;
+			}
+		};
+		
 
-//        private Comparator<LiftGroupElement> liftsComparator = new Comparator<LiftGroupElement>(){
-//            @Override
-//            public int compare(LiftGroupElement e1, LiftGroupElement e2)
-//            {
-//				//TODO
-//				return 0;
-//			}
-//		};
-        private List<List<Lift>> liftLists;
-        private List<Exercise> exercises;
+        //private List<List<Lift>> liftLists;
+        //private List<Exercise> exercises;
         private List<LiftGroupElement> elements;
 
         @Override
@@ -495,39 +498,47 @@ public class ViewSession extends AppCompatActivity
         @Override
         public int getGroupCount()
         {
-            return exercises.size();
+            //return exercises.size();
+			return elements.size();
         }
 
         @Override
         public int getChildrenCount(int i)
         {
-            List<Lift> lifts = liftLists.get(i);
-            if(lifts == null) return 0;
-            return lifts.size();
+            //List<Lift> lifts = liftLists.get(i);
+            //if(lifts == null) return 0;
+            //return lifts.size();
+			LiftGroupElement e = elements.get(i);
+			if(e == null || e.getLifts() == null) return 0;
+			return e.getLifts().size();
         }
 
         @Override
         public Object getGroup(int i)
         {
-            return exercises.get(i);
+            //return exercises.get(i);
+			return elements.get(i);
         }
 
         @Override
         public Object getChild(int i, int j)
         {
-            return liftLists.get(i).get(j);
+			//return liftLists.get(i).get(j);
+			return elements.get(i).getLifts().get(j);
         }
 
         @Override
         public long getGroupId(int i)
         {
-            return exercises.get(i).getId();
+            //return exercises.get(i).getId();
+			return elements.get(i).getExercise().getId();
         }
 
         @Override
         public long getChildId(int i, int j)
         {
             return liftLists.get(i).get(j).getId();
+			return elements.get(i).getLifts().get(j).getId();
         }
 
         @Override
@@ -545,7 +556,8 @@ public class ViewSession extends AppCompatActivity
                 view = vi.inflate(R.layout.lift_group_item, viewGroup, false);
             }
 
-            Exercise exercise = exercises.get(i);
+            //Exercise exercise = exercises.get(i);
+			Exercise exercise = elements.get(i).getExercise();
             TextView lblExercise = (TextView) view.findViewById(R.id.lbl_lift_group);
             lblExercise.setText(exercise.getName());
 
@@ -562,8 +574,8 @@ public class ViewSession extends AppCompatActivity
                 view = vi.inflate(R.layout.lift_item, viewGroup, false);
             }
 
-            final Lift lift = liftLists.get(i).get(j);
-
+            //final Lift lift = liftLists.get(i).get(j);
+			final Lift lift = elements.get(i).getLifts().get(j);
 
             TextView lblLift = (TextView) view.findViewById(R.id.lbl_lift);
             lblLift.setText(lift.toString());
