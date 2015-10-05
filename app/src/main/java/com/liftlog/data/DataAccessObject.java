@@ -358,6 +358,58 @@ public class DataAccessObject extends SQLiteOpenHelper
 
         return result;
     }
+//    public List<Lift> selectLiftsByExercise(long exerciseId)
+//    {
+//        SQLiteDatabase db = this.getReadableDatabase();
+//        return selectLiftsByExercise(db, exerciseId);
+//    }
+//    public List<Lift> selectLiftsByExercise(SQLiteDatabase db, long exerciseId)
+//    {
+//        List<Lift> result = null;
+//        String qry = "SELECT * FROM " + LIFT_TABLE_NAME
+//                + " WHERE " + LIFT_COLUMN_EXERCISE_FK + " = " + exerciseId
+//                + " AND " + LIFT_COLUMN_DELETED + " != 1";
+//        Cursor cursor = db.rawQuery(qry, null);
+//        if (cursor == null)
+//        {
+//            return null;
+//        }
+//
+//        boolean hasNext = cursor.moveToFirst();
+//        while(hasNext)
+//        {
+//            long id = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_PK));
+//            long sessionId = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_SESSION_FK));
+//            double weight = cursor.getDouble(cursor.getColumnIndex(LIFT_COLUMN_WEIGHT));
+//            int sets = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_SETS));
+//            int reps = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_REPS));
+//            int warmup = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_WARMUP));
+//            long dateCreated = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_DATE_CREATED));
+//            boolean isNew = (cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_NEW)) == 1);
+//            boolean isModified = (cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_MODIFIED)) == 1);
+//            boolean isDeleted = (cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_DELETED)) == 1);
+//
+//            Lift lift = new Lift();
+//            lift.setId(id);
+//            lift.setExerciseId(exerciseId);
+//            lift.setSessionId(sessionId);
+//            lift.setWeight(weight);
+//            lift.setSets(sets);
+//            lift.setReps(reps);
+//            lift.setWarmup(warmup == 1 ? true : false);
+//            lift.setDateCreated(dateCreated);
+//            lift.setNew(isNew);
+//            lift.setModified(isModified);
+//            lift.setDeleted(isDeleted);
+//            result.add(lift);
+//
+//            hasNext = cursor.moveToNext();
+//        }
+//
+//        cursor.close();
+//        return result;
+//    }
+
     public Lift selectLift(long id)
     {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -961,6 +1013,87 @@ public class DataAccessObject extends SQLiteOpenHelper
 
         return result;
     }
+    public List<Session> selectSessionsByExercise(long exerciseId)
+    {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return selectSessionsByExercise(db, exerciseId);
+    }
+    public List<Session> selectSessionsByExercise(SQLiteDatabase db, long exerciseId)
+    {
+        String qry = "SELECT " +
+                "b." + LIFT_COLUMN_PK + ", " +
+                "b." + LIFT_COLUMN_SESSION_FK + ", " +
+                "b." + LIFT_COLUMN_EXERCISE_FK + ", " +
+                "b." + LIFT_COLUMN_WEIGHT + ", " +
+                "b." + LIFT_COLUMN_REPS + ", " +
+                "b." + LIFT_COLUMN_SETS + ", " +
+                "b." + LIFT_COLUMN_DATE_CREATED + ", " +
+                "b." + LIFT_COLUMN_WARMUP + ", " +
+                "a." + SESSION_COLUMN_DATE  +
+                " FROM " + SESSION_TABLE_NAME + " as a," + LIFT_TABLE_NAME + " as b" +
+                " WHERE a." + SESSION_COLUMN_PK + " = b." + LIFT_COLUMN_SESSION_FK +
+                " AND b." + LIFT_COLUMN_EXERCISE_FK + " = " + exerciseId;
+
+
+        Cursor cursor = null;
+        try
+        {
+            cursor = db.rawQuery(qry, null);
+        } catch (SQLiteException e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+        if(cursor == null)
+        {
+            return null;
+        }
+
+        //use a map to avoid re-creating Session objects because the returned dataset is a table of lifts with sessionId
+        Map<Long, Session> sessions = new HashMap<Long, Session>();
+        boolean hasNext = cursor.moveToFirst();
+        while(hasNext)
+        {
+            long sessionId = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_SESSION_FK));
+            long date = cursor.getLong(cursor.getColumnIndex(SESSION_COLUMN_DATE));
+            Session session = sessions.get(sessionId);
+            if(session == null)
+            {
+                session = new Session();
+                session.setId(sessionId);
+                session.setDate(date);
+            }
+
+
+            long liftId = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_PK));
+            double weight = cursor.getDouble(cursor.getColumnIndex(LIFT_COLUMN_WEIGHT));
+            int reps = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_REPS));
+            int sets = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_SETS));
+            int warmup = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_WARMUP));
+            long dateCreated = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_DATE_CREATED));
+
+
+            Lift lift = new Lift();
+            lift.setId(liftId);
+            lift.setExerciseId(exerciseId);
+            lift.setSessionId(sessionId);
+            lift.setWeight(weight);
+            lift.setReps(reps);
+            lift.setSets(sets);
+            lift.setWarmup(warmup == 1);
+            lift.setDateCreated(dateCreated);
+
+            session.getLifts().add(lift);
+
+            sessions.put(sessionId, session);
+
+            hasNext = cursor.moveToNext();
+        }
+
+        cursor.close();
+        return new ArrayList<>(sessions.values());
+    }
+
     public Session selectSession(long id)
     {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -1017,7 +1150,8 @@ public class DataAccessObject extends SQLiteOpenHelper
         boolean hasNext = cursor.moveToFirst();
         while (hasNext)
         {
-
+            boolean isDeleted = (cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_DELETED)) == 1);
+//            long date = cursor.getLong(cursor.getColumnIndex(SESSION_COLUMN_DATE));
 
 
             long liftId = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_PK));
@@ -1030,8 +1164,7 @@ public class DataAccessObject extends SQLiteOpenHelper
             long dateCreated = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_DATE_CREATED));
             boolean isNew = (cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_NEW)) == 1);
             boolean isModified = (cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_MODIFIED)) == 1);
-            boolean isDeleted = (cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_DELETED)) == 1);
-//            long date = cursor.getLong(cursor.getColumnIndex(SESSION_COLUMN_DATE));
+
 
             Lift lift = new Lift();
             lift.setId(liftId);
