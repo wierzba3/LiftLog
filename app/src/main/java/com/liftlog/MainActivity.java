@@ -31,10 +31,10 @@ import com.liftlog.models.Category;
  * - Switch back delete operations to actually delete records instead of marking them deleted
  *
  * Implement now:
- * - Provide way to delete category
+ * - Provide way to delete category (menu icon of a edit pencil, prompt for Category|Exercise, and then bring up edit dialog)
  * - Option to create and restore backup (don't keep doing it automatically? because it might do a backup after the user lost data...)
- * - Implement tools tab
- * - Implement View History (via Tools or ViewLift)
+ * - Implement View History
+ *      mostly implemented
  * - filter sessions
  * - settings
  *		+ kg/lb
@@ -166,10 +166,10 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings)
-        {
-            return true;
-        }
+//        if (id == R.id.action_settings)
+//        {
+//            return true;
+//        }
 
         return super.onOptionsItemSelected(item);
     }

@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.liftlog.R;
-import com.liftlog.backend.myApi.model.ExerciseAPI;
 import com.liftlog.common.Util;
 import com.liftlog.models.Category;
 import com.liftlog.models.Lift;
@@ -206,7 +205,7 @@ public class DataAccessObject extends SQLiteOpenHelper
         try {
             sessions = selectSessions(db, 0, Integer.MAX_VALUE, true);
             lifts = selectLifts(db, true);
-            exercises = selectExercises(db, true);
+            exercises = selectExerciseMap(db, true);
             categories = selectCategories(db, true);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -763,12 +762,18 @@ public class DataAccessObject extends SQLiteOpenHelper
 
         return result;
     }
-    public Map<Long, Exercise> selectExercises(boolean includeDeleted)
+    public List<Exercise> selectExercises(boolean includeDeleted)
+    {
+        Map<Long, Exercise> exerciseMap = selectExerciseMap(includeDeleted);
+        return new ArrayList<>(exerciseMap.values());
+    }
+
+    public Map<Long, Exercise> selectExerciseMap(boolean includeDeleted)
     {
         SQLiteDatabase db = this.getReadableDatabase();
-        return selectExercises(db, includeDeleted);
+        return selectExerciseMap(db, includeDeleted);
     }
-    public Map<Long, Exercise> selectExercises(SQLiteDatabase db, boolean includeDeleted)
+    public Map<Long, Exercise> selectExerciseMap(SQLiteDatabase db, boolean includeDeleted)
     {
 //        ArrayList<Exercise> result = new ArrayList<Exercise>();
         HashMap<Long, Exercise> result = new HashMap<>();
@@ -1045,7 +1050,7 @@ public class DataAccessObject extends SQLiteOpenHelper
             hasNext = cursor.moveToNext();
         }
 
-        Map<Long, Exercise> exercises = selectExercises(false);
+        Map<Long, Exercise> exercises = selectExerciseMap(false);
         for (Lift lift : result.getLifts())
         {
             long exerciseId = lift.getExerciseId();

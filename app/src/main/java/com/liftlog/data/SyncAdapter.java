@@ -122,7 +122,7 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
      */
     private void syncExercises(Connection conn, String username)
     {
-        Map<Long, Exercise> localExercises = dao.selectExercises(true);
+        Map<Long, Exercise> localExercises = dao.selectExerciseMap(true);
         for(Exercise localExercise : localExercises.values())
         {
             boolean ret;

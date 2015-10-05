@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -130,7 +129,7 @@ public class ViewLift extends AppCompatActivity implements ExerciseInputDialog.E
 
     private void loadExercises()
     {
-        exercises = dao.selectExercises(false);
+        exercises = dao.selectExerciseMap(false);
         if(exercises != null)
         {
             List<Exercise> exerciseList = new ArrayList<>(exercises.values());
@@ -197,9 +196,6 @@ public class ViewLift extends AppCompatActivity implements ExerciseInputDialog.E
 //                finish();
                 finish();
                 return true;
-            case R.id.action_settings:
-
-                break;
         }
 
         return super.onOptionsItemSelected(item);

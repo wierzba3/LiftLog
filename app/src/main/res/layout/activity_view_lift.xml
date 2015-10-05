@@ -56,7 +56,7 @@
             android:layout_width="82dp"
             android:layout_height="wrap_content"
             android:id="@+id/txt_weight"
-            android:inputType="number"
+            android:inputType="numberDecimal"
             android:layout_row="1"
             android:layout_column="0"
             />

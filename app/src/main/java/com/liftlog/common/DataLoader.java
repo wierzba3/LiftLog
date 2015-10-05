@@ -8,10 +8,7 @@ import com.liftlog.models.Lift;
 import com.liftlog.models.Session;
 
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeUtils;
-import org.joda.time.Days;
 import org.joda.time.MutableDateTime;
-import org.joda.time.field.MillisDurationField;
 
 import java.util.Map;
 
@@ -47,7 +44,7 @@ public class DataLoader
 //        dao.clearLiftsTable();
 //        dao.clearSessionsTable();
 
-		Map<Long, Exercise> exerciseMap = dao.selectExercises(false);
+		Map<Long, Exercise> exerciseMap = dao.selectExerciseMap(false);
 	
 	
 		//TODO make sure these lift names match the ones in the app db
