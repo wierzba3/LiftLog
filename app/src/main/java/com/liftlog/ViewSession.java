@@ -16,12 +16,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,7 +29,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedMap;
 
 import com.liftlog.models.Exercise;
 import com.liftlog.models.Lift;
@@ -121,7 +117,7 @@ public class ViewSession extends AppCompatActivity
         }
         Collections.sort(lifts);
 
-        Map<Long, Exercise> exerciseMap = dao.selectExercises(false);
+        Map<Long, Exercise> exerciseMap = dao.selectExerciseMap(false);
 
         //dummy lift for < Add New > option
         Lift emptyLift = new Lift();
@@ -268,8 +264,6 @@ public class ViewSession extends AppCompatActivity
                 break;
             case R.id.home:
                 break;
-            case R.id.action_settings:
-                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -364,7 +358,7 @@ public class ViewSession extends AppCompatActivity
 				}
 			}
 			
-			Collections.sort(elements, liftsComparator);
+			Collections.sort(elements, comparator);
 		}
 		
         //public LiftExpendableListAdapter(Context ctx, List<Lift> allLifts, Map<Long, Exercise> exerciseMap)
@@ -475,12 +469,35 @@ public class ViewSession extends AppCompatActivity
             }
         };
 		
-        private Comparator<LiftGroupElement> liftsComparator = new Comparator<LiftGroupElement>(){
+        private Comparator<LiftGroupElement> comparator = new Comparator<LiftGroupElement>(){
             @Override
             public int compare(LiftGroupElement e1, LiftGroupElement e2)
             {
-				//TODO
-				return 0;
+                List<Lift> l1 = e1.getLifts();
+                List<Lift> l2 = e2.getLifts();
+                if((l1 == null || l1.size() == 0) && (l2 == null || l2.size() == 0)) return 0;
+                else if(l1 == null || l1.size() == 0) return -1;
+                else if(l2 == null || l2.size() == 0) return 1;
+
+                int result = 0;
+                long minDate = Long.MAX_VALUE;
+                for(Lift lift : l1)
+                {
+                    if(lift.getDateCreated() < minDate)
+                    {
+                        minDate = lift.getDateCreated();
+                        result = -1;
+                    }
+                }
+                for(Lift lift : l2)
+                {
+                    if(lift.getDateCreated() < minDate)
+                    {
+                        minDate = lift.getDateCreated();
+                        result = 1;
+                    }
+                }
+                return result;
 			}
 		};
 		
@@ -537,7 +554,6 @@ public class ViewSession extends AppCompatActivity
         @Override
         public long getChildId(int i, int j)
         {
-            return liftLists.get(i).get(j).getId();
 			return elements.get(i).getLifts().get(j).getId();
         }
 

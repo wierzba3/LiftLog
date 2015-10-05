@@ -131,7 +131,7 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
             return;
         }
 
-        Map<Long, Exercise> exercises = dao.selectExercises(false);
+        Map<Long, Exercise> exercises = dao.selectExerciseMap(false);
         if (exercises == null)
         {
             return;
