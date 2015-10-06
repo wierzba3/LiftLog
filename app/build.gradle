@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion "21.1.2"
+    compileSdkVersion 22
+    buildToolsVersion "22.0.1"
 
     defaultConfig {
         applicationId "com.liftlog"
@@ -25,4 +25,5 @@ dependencies {
     compile project(path: ':liftlog backend', configuration: 'android-endpoints')
     compile files('libs/com.mysql.jdbc_5.1.5.jar')
     compile files('libs/joda-time-2.8.2.jar')
+    compile 'joda-time:joda-time:2.8.2'
 }

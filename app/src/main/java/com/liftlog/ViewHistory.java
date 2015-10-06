@@ -19,12 +19,15 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.liftlog.data.DataAccessObject;
 import com.liftlog.models.Exercise;
 import com.liftlog.models.Lift;
+import com.liftlog.models.Session;
 
 import org.joda.time.DateTime;
+import org.joda.time.MutableDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -32,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -51,6 +55,7 @@ public class ViewHistory extends AppCompatActivity
     private ExpandableListView exListHistory;
 
     private long exerciseId = -1;
+    private String exerciseName = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -71,18 +76,43 @@ public class ViewHistory extends AppCompatActivity
             promptForExercise();
             return;
         }
+        else
+        {
+            Exercise exercise = dao.selectExercise(exerciseId);
+            if(exercise == null)
+            {
+                Toast.makeText(this, "Error: Exercise does not exist.", Toast.LENGTH_LONG).show();
+                finish();
+                return;
+            }
+            exerciseName = exercise.getName();
+            this.setTitle(exerciseName);
+        }
+
         loadLifts(exerciseId);
     }
 
     private void promptForExercise()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("New Category Name");
+        builder.setTitle("Select Exercise");
 
 
         final Spinner input = new Spinner(this);
 
         final List<Exercise> exercises = dao.selectExercises(false);
+        if(exercises == null)
+        {
+            Toast.makeText(this, "Error loading exercises.", Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+        if(exercises.size() == 0)
+        {
+            Toast.makeText(this, "No exercises exist to view.", Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
         ArrayAdapter<Exercise> spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, exercises);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         input.setAdapter(spinnerAdapter);
@@ -93,9 +123,11 @@ public class ViewHistory extends AppCompatActivity
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
-                Exercise exercise = exercises.get(which);
-                if(exercise != null)
+                Exercise exercise = (Exercise) input.getSelectedItem();
+                if (exercise != null)
                 {
+                    ViewHistory.this.exerciseId = exercise.getId();
+                    ViewHistory.this.exerciseName = exercise.getName();
                     loadLifts(exercise.getId());
                 }
             }
@@ -105,7 +137,7 @@ public class ViewHistory extends AppCompatActivity
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
-               finish();
+                finish();
             }
         });
         builder.show();
@@ -124,29 +156,27 @@ public class ViewHistory extends AppCompatActivity
         }
 
 
-        exListHistory = (ExpandableListView) findViewById(R.id.exList_lifts);
+        exListHistory = (ExpandableListView) findViewById(R.id.exList_history);
 
 
     }
 
     private void loadLifts(long exerciseId)
     {
-        //TODO select all lifts of that exercise
-        List lifts = null;
-        Exercise exercise = dao.selectExercise(exerciseId);
+//        List<Lift> lifts = dao.selectLiftsByExercise(exerciseId);
+        List<Session> sessions = dao.selectSessionsByExercise(exerciseId);
+        if(sessions == null)
+        {
+            Toast.makeText(this, "No history for Exercise: " + exerciseName, Toast.LENGTH_LONG).show();
+            return;
+        }
 
-        Map<Long, Exercise> exerciseMap = dao.selectExerciseMap(false);
-
-        //dummy lift for < Add New > option
-        Lift emptyLift = new Lift();
-        emptyLift.setId(-1);
-        lifts.add(0, emptyLift);
-
-//        LiftArrayAdapter liftArrayAdapter = new LtArrayAdapter(this, R.id.lbl_lift, lifts);
-//        listLifts.setAdapter(liftArrayAdapter);if
-
-        HistoryExpendableListAdapter liftExpandableAdapter = new HistoryExpendableListAdapter(this, lifts);
-        exListHistory.setAdapter(liftExpandableAdapter);
+        HistoryExpendableListAdapter liftExpandableAdapter = new HistoryExpendableListAdapter(this, sessions);
+        try {
+            exListHistory.setAdapter(liftExpandableAdapter);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         for(int i = 0; i < liftExpandableAdapter.getGroupCount(); i++)
         {
@@ -282,9 +312,9 @@ public class ViewHistory extends AppCompatActivity
 
 //
 
-	/**
-		Encapsulates the elements of the ExpandableListView (Lifts categorized by the exercise type)
-	*/
+    /**
+     Encapsulates the elements of the ExpandableListView (Lifts categorized by the exercise type)
+     */
     private class HistoryGroupElement
     {
 
@@ -292,27 +322,37 @@ public class ViewHistory extends AppCompatActivity
         {
         }
 
-
+        private long id;
         private DateTime date;
         private List<Lift> lifts;
-		
-		public void setLifts(List<Lift> value)
-		{
-			lifts = value;
-		}
-		public List<Lift> getLifts()
-		{
-			return lifts;
-		}
-		
-		public DateTime getDate()
-		{
-			return date;
-		}
-		public void setDate(DateTime value)
-		{
+
+        public void setId(long value)
+        {
+            id = value;
+        }
+        public long getId()
+        {
+            return id;
+        }
+
+
+        public void setLifts(List<Lift> value)
+        {
+            lifts = value;
+        }
+        public List<Lift> getLifts()
+        {
+            return lifts;
+        }
+
+        public DateTime getDate()
+        {
+            return date;
+        }
+        public void setDate(DateTime value)
+        {
             date = value;
-		}
+        }
 
     }
 
@@ -320,16 +360,28 @@ public class ViewHistory extends AppCompatActivity
     private class HistoryExpendableListAdapter extends BaseExpandableListAdapter
     {
 
-		public HistoryExpendableListAdapter(Context ctx, List<Lift> allLifts)
-		{
-			elements = new ArrayList<HistoryGroupElement>();
-			
-            if(allLifts == null) return;
-            //TODO
-			
-			Collections.sort(elements, comparator);
-		}
-		
+        public HistoryExpendableListAdapter(Context ctx, List<Session> sessions)
+        {
+            elements = new ArrayList<HistoryGroupElement>();
+
+            if(sessions == null) return;
+
+            for(Session session : sessions)
+            {
+                if(session == null) continue;
+                HistoryGroupElement element = new HistoryGroupElement();
+                DateTime date = new DateTime(session.getDate());
+
+                element.setId(session.getId());
+                element.setDate(date);
+                element.setLifts(session.getLifts());
+                Collections.sort(element.getLifts(), Lift.byDateCreated);
+                elements.add(element);
+            }
+
+            Collections.sort(elements, comparator);
+        }
+
 
         private Comparator<List<Lift>> liftsComparator = new Comparator<List<Lift>>(){
             @Override
@@ -338,41 +390,41 @@ public class ViewHistory extends AppCompatActivity
                 if((l1 == null || l1.size() == 0) && (l2 == null || l2.size() == 0)) return 0;
                 else if(l1 == null || l1.size() == 0) return -1;
                 else if(l2 == null || l2.size() == 0) return 1;
-				
-				int result = 0;
-				long minDate = Long.MAX_VALUE;
-				for(Lift lift : l1)
-				{
-					if(lift.getDateCreated() < minDate)
-					{
-						minDate = lift.getDateCreated();
-						result = -1;
-					}
-				}
-				for(Lift lift : l2)
-				{
-					if(lift.getDateCreated() < minDate)
-					{
-						minDate = lift.getDateCreated();
-						result = 1;
-					}
-				}
+
+                int result = 0;
+                long minDate = Long.MAX_VALUE;
+                for(Lift lift : l1)
+                {
+                    if(lift.getDateCreated() < minDate)
+                    {
+                        minDate = lift.getDateCreated();
+                        result = -1;
+                    }
+                }
+                for(Lift lift : l2)
+                {
+                    if(lift.getDateCreated() < minDate)
+                    {
+                        minDate = lift.getDateCreated();
+                        result = 1;
+                    }
+                }
                 return result;
             }
         };
-		
+
         private Comparator<HistoryGroupElement> comparator = new Comparator<HistoryGroupElement>(){
             @Override
             public int compare(HistoryGroupElement e1, HistoryGroupElement e2)
             {
-				//TODO
-				return 0;
-			}
-		};
-		
+                long d1 = e1.getDate().getMillis();
+                long d2 = e2.getDate().getMillis();
+                if(d1 < d2) return -1;
+                else if(d1 > d2) return 1;
+                else return 0;
+            }
+        };
 
-        //private List<List<Lift>> liftLists;
-        //private List<Exercise> exercises;
         private List<HistoryGroupElement> elements;
 
         @Override
@@ -384,41 +436,39 @@ public class ViewHistory extends AppCompatActivity
         @Override
         public int getGroupCount()
         {
-			return elements.size();
+            return elements.size();
         }
 
         @Override
         public int getChildrenCount(int i)
         {
             HistoryGroupElement e = elements.get(i);
-			if(e == null || e.getLifts() == null) return 0;
-			return e.getLifts().size();
+            if(e == null || e.getLifts() == null) return 0;
+            return e.getLifts().size();
         }
 
         @Override
         public Object getGroup(int i)
         {
-			return elements.get(i);
+            return elements.get(i);
         }
 
         @Override
         public Object getChild(int i, int j)
         {
-			//return liftLists.get(i).get(j);
-			return elements.get(i).getLifts().get(j);
+            return elements.get(i).getLifts().get(j);
         }
 
         @Override
         public long getGroupId(int i)
         {
-            //return exercises.get(i).getId();
-			return elements.get(i).getDate().getMillis();
+            return elements.get(i).getDate().getMillis();
         }
 
         @Override
         public long getChildId(int i, int j)
         {
-			return elements.get(i).getLifts().get(j).getId();
+            return elements.get(i).getLifts().get(j).getId();
         }
 
         @Override
@@ -437,7 +487,7 @@ public class ViewHistory extends AppCompatActivity
             }
 
             //Exercise exercise = exercises.get(i);
-			DateTime date = elements.get(i).getDate();
+            DateTime date = elements.get(i).getDate();
             DateTime dt = new DateTime(date);
             DateTimeFormatter dtf = DateTimeFormat.forPattern("E, MMM dd yyyy");
             String dateString = dtf.print(dt);
@@ -454,13 +504,12 @@ public class ViewHistory extends AppCompatActivity
             if (view == null)
             {
                 LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                view = vi.inflate(R.layout.lift_item, viewGroup, false);
+                view = vi.inflate(R.layout.history_item, viewGroup, false);
             }
 
-            //final Lift lift = liftLists.get(i).get(j);
-			final Lift lift = elements.get(i).getLifts().get(j);
+            final Lift lift = elements.get(i).getLifts().get(j);
 
-            TextView lblLift = (TextView) view.findViewById(R.id.lbl_lift);
+            TextView lblLift = (TextView) view.findViewById(R.id.lbl_lift_history);
             lblLift.setText(lift.toString());
 
             lblLift.setOnClickListener(new View.OnClickListener()

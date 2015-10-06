@@ -4,6 +4,7 @@ import android.app.ActionBar;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
@@ -110,22 +111,29 @@ public class ToolsFragment extends Fragment
         tools.add(Tool.BACKUP);
         ToolArrayAdapter adapter = new ToolArrayAdapter(super.getActivity(), android.R.layout.simple_list_item_1, tools);
         listTools.setAdapter(adapter);
-        listTools.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
+        listTools.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
-            {
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Tool tool = tools.get(i);
                 //TODO launch the activity
-                switch(tool)
-                {
+                switch (tool) {
                     case VIEW_HISTORY:
+                        launchViewHistory();
                         break;
                     case BACKUP:
+                        Toast.makeText(ToolsFragment.super.getActivity(), "not implemented", Toast.LENGTH_SHORT).show();
                         break;
                 }
             }
         });
+    }
+
+    private void launchViewHistory()
+    {
+        Intent intent = new Intent(super.getActivity(), ViewHistory.class);
+        super.startActivity(intent);
+        //intent.putExtra(ViewLift.LIFT_ID_KEY, liftId);
+        //intent.putExtra(ViewLift.SESSION_ID_KEY, sessionId);
     }
 
     @Override

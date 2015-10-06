@@ -10,9 +10,9 @@
       <configuration>
         <option name="HTTP_ADDRESS" value="0.0.0.0" />
         <option name="HTTP_PORT" value="8080" />
-        <option name="WAR_DIR" value="C:\Users\cdewz\AndroidStudioProjects\LiftLog\liftlog backend\build\exploded-app" />
-        <option name="WEB_APP_DIR" value="C:\Users\cdewz\AndroidStudioProjects\LiftLog\liftlog backend\src\main\webapp" />
-        <option name="APPENGINE_SDKROOT" value="C:\Users\cdewz\.gradle\appengine-sdk\appengine-java-sdk-1.9.18" />
+        <option name="WAR_DIR" value="$MODULE_DIR$/build/exploded-app" />
+        <option name="WEB_APP_DIR" value="$MODULE_DIR$/src/main/webapp" />
+        <option name="APPENGINE_SDKROOT" value="$USER_HOME$/.gradle/appengine-sdk/appengine-java-sdk-1.9.18" />
       </configuration>
     </facet>
     <facet type="java-gradle" name="Java-Gradle">
