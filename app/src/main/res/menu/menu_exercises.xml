@@ -13,4 +13,10 @@
         android:icon="@drawable/ic_add_white_24dp"
         android:title="Add Exercise"/>
 
+    <item
+        android:id="@+id/action_edit_exercise"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_edit_white_24dp"
+        android:title="Add Exercise"/>
+
 </menu>

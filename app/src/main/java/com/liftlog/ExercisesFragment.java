@@ -173,6 +173,7 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
 
         // Set up the input
         final EditText input = new EditText(super.getActivity());
+        input.setSingleLine();
 
         // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
         input.setInputType(InputType.TYPE_CLASS_TEXT);
@@ -268,8 +269,11 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
         switch (id)
         {
             case R.id.action_add_exercise:
-//                doAddExercise(-1);
                 promptExerciseOrCategory();
+                break;
+
+            case R.id.action_edit_exercise:
+                //TODO prompt for edit/delete of Exercise|Category
                 break;
         }
 

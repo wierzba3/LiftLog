@@ -3,6 +3,7 @@ package com.liftlog.models;
 import com.liftlog.backend.myApi.model.LiftAPI;
 import com.liftlog.data.DataAccessObject;
 
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -182,6 +183,14 @@ public class Lift implements Comparable<Lift> {
         else if(dateCreated < other.getDateCreated()) return -1;
         else return 0;
     }
+
+    public static Comparator<Lift> byDateCreated = new Comparator<Lift>()
+    {
+        @Override
+        public int compare(Lift l1, Lift l2) {
+            return l1.compareTo(l2);
+        }
+    };
 
 //    @Override
 //    public int compareTo(Lift other)
