@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,17 +28,13 @@ import com.liftlog.models.Lift;
 import com.liftlog.models.Session;
 
 import org.joda.time.DateTime;
-import org.joda.time.MutableDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ViewHistory extends AppCompatActivity
 {
@@ -97,7 +94,6 @@ public class ViewHistory extends AppCompatActivity
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Select Exercise");
 
-
         final Spinner input = new Spinner(this);
 
         final List<Exercise> exercises = dao.selectExercises(false);
@@ -138,6 +134,19 @@ public class ViewHistory extends AppCompatActivity
             public void onClick(DialogInterface dialog, int which)
             {
                 finish();
+            }
+        });
+        //if user exits dialog, exit the activity because there is no chosen exercise history to display
+        builder.setOnKeyListener(new DialogInterface.OnKeyListener()
+        {
+            @Override
+            public boolean onKey(DialogInterface dialogInterface, int i, KeyEvent keyEvent)
+            {
+                if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_BACK)
+                {
+                    finish();
+                }
+                return false;
             }
         });
         builder.show();
