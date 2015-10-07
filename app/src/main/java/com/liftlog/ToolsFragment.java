@@ -52,7 +52,8 @@ public class ToolsFragment extends Fragment
     enum Tool
     {
         VIEW_HISTORY("View History"),
-        BACKUP("Data Backup");
+//        BACKUP("Data Backup")
+        ;
 
         Tool(String name)
         {
@@ -108,7 +109,7 @@ public class ToolsFragment extends Fragment
 
         final List<Tool> tools = new ArrayList<Tool>();
         tools.add(Tool.VIEW_HISTORY);
-        tools.add(Tool.BACKUP);
+//        tools.add(Tool.BACKUP);
         ToolArrayAdapter adapter = new ToolArrayAdapter(super.getActivity(), android.R.layout.simple_list_item_1, tools);
         listTools.setAdapter(adapter);
         listTools.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -120,9 +121,9 @@ public class ToolsFragment extends Fragment
                     case VIEW_HISTORY:
                         launchViewHistory();
                         break;
-                    case BACKUP:
-                        Toast.makeText(ToolsFragment.super.getActivity(), "not implemented", Toast.LENGTH_SHORT).show();
-                        break;
+//                    case BACKUP:
+//                        Toast.makeText(ToolsFragment.super.getActivity(), "not implemented", Toast.LENGTH_SHORT).show();
+//                        break;
                 }
             }
         });
@@ -140,7 +141,7 @@ public class ToolsFragment extends Fragment
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
     {
         // Inflate the menu; this adds items to the action bar if it is present.
-        inflater.inflate(R.menu.menu_exercises, menu);
+        inflater.inflate(R.menu.menu_tools, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
