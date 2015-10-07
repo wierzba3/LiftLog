@@ -39,11 +39,11 @@ import com.liftlog.models.Lift;
 public class ExercisesFragment extends Fragment implements ExerciseInputDialog.ExerciseInputDialogListener
 {
 
-    public static final String LOG_TAG = "liftlog.ExerciseFragment";
+    public static final String LOG_TAG = "ExerciseFragment";
 
 //    public static final int REQUEST_CODE = 1;
 
-//    private ListView listExercises;
+    //    private ListView listExercises;
     private ExpandableListView exListExercises;
     private ExerciseExpendableListAdapter exListAdapter;
 
@@ -152,6 +152,8 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
         Map<Category, List<Exercise>> categoryMap = dao.selectCategoryMap(false);
         ExerciseExpendableListAdapter exListAdapter = new ExerciseExpendableListAdapter(super.getActivity(), categoryMap);
         exListExercises.setAdapter(exListAdapter);
+
+        expandListGroupItems();
     }
 
 
@@ -268,7 +270,7 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
                 dao.update(category);
             }
         });
-        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener()
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
         {
             @Override
             public void onClick(DialogInterface dialog, int which)
@@ -276,17 +278,78 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
                 dialog.cancel();
             }
         });
-        builder.setNegativeButton("Delete", new DialogInterface.OnClickListener()
+        builder.setNeutralButton("Delete", new DialogInterface.OnClickListener()
         {
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
-               dao.deleteCategory(category.getId());
+                deleteCategory(category);
             }
         });
         builder.show();
 
     }
+
+    private void deleteCategory(final Category category)
+    {
+        String msg = "Are you sure you want to delete category " + category.getName();
+        new AlertDialog.Builder(super.getActivity())
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle("Delete Exercise")
+                .setMessage(msg)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        dao.deleteCategory(category.getId());
+                        ExercisesFragment.this.loadExercises();
+                    }
+
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                return;
+                            }
+
+                        }
+                )
+                .show();
+    }
+
+    private void deleteExercise(final Exercise exercise)
+    {
+        String msg = "Are you sure you want to delete exercise " + exercise.getName();
+        new AlertDialog.Builder(super.getActivity())
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle("Delete Exercise")
+                .setMessage(msg)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        dao.deleteExercise(exercise.getId());
+                        ExercisesFragment.this.loadExercises();
+                    }
+
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                return;
+                            }
+
+                        }
+                )
+                .show();
+    }
+
 
     public void addCategory(String name)
     {
@@ -457,6 +520,7 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
         //do nothing
     }
 
+
     public void onDialogDeleteClick(DialogFragment dialog, final Exercise exercise)
     {
         if (exercise == null || exercise.getId() == -1)
@@ -487,11 +551,6 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
                         @Override
                         public void onClick(DialogInterface dialog, int which)
                         {
-//                            if (!dao.deleteExercise(exercise.getId()))
-//                            {
-//                                Toast.makeText(ExercisesFragment.super.getActivity(), "Error deleting exercise.", Toast.LENGTH_SHORT).show();
-//                                Log.d(LOG_TAG, "Error deleting exercise. id=" + exercise.getId() + "\tname=" + exercise.getName());
-//                            }
                             exercise.setName("?");
                             exercise.setValid(false);
                             exercise.setDeleted(true);
@@ -524,13 +583,8 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
                         @Override
                         public void onClick(DialogInterface dialog, int which)
                         {
-                            exercise.setDeleted(true);
-//                        if (!dao.deleteExercise(exercise.getId()))
-                            if (!dao.update(exercise))
-                            {
-                                Toast.makeText(ExercisesFragment.super.getActivity(), "Error deleting exercise.", Toast.LENGTH_SHORT).show();
-                                Log.d(LOG_TAG, "Error deleting exercise. id=" + exercise.getId() + "\tname=" + exercise.getName());
-                            }
+
+                            deleteExercise(exercise);
                             loadExercises();
                         }
 
