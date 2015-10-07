@@ -3,8 +3,11 @@
 
     <color name="material_blue_700">#1976d2</color>
     <color name="material_blue_500">#2196f3</color>
+    <color name="material_blue_400">#42A5F5</color>
     <color name="material_blue_300">#64b5f6</color>
     <color name="material_blue_100">#bbdefb</color>
+    <color name="material_blue_200">#90CAF9</color>
+    <color name="material_blue_50">#E3F2FD</color>
 
     <color name="blue">#5677fc</color>
     <color name="white">#FFFFFF</color>

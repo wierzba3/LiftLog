@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
@@ -693,14 +694,30 @@ public class DataAccessObject extends SQLiteOpenHelper
 
         return result;
     }
+    public boolean categoryExists(String name)
+    {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return categoryExists(db, name);
+    }
+    public boolean categoryExists(SQLiteDatabase db, String name)
+    {
+        long num = DatabaseUtils.queryNumEntries(db, CATEGORY_TABLE_NAME, "name=?", new String[]{name});
+        return num > 0;
+    }
     public boolean deleteCategory(long id)
     {
         String qry = "DELETE FROM " + CATEGORY_TABLE_NAME +
                 " WHERE " + CATEGORY_COLUMN_PK + " = " + id;
+
+        ContentValues values = new ContentValues();
+        values.put(EXERCISE_COLUMN_CATEGORY_FK, 0l);
         try
         {
             SQLiteDatabase db = this.getWritableDatabase();
+            //delete the category
             db.execSQL(qry);
+            //update exercises whose category_id was referencing this category
+            db.update(EXERCISE_TABLE_NAME, values, EXERCISE_COLUMN_CATEGORY_FK + " = " + id, null);
         } catch (SQLException e)
         {
             e.printStackTrace();

@@ -29,17 +29,15 @@ import com.liftlog.models.Category;
  * TODO
  * BUGS:
  * - Switch back delete operations to actually delete records instead of marking them deleted
+ * - Removing category seems to cause an IndexOutOfBoundsException but I can't recreate it
+ *
  *
  * Implement now:
- * - Provide way to delete category (menu icon of a edit pencil, prompt for Category|Exercise, and then bring up edit dialog)
- * - Option to create and restore backup (don't keep doing it automatically? because it might do a backup after the user lost data...)
- * - Implement View History
- *      mostly implemented
+ * - Add View History menu item to ViewLift
+ * - Implement DataBackup service
+ *      http://developer.android.com/guide/topics/data/backup.html
  * - filter sessions
- * - settings
- *		+ kg/lb
- *		+ sort lifts by date created/exercise alphabetical/heavyest/lightest
- * 	+
+ * - floating action button
  *
  *
  *

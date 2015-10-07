@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ListView;
@@ -92,6 +93,27 @@ public class ToolsFragment extends Fragment
 
     }
 
+    /**
+     *
+     * @param view
+     */
+    public void launchViewHistory(View view)
+    {
+        Intent intent = new Intent(super.getActivity(), ViewHistory.class);
+        super.startActivity(intent);
+    }
+
+
+    /**
+     *
+     * @param view
+     */
+    public void launch1RMCalculator(View view)
+    {
+        //TODO launch 1RM calculator
+        Toast.makeText(super.getActivity(), "Not implemented yet.", Toast.LENGTH_LONG).show();
+    }
+
 
     private void createContents(View view)
     {
@@ -105,37 +127,54 @@ public class ToolsFragment extends Fragment
             actionBar.show();
         }
 
-        listTools = (ListView) view.findViewById(R.id.list_tools);
-
-        final List<Tool> tools = new ArrayList<Tool>();
-        tools.add(Tool.VIEW_HISTORY);
-//        tools.add(Tool.BACKUP);
-        ToolArrayAdapter adapter = new ToolArrayAdapter(super.getActivity(), android.R.layout.simple_list_item_1, tools);
-        listTools.setAdapter(adapter);
-        listTools.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        Button btnViewHistory = (Button) view.findViewById(R.id.btn_view_history);
+        btnViewHistory.setOnClickListener(new View.OnClickListener()
+        {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Tool tool = tools.get(i);
-                //TODO launch the activity
-                switch (tool) {
-                    case VIEW_HISTORY:
-                        launchViewHistory();
-                        break;
-//                    case BACKUP:
-//                        Toast.makeText(ToolsFragment.super.getActivity(), "not implemented", Toast.LENGTH_SHORT).show();
-//                        break;
-                }
+            public void onClick(View view)
+            {
+                launchViewHistory(view);
+            }
+        });
+        Button btn1RMCalc = (Button) view.findViewById(R.id.btn_1rm_calc);
+        btn1RMCalc.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                launch1RMCalculator(view);
             }
         });
     }
 
-    private void launchViewHistory()
-    {
-        Intent intent = new Intent(super.getActivity(), ViewHistory.class);
-        super.startActivity(intent);
-        //intent.putExtra(ViewLift.LIFT_ID_KEY, liftId);
-        //intent.putExtra(ViewLift.SESSION_ID_KEY, sessionId);
-    }
+//    private void initListView(View view)
+//    {
+//        listTools = (ListView) view.findViewById(R.id.list_tools);
+//
+//        final List<Tool> tools = new ArrayList<Tool>();
+//        tools.add(Tool.VIEW_HISTORY);
+////        tools.add(Tool.BACKUP);
+//        ToolArrayAdapter adapter = new ToolArrayAdapter(super.getActivity(), android.R.layout.simple_list_item_1, tools);
+//        listTools.setAdapter(adapter);
+//        listTools.setOnItemClickListener(new AdapterView.OnItemClickListener()
+//        {
+//            @Override
+//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
+//            {
+//                Tool tool = tools.get(i);
+//                //TODO launch the activity
+//                switch (tool)
+//                {
+//                    case VIEW_HISTORY:
+//                        launchViewHistory();
+//                        break;
+////                    case BACKUP:
+////                        Toast.makeText(ToolsFragment.super.getActivity(), "not implemented", Toast.LENGTH_SHORT).show();
+////                        break;
+//                }
+//            }
+//        });
+//    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)

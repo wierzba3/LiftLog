@@ -189,13 +189,19 @@ public class ViewLift extends AppCompatActivity implements ExerciseInputDialog.E
                 doDelete(this.getCurrentFocus());
                 break;
             case android.R.id.home:
-                //Automatically handled by the action bar.
-//                Intent intent = new Intent();
-//                intent.putExtra(ViewSession.SESSION_ID_KEY, sessionId);
-//                setResult(RESULT_OK, intent);
-//                finish();
                 finish();
                 return true;
+            case R.id.action_view_history:
+                Intent intent = new Intent(this, ViewHistory.class);
+                Exercise selectedExercise = (Exercise) spnExercise.getSelectedItem();
+                if(selectedExercise == null)
+                {
+                    Toast.makeText(this, "Error loading exercise history.", Toast.LENGTH_LONG).show();
+                    return false;
+                }
+                intent.putExtra(ViewHistory.EXERCISE_ID_KEY, selectedExercise.getId());
+                super.startActivity(intent);
+                break;
         }
 
         return super.onOptionsItemSelected(item);
