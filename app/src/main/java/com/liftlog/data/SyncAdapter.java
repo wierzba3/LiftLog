@@ -10,7 +10,6 @@ import android.util.Log;
 
 
 import com.liftlog.MainActivity;
-import com.liftlog.backend.myApi.MyApi;
 import com.liftlog.data.mysql.MySQLController;
 import com.liftlog.models.Exercise;
 import com.liftlog.models.Lift;
@@ -31,7 +30,6 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter
     public static final String LOG_TAG = "LiftLog";
 
     private DataAccessObject dao;
-    private static MyApi myApiService = null;
 
     /**
      * Set up the sync adapter

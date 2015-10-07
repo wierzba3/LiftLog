@@ -3,7 +3,7 @@ package com.liftlog.models;
 /**
  * Created by James Wierzba on 9/26/15.
  */
-public class Category
+public class Category implements Comparable<Category>
 {
 
     public Category()
@@ -68,11 +68,17 @@ public class Category
     }
 
     @Override
+    public int compareTo(Category that)
+    {
+        if(name == null) return -1;
+        return name.compareTo(that.getName());
+    }
+
+    @Override
     public String toString()
     {
         return name;
     }
-
 
     public static Category dummy;
     static

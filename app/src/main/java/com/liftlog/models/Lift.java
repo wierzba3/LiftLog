@@ -1,8 +1,5 @@
 package com.liftlog.models;
 
-import com.liftlog.backend.myApi.model.LiftAPI;
-import com.liftlog.data.DataAccessObject;
-
 import java.util.Comparator;
 import java.util.List;
 

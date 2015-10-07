@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -133,19 +134,17 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
             return;
         }
 
-        Map<Long, Exercise> exercises = dao.selectExerciseMap(false);
-        if (exercises == null)
-        {
-            return;
-        }
-
-        List<Exercise> exerciseList = new ArrayList<>(exercises.values());
-        Exercise dummyExercise = new Exercise();
-        dummyExercise.setId(-1);
-        dummyExercise.setName("<Add New>");
-        exerciseList.add(dummyExercise);
-        Collections.sort(exerciseList, Exercise.byNameDummyFirst);
-
+//        Map<Long, Exercise> exercises = dao.selectExerciseMap(false);
+//        if (exercises == null)
+//        {
+//            return;
+//        }
+//        List<Exercise> exerciseList = new ArrayList<>(exercises.values());
+//        Exercise dummyExercise = new Exercise();
+//        dummyExercise.setId(-1);
+//        dummyExercise.setName("<Add New>");
+//        exerciseList.add(dummyExercise);
+//        Collections.sort(exerciseList, Exercise.byNameDummyFirst);
 //        ArrayAdapter<Exercise> adapter = new ArrayAdapter<Exercise>(super.getActivity(), android.R.layout.simple_list_item_1, exerciseList);
 //        listExercises.setAdapter(adapter);
 
@@ -166,7 +165,6 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
         ExerciseInputDialog dialog = ExerciseInputDialog.newInstance(exercise);
         dialog.setTargetFragment(this, ExerciseInputDialog.RequestType.DEFAULT.getValue());
         dialog.show(getFragmentManager().beginTransaction(), "ExerciseInputDialog");
-
     }
 
 
@@ -187,9 +185,18 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
-                String categoryInput = input.getText().toString();
-                addCategory(categoryInput);
-                ExercisesFragment.this.loadExercises();
+                String inputValue = input.getText().toString();
+                if(inputValue == null || inputValue.isEmpty())
+                {
+                    Toast.makeText(ExercisesFragment.super.getActivity(), "Category name must not be empty.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                if(dao.categoryExists(inputValue))
+                {
+                    Toast.makeText(ExercisesFragment.super.getActivity(), "Category name already exists.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                addCategory(inputValue);
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
@@ -211,6 +218,7 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
         final Spinner input = new Spinner(super.getActivity());
 
         final List<Category> categories = dao.selectCategories(false);
+        Collections.sort(categories);
         if(categories == null)
         {
             Toast.makeText(super.getActivity(), "Error loading categories.", Toast.LENGTH_LONG).show();
@@ -238,7 +246,7 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
                 }
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
+        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener()
         {
             @Override
             public void onClick(DialogInterface dialog, int which)
@@ -268,6 +276,7 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
             public void onClick(DialogInterface dialog, int which)
             {
                 dao.update(category);
+                ExercisesFragment.this.loadExercises();
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
@@ -295,13 +304,14 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
         String msg = "Are you sure you want to delete category " + category.getName();
         new AlertDialog.Builder(super.getActivity())
                 .setIcon(android.R.drawable.ic_dialog_alert)
-                .setTitle("Delete Exercise")
+                .setTitle("Delete Category")
                 .setMessage(msg)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener()
                 {
                     @Override
                     public void onClick(DialogInterface dialog, int which)
                     {
+                        //TODO CHECK THIS, IT IS CRASHING BECAUSE LISTVIEW IS STILL EXPECTING THE OBJECT!
                         dao.deleteCategory(category.getId());
                         ExercisesFragment.this.loadExercises();
                     }
@@ -357,6 +367,7 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
         category.setName(name);
         category.setNew(true);
         dao.insert(category);
+        loadExercises();
     }
 
 
@@ -415,6 +426,7 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
         final Spinner input = new Spinner(super.getActivity());
 
         final List<Exercise> exercises = dao.selectExercises(false);
+        Collections.sort(exercises);
         if(exercises == null)
         {
             Toast.makeText(super.getActivity(), "Error loading exercises.", Toast.LENGTH_LONG).show();
@@ -458,6 +470,7 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
         ExerciseInputDialog dialog = ExerciseInputDialog.newInstance(exercise);
         dialog.setTargetFragment(this, ExerciseInputDialog.RequestType.DEFAULT.getValue());
         dialog.show(getFragmentManager().beginTransaction(), "ExerciseInputDialog");
+        loadExercises();
     }
 
 
@@ -551,10 +564,7 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
                         @Override
                         public void onClick(DialogInterface dialog, int which)
                         {
-                            exercise.setName("?");
-                            exercise.setValid(false);
-                            exercise.setDeleted(true);
-                            dao.update(exercise);
+                            dao.deleteExercise(exercise.getId());
                             loadExercises();
                         }
 
@@ -596,27 +606,67 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
     }
 
 
+    private class ExerciseGroupElement
+    {
+        public ExerciseGroupElement()
+        {
+
+        }
+
+        private Category category;
+        private List<Exercise> exercises;
+
+        public List<Exercise> getExercises()
+        {
+            return exercises;
+        }
+        public void setExercises(List<Exercise> exercises)
+        {
+            this.exercises = exercises;
+        }
+        public Category getCategory()
+        {
+            return category;
+        }
+        public void setCategory(Category category)
+        {
+            this.category = category;
+        }
+        public void addAll(List<Exercise> values)
+        {
+            if(values == null) return;
+            if(exercises == null) exercises = new ArrayList<>();
+            exercises.addAll(values);
+        }
+
+    }
+
     private class ExerciseExpendableListAdapter extends BaseExpandableListAdapter
     {
         public ExerciseExpendableListAdapter(Context ctx, Map<Category, List<Exercise>> categoryMap)
         {
-            categories = new ArrayList<Category>();
-            exerciseLists = new ArrayList<List<Exercise>>();
+//            categories = new ArrayList<Category>();
+//            exerciseLists = new ArrayList<List<Exercise>>();
+            elements = new ArrayList<>();
 
             if(categoryMap == null) return;
 //            Collections.sort(allLifts);
 
 
-            Category uncategorized = null;
-            List<Exercise> uncategorizedExercises = null;
+//            Category uncategorized = null;
+//            List<Exercise> uncategorizedExercises = null;
+            ExerciseGroupElement uncategorizedElement = new ExerciseGroupElement();
             for(Category category : categoryMap.keySet())
             {
-                List<Exercise> exercises = categoryMap.get(category);
+                if(category == null) continue;
 
-                if(category.getId() == -1)
+                List<Exercise> exercises = categoryMap.get(category);
+                if(exercises == null) exercises = new ArrayList<Exercise>();
+
+                if(category.getId() < 1)
                 {
-                    uncategorized = category;
-                    uncategorizedExercises = exercises;
+                    uncategorizedElement.setCategory(category);
+                    uncategorizedElement.addAll(exercises);
                     continue;
                 }
 
@@ -624,30 +674,35 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
                 Collections.sort(exercises, Exercise.byNameDummyLast);
 
                 //add the Category, List<Exercise> in parallel
-                categories.add(category);
-                exerciseLists.add(exercises);
+//                categories.add(category);
+//                exerciseLists.add(exercises);
+                ExerciseGroupElement element = new ExerciseGroupElement();
+                element.setCategory(category);
+                element.setExercises(exercises);
+                elements.add(element);
             }
-            if(uncategorized != null)
+            if(uncategorizedElement != null)
             {
-                categories.add(uncategorized);
-                exerciseLists.add(uncategorizedExercises);
+                elements.add(uncategorizedElement);
             }
 
+            Collections.sort(elements, comparator);
         }
 
-//        private Comparator<List<Lift>> liftsComparator = new Comparator<List<Lift>>(){
-//            @Override
-//            public int compare(List<Lift> l1, List<Lift> l2)
-//            {
-//                if((l1 == null || l1.size() == 0) && (l2 == null || l2.size() == 0)) return 0;
-//                else if(l1 == null || l1.size() == 0) return -1;
-//                else if(l2 == null || l2.size() == 0) return 1;
-//                return l1.get(0).compareTo(l2.get(0));
-//            }
-//        };
+        private Comparator<ExerciseGroupElement> comparator = new Comparator<ExerciseGroupElement>(){
+            @Override
+            public int compare(ExerciseGroupElement e1, ExerciseGroupElement e2)
+            {
+                if((e1 == null) && (e2 == null)) return 0;
+                else if(e1 == null) return -1;
+                else if(e2 == null) return 1;
+                if(e1.getCategory().getId() == -1) return 1;
+                if(e2.getCategory().getId() == -1) return -1;
+                return e1.getCategory().compareTo(e2.getCategory());
+            }
+        };
 
-        private List<List<Exercise>> exerciseLists;
-        private List<Category> categories;
+        private List<ExerciseGroupElement> elements;
 
         @Override
         public boolean isChildSelectable(int i, int i1)
@@ -658,13 +713,13 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
         @Override
         public int getGroupCount()
         {
-            return categories.size();
+            return elements.size();
         }
 
         @Override
         public int getChildrenCount(int i)
         {
-            List<Exercise> exercises = exerciseLists.get(i);
+            List<Exercise> exercises = elements.get(i).getExercises();
             if(exercises == null) return 0;
             return exercises.size();
         }
@@ -672,25 +727,25 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
         @Override
         public Object getGroup(int i)
         {
-            return categories.get(i);
+            return elements.get(i).getCategory();
         }
 
         @Override
         public Object getChild(int i, int j)
         {
-            return exerciseLists.get(i).get(j);
+            return elements.get(i).getExercises().get(j);
         }
 
         @Override
         public long getGroupId(int i)
         {
-            return categories.get(i).getId();
+            return elements.get(i).getCategory().getId();
         }
 
         @Override
         public long getChildId(int i, int j)
         {
-            return exerciseLists.get(i).get(j).getId();
+            return elements.get(i).getExercises().get(j).getId();
         }
 
         @Override
@@ -708,7 +763,7 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
                 view = vi.inflate(R.layout.exercise_group_item, viewGroup, false);
             }
 
-            Category category = categories.get(i);
+            Category category = elements.get(i).getCategory();
             TextView lblCategory = (TextView) view.findViewById(R.id.lbl_exercise_group);
             lblCategory.setText(category.getName());
 
@@ -725,8 +780,7 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
                 view = vi.inflate(R.layout.exercise_item, viewGroup, false);
             }
 
-            final Exercise exercise = exerciseLists.get(i).get(j);
-
+            final Exercise exercise = elements.get(i).getExercises().get(j);
 
             TextView lblExercise = (TextView) view.findViewById(R.id.lbl_exercise);
             lblExercise.setText(exercise.toString());

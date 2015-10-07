@@ -1,1 +1,2 @@
-include ':app', ':liftlog backend'
+include ':app', ':'
+// 10/07/15 removed  ':liftlog backend',

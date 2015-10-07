@@ -341,7 +341,9 @@ public class ViewSession extends AppCompatActivity
 				
 				List<Lift> lifts = map.get(exerciseId);
 				if(lifts == null || lifts.size() == 0) continue;
-				if(exerciseId == -1)
+
+                Exercise exercise = exerciseMap.get(exerciseId);
+				if(exerciseId == -1 || exercise == null)
 				{
 					uncategorized = new LiftGroupElement();
 					uncategorized.setLifts(lifts);
@@ -351,7 +353,6 @@ public class ViewSession extends AppCompatActivity
 				else
 				{
 					LiftGroupElement element = new LiftGroupElement();
-					Exercise exercise = exerciseMap.get(exerciseId);
 					element.setExercise(exercise);
 					element.setLifts(lifts);
 					elements.add(element);

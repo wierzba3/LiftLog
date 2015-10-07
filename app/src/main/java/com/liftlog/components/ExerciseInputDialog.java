@@ -19,6 +19,7 @@ import com.liftlog.R;
 import com.liftlog.models.Category;
 import com.liftlog.models.Exercise;
 
+import java.util.Collections;
 import java.util.List;
 
 
@@ -87,6 +88,7 @@ public class ExerciseInputDialog extends DialogFragment
 
         //populate and select Category spinner:
         final List<Category> categories = dao.selectCategories(false);
+        Collections.sort(categories);
         categories.add(Category.dummy);
         ArrayAdapter<Category> categoryItemAdapter = new ArrayAdapter<>(super.getActivity(), android.R.layout.simple_spinner_dropdown_item, categories);
         categoryItemAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);

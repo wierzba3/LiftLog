@@ -1,14 +1,12 @@
 package com.liftlog.models;
 
-import com.liftlog.backend.myApi.model.ExerciseAPI;
-import com.liftlog.data.DataAccessObject;
-
 import java.util.Comparator;
 
 /**
  * Created by James Wierzba on 2/8/2015.
  */
-public class Exercise {
+public class Exercise implements Comparable<Exercise>
+{
 
 
     public Exercise()
@@ -172,6 +170,12 @@ public class Exercise {
             return lhs.getName().compareToIgnoreCase(rhs.getName());
         }
     };
+
+    @Override
+    public int compareTo(Exercise exercise)
+    {
+        return byNameDummyLast.compare(this, exercise);
+    }
 
     @Override
     public String toString()
