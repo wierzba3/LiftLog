@@ -3,6 +3,7 @@ package com.liftlog;
 import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -91,7 +92,15 @@ public class SessionsFragment extends Fragment implements  DateInputDialog.DateI
             }
         });
 
-
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab_add_session);
+        fab.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                doAdd();
+            }
+        });
     }
 
     private void doAdd()

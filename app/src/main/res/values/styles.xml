@@ -13,16 +13,20 @@
     <style name="AppTheme" parent="@style/Theme.AppCompat.Light.DarkActionBar">
         <!-- This is the styling for action bar -->
         <item name="actionBarStyle">@style/MyActionBar</item>
+        <item name="colorPrimary">@color/material_blue_500</item>
+        <item name="colorPrimaryDark">@color/material_blue_700</item>
+        <item name="colorAccent">@color/accent</item>
     </style>
 
     <style name="MyActionBar" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="background">@color/material_blue_700</item>
+        <item name="background">@color/material_blue_500</item>
         <item name="titleTextStyle">@style/MyActionBarTitle</item>
     </style>
 
     <style name="MyActionBarTitle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textColor">@color/white</item>
     </style>
+
 
 
 

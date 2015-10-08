@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.text.InputType;
@@ -87,7 +88,6 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
 
 
         ActionBar actionBar = super.getActivity().getActionBar();
-//        if(actionBar == null) actionBar =
         if (actionBar != null)
         {
             actionBar.setDisplayUseLogoEnabled(false);
@@ -95,24 +95,32 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
             actionBar.show();
         }
 
-//        listExercises = (ListView) view.findViewById(R.id.list_exercises_fragment);
-//        listExercises.setOnItemClickListener(new AdapterView.OnItemClickListener()
-//        {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-//            {
-//                Exercise exercise = (Exercise) parent.getItemAtPosition(position);
-//                doEditExercise(exercise);
-//            }
-//
-//        });
-
-
         exListExercises = (ExpandableListView) view.findViewById(R.id.exList_exercises);
         Map<Category, List<Exercise>> categoryMap = dao.selectCategoryMap(false);
         exListAdapter = new ExerciseExpendableListAdapter(super.getActivity(), categoryMap);
         exListExercises.setAdapter(exListAdapter);
+        exListExercises.setOnChildClickListener(new ExpandableListView.OnChildClickListener()
+        {
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View view, int i, int j, long id)
+            {
+                int index = parent.getFlatListPosition(ExpandableListView.getPackedPositionForChild(i, j));
+                parent.setItemChecked(index, true);
+                Exercise exercise = exListAdapter.getElements().get(i).getExercises().get(j);
+                doEditExercise(exercise);
+                return true;
+            }
+        });
 
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab_add_exercise);
+        fab.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                addExerciseOrCategory();
+            }
+        });
 
     }
 
@@ -369,7 +377,6 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
         dao.insert(category);
         loadExercises();
     }
-
 
     public void addExerciseOrCategory()
     {
@@ -689,6 +696,14 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
             Collections.sort(elements, comparator);
         }
 
+        private List<ExerciseGroupElement> elements;
+
+        public List<ExerciseGroupElement> getElements()
+        {
+            return elements;
+        }
+
+
         private Comparator<ExerciseGroupElement> comparator = new Comparator<ExerciseGroupElement>(){
             @Override
             public int compare(ExerciseGroupElement e1, ExerciseGroupElement e2)
@@ -702,7 +717,7 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
             }
         };
 
-        private List<ExerciseGroupElement> elements;
+
 
         @Override
         public boolean isChildSelectable(int i, int i1)
@@ -785,18 +800,19 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
             TextView lblExercise = (TextView) view.findViewById(R.id.lbl_exercise);
             lblExercise.setText(exercise.toString());
 
-            lblExercise.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    doEditExercise(exercise);
-                }
-            });
+//            lblExercise.setOnClickListener(new View.OnClickListener()
+//            {
+//                @Override
+//                public void onClick(View v)
+//                {
+//                    doEditExercise(exercise);
+//                }
+//            });
 
             return view;
         }
     }
+
 
 
 }

@@ -127,8 +127,21 @@ public class ViewSession extends AppCompatActivity
 //        LiftArrayAdapter liftArrayAdapter = new LtArrayAdapter(this, R.id.lbl_lift, lifts);
 //        listLifts.setAdapter(liftArrayAdapter);if
 
-        LiftExpendableListAdapter liftExpandableAdapter = new LiftExpendableListAdapter(this, lifts, exerciseMap);
+        final LiftExpendableListAdapter liftExpandableAdapter = new LiftExpendableListAdapter(this, lifts, exerciseMap);
         exListLifts.setAdapter(liftExpandableAdapter);
+        //TODO style selector isnt working...
+//        exListLifts.setOnChildClickListener(new ExpandableListView.OnChildClickListener()
+//        {
+//            @Override
+//            public boolean onChildClick(ExpandableListView parent, View view, int i, int j, long id)
+//            {
+//                int index = parent.getFlatListPosition(ExpandableListView.getPackedPositionForChild(i, j));
+//                parent.setItemChecked(index, true);
+//                Lift lift = liftExpandableAdapter.getElements().get(i).getLifts().get(j);
+//                doAdd(lift.getId());
+//                return true;
+//            }
+//        });
 
         for(int i = 0; i < liftExpandableAdapter.getGroupCount(); i++)
         {
@@ -157,6 +170,15 @@ public class ViewSession extends AppCompatActivity
     }
 
     /**
+     * Handle Add action event
+     * @param view
+     */
+    public void doAdd(View view)
+    {
+        doAdd(-1);
+    }
+
+    /**
      * Add a new Lift
      *
      * @param liftId The id of the lift (-1 for a new Lift)
@@ -169,6 +191,8 @@ public class ViewSession extends AppCompatActivity
         startActivity(intent);
 //        startActivityForResult(intent, 1);
     }
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -507,6 +531,11 @@ public class ViewSession extends AppCompatActivity
         //private List<Exercise> exercises;
         private List<LiftGroupElement> elements;
 
+        public List<LiftGroupElement> getElements()
+        {
+            return elements;
+        }
+
         @Override
         public boolean isChildSelectable(int i, int i1)
         {
@@ -621,70 +650,6 @@ public class ViewSession extends AppCompatActivity
         }
     }
 
-//    private class LiftArrayAdapter extends ArrayAdapter<Lift>
-//    {
-//
-//        private ArrayList<Lift> items;
-//
-//        public LiftArrayAdapter(Context context, int textViewResourceId, ArrayList<Lift> items)
-//        {
-//            super(context, textViewResourceId, items);
-//            this.items = items;
-//        }
-//
-//        @Override
-//        public View getView(int position, View convertView, ViewGroup parent)
-//        {
-//            View v = convertView;
-//            if (v == null)
-//            {
-//                LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//                v = vi.inflate(R.layout.lift_item, parent, false);
-//            }
-////            v.setMinimumHeight(150);
-//
-//            final Lift lift = items.get(position);
-//
-//            TextView lblLift = (TextView) v.findViewById(R.id.lbl_lift);
-//            ImageButton btnIncrement = (ImageButton) v.findViewById(R.id.btn_increment);
-//
-//            if (lift != null)
-//            {
-//                if (lblLift != null)
-//                {
-//                    lblLift.setText(lift.toString());
-//                }
-//
-//                //remove the increment button in the <New Lift> dummy item
-//                if (lift.getId() == -1)
-//                {
-//                    btnIncrement.setVisibility(View.GONE);
-//                }
-//            }
-//            else return null;
-//
-//            lblLift.setOnClickListener(new View.OnClickListener()
-//            {
-//                @Override
-//                public void onClick(View v)
-//                {
-//                    doAdd(lift.getId());
-//                }
-//            });
-//            btnIncrement.setOnClickListener(new View.OnClickListener()
-//            {
-//                @Override
-//                public void onClick(View v)
-//                {
-//                    lift.setSets(lift.getSets() + 1);
-//                    dao.update(lift);
-//                    loadSession(sessionId);
-//                }
-//            });
-//
-//            return v;
-//        }
-//
-//    }
+
 
 }
