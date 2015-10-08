@@ -322,7 +322,7 @@ public class ViewHistory extends AppCompatActivity
 //
 
     /**
-     Encapsulates the elements of the ExpandableListView (Lifts categorized by the exercise type)
+        Encapsulates the elements of the ExpandableListView (Lifts categorized by the exercise type)
      */
     private class HistoryGroupElement
     {
@@ -428,8 +428,8 @@ public class ViewHistory extends AppCompatActivity
             {
                 long d1 = e1.getDate().getMillis();
                 long d2 = e2.getDate().getMillis();
-                if(d1 < d2) return -1;
-                else if(d1 > d2) return 1;
+                if(d1 < d2) return 1;
+                else if(d1 > d2) return -1;
                 else return 0;
             }
         };
