@@ -28,16 +28,16 @@ import com.liftlog.models.Category;
 /**
  * TODO
  * BUGS:
+ * - can't get the listselector to work on ViewSession, I think it's because of the custom layout for items
  * - Switch back delete operations to actually delete records instead of marking them deleted
  * - Removing category seems to cause an IndexOutOfBoundsException but I can't recreate it
  *
  *
  * Implement now:
- * - Add View History menu item to ViewLift
  * - Implement DataBackup service
  *      http://developer.android.com/guide/topics/data/backup.html
- * - filter sessions
- * - floating action button
+ * - Implement calendar view for ViewSessions
+ *		 https://github.com/roomorama/Caldroid
  *
  *
  *
@@ -49,6 +49,14 @@ import com.liftlog.models.Category;
  * Display planned lifts separately from the completed lifts in the sessions.
  * e.g. repeat selected lift every M/W/F, increase weight each day/week
  * - Copy option for session?
+ *
+ *
+ * Publishing TODO:
+ * - App icon https://www.google.com/design/spec/style/icons.html
+ * - Test on tablet device(s)
+ * - private key for signing application (?) http://developer.android.com/tools/publishing/app-signing.html
+ * - End User License Agreement (EULA)
+ *
  */
 
 public class MainActivity extends AppCompatActivity
@@ -71,7 +79,7 @@ public class MainActivity extends AppCompatActivity
     // Instance fields
     Account mAccount;
 
-//    private ContentResolver mResolver;
+    //    private ContentResolver mResolver;
     private ContentObserver mObserver;
 
     public static final Uri DUMMY_URI = new Uri.Builder().scheme(ContentResolver.SCHEME_CONTENT).authority("com.liftlog").build();
@@ -80,6 +88,7 @@ public class MainActivity extends AppCompatActivity
     public void onStart()
     {
         super.onStart();
+
         mObserver = new ContentObserver(new Handler(Looper.getMainLooper()))
         {
             public void onChange(boolean selfChange)
@@ -89,6 +98,8 @@ public class MainActivity extends AppCompatActivity
             }
         };
         getContentResolver().registerContentObserver(DUMMY_URI, false, mObserver);
+
+
         ContentResolver.requestSync(mAccount, AUTHORITY, Bundle.EMPTY);
     }
 
@@ -113,10 +124,10 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onPageSelected(int position)
             {
-               if(position == FragmentPagerAdapter.EXERCISES_INDEX)
-               {
-                   mCustomPagerAdapter.getExercisesFragment().expandListGroupItems();
-               }
+                if(position == FragmentPagerAdapter.EXERCISES_INDEX)
+                {
+                    mCustomPagerAdapter.getExercisesFragment().expandListGroupItems();
+                }
             }
             @Override
             public void onPageScrollStateChanged(int state)
@@ -125,13 +136,9 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        accountType = getString(R.string.accountType);
-        mAccount = CreateSyncAccount(this);
-
-        dao = new DataAccessObject(this);
-        dao.createBackupCopy(this);
+//        accountType = getString(R.string.accountType);
+//        mAccount = CreateSyncAccount(this);
 //        dao.restoreBackupCopy(this);
-
 //        mResolver = getContentResolver();
 //        ContentResolver.setSyncAutomatically(mAccount, AUTHORITY, true);
 //        ContentResolver.addPeriodicSync(
@@ -142,8 +149,10 @@ public class MainActivity extends AppCompatActivity
 //        );
 
 
+        dao = new DataAccessObject(this);
+        dao.createBackupCopy(this);
 //        DataLoader.load(this);
-        //dao.restoreBackupCopy(this);
+//        dao.restoreBackupCopy(this);
     }
 
 

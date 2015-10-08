@@ -95,9 +95,8 @@ public class ToolsFragment extends Fragment
 
     /**
      *
-     * @param view
      */
-    public void launchViewHistory(View view)
+    public void launchViewHistory()
     {
         Intent intent = new Intent(super.getActivity(), ViewHistory.class);
         super.startActivity(intent);
@@ -106,11 +105,19 @@ public class ToolsFragment extends Fragment
 
     /**
      *
-     * @param view
      */
-    public void launch1RMCalculator(View view)
+    private void launch1RMCalculator()
     {
         //TODO launch 1RM calculator
+        Toast.makeText(super.getActivity(), "Not implemented yet.", Toast.LENGTH_LONG).show();
+    }
+
+    /**
+     *
+     */
+    public void launchFindBestLifts()
+    {
+        //TODO launch find best lifts view
         Toast.makeText(super.getActivity(), "Not implemented yet.", Toast.LENGTH_LONG).show();
     }
 
@@ -133,18 +140,32 @@ public class ToolsFragment extends Fragment
             @Override
             public void onClick(View view)
             {
-                launchViewHistory(view);
+                launchViewHistory();
             }
         });
+
         Button btn1RMCalc = (Button) view.findViewById(R.id.btn_1rm_calc);
         btn1RMCalc.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                launch1RMCalculator(view);
+                launch1RMCalculator();
             }
         });
+
+        Button btnFindBestLifts = (Button) view.findViewById(R.id.btn_find_best_lifts);
+        btnFindBestLifts.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                launchFindBestLifts();
+            }
+        });
+
+
+
     }
 
 //    private void initListView(View view)

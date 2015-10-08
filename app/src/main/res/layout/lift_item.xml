@@ -4,6 +4,7 @@
               android:layout_height="40dp"
               android:padding="6dip"
               android:backgroundTint="@color/material_blue_100"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
             >
 
         <TextView
@@ -23,6 +24,8 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:gravity="center_vertical"
+            android:layout_marginRight="20dp"
             />
+
 
 </LinearLayout>

@@ -2,13 +2,40 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
              tools:context="com.liftlog.SessionsFragment">
 
     <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:id="@+id/list_sessions_fragment"
         android:clickable="true"
+        android:listSelector="@drawable/list_click_item"
         />
+
+    <!--<ImageButton-->
+    <!--android:id="@+id/add_button"-->
+    <!--android:layout_width="@dimen/round_button_diameter"-->
+    <!--android:layout_height="@dimen/round_button_diameter"-->
+    <!--android:layout_gravity="end|bottom"-->
+    <!--android:layout_marginBottom="@dimen/add_button_margin"-->
+    <!--android:layout_marginEnd="@dimen/add_button_margin"-->
+    <!--android:layout_marginRight="@dimen/add_button_margin"-->
+    <!--android:src="@android:drawable/ic_input_add"-->
+    <!--android:tint="@android:color/white"-->
+    <!--/>-->
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_add_session"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:clickable="true"
+        android:src="@drawable/ic_add_white_24dp"
+        app:elevation="4dp"
+        app:layout_anchorGravity="bottom|right|end"
+        android:layout_gravity="bottom|right|end"
+        />
+    <!--app:layout_anchor="@id/viewA"-->
 
 </FrameLayout>
