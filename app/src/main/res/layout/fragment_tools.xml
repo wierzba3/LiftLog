@@ -33,11 +33,16 @@
             android:layout_marginBottom="10dp"
             />
 
-        <ListView
+        <Button
+            android:id="@+id/btn_find_best_lifts"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:id="@+id/list_tools"
-            android:clickable="true"
+            android:layout_height="70dp"
+            android:textColor="@color/white"
+            android:text="Find Best Lifts"
+            android:textSize="20dp"
+            android:background="@drawable/round_button"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             />
 
     </LinearLayout>
