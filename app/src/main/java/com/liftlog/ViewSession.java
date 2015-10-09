@@ -50,6 +50,7 @@ public class ViewSession extends AppCompatActivity
 
     private ListView listLifts;
     private ExpandableListView exListLifts;
+    private LiftExpendableListAdapter extListLiftsAdapter;
 
     private long sessionId = -1;
 
@@ -83,7 +84,18 @@ public class ViewSession extends AppCompatActivity
 
 //        listLifts = (ListView) findViewById(R.id.list_lifts);
         exListLifts = (ExpandableListView) findViewById(R.id.exList_lifts);
-
+        exListLifts.setOnChildClickListener(new ExpandableListView.OnChildClickListener()
+        {
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View view, int i, int j, long id)
+            {
+                int index = parent.getFlatListPosition(ExpandableListView.getPackedPositionForChild(i, j));
+                parent.setItemChecked(index, true);
+                Lift lift = extListLiftsAdapter.getElements().get(i).getLifts().get(j);
+                doAdd(lift.getId());
+                return true;
+            }
+        });
 
 //        listLifts.setOnItemClickListener(new AdapterView.OnItemClickListener()
 //        {
@@ -127,23 +139,12 @@ public class ViewSession extends AppCompatActivity
 //        LiftArrayAdapter liftArrayAdapter = new LtArrayAdapter(this, R.id.lbl_lift, lifts);
 //        listLifts.setAdapter(liftArrayAdapter);if
 
-        final LiftExpendableListAdapter liftExpandableAdapter = new LiftExpendableListAdapter(this, lifts, exerciseMap);
-        exListLifts.setAdapter(liftExpandableAdapter);
+        extListLiftsAdapter = new LiftExpendableListAdapter(this, lifts, exerciseMap);
+        exListLifts.setAdapter(extListLiftsAdapter);
         //TODO style selector isnt working...
-//        exListLifts.setOnChildClickListener(new ExpandableListView.OnChildClickListener()
-//        {
-//            @Override
-//            public boolean onChildClick(ExpandableListView parent, View view, int i, int j, long id)
-//            {
-//                int index = parent.getFlatListPosition(ExpandableListView.getPackedPositionForChild(i, j));
-//                parent.setItemChecked(index, true);
-//                Lift lift = liftExpandableAdapter.getElements().get(i).getLifts().get(j);
-//                doAdd(lift.getId());
-//                return true;
-//            }
-//        });
 
-        for(int i = 0; i < liftExpandableAdapter.getGroupCount(); i++)
+
+        for(int i = 0; i < extListLiftsAdapter.getGroupCount(); i++)
         {
             exListLifts.expandGroup(i);
         }
@@ -612,7 +613,7 @@ public class ViewSession extends AppCompatActivity
         }
 
         @Override
-        public View getChildView(int i, int j, boolean b, View view, ViewGroup viewGroup)
+        public View getChildView(final int i, final int j, boolean b, View view, ViewGroup viewGroup)
         {
             if (view == null)
             {
@@ -623,7 +624,7 @@ public class ViewSession extends AppCompatActivity
             //final Lift lift = liftLists.get(i).get(j);
 			final Lift lift = elements.get(i).getLifts().get(j);
 
-            TextView lblLift = (TextView) view.findViewById(R.id.lbl_lift);
+            final TextView lblLift = (TextView) view.findViewById(R.id.lbl_lift);
             lblLift.setText(lift.toString());
 
             ImageButton btnIncrement = (ImageButton) view.findViewById(R.id.btn_increment);
@@ -637,14 +638,20 @@ public class ViewSession extends AppCompatActivity
                     loadSession(sessionId);
                 }
             });
+
+            final View viewRef = view;
             lblLift.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
                 {
+//                    viewRef.setBackgroundResource(R.drawable.list_click_background);
+                    viewRef.setBackgroundColor(getResources().getColor(R.color.material_blue_200));
                     doAdd(lift.getId());
                 }
             });
+
+
 
             return view;
         }

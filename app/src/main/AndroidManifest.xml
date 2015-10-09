@@ -61,6 +61,17 @@
                 />
         </activity>
 
+        <activity
+            android:name="com.liftlog.MaxCalculator"
+            android:label="Max Calculator"
+
+            android:parentActivityName="com.liftlog.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.liftlog.MainActivity"
+                />
+        </activity>
+
         <service
             android:name="com.liftlog.data.AuthenticatorService">
             <intent-filter>

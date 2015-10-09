@@ -94,7 +94,7 @@ public class ToolsFragment extends Fragment
     }
 
     /**
-     *
+     * Launch View History activity
      */
     public void launchViewHistory()
     {
@@ -104,16 +104,16 @@ public class ToolsFragment extends Fragment
 
 
     /**
-     *
+     * Launch 1-Rep Max Calculator activity
      */
     private void launch1RMCalculator()
     {
-        //TODO launch 1RM calculator
-        Toast.makeText(super.getActivity(), "Not implemented yet.", Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(super.getActivity(), MaxCalculator.class);
+        super.startActivity(intent);
     }
 
     /**
-     *
+     * Launch Find Best Lifts activity
      */
     public void launchFindBestLifts()
     {
@@ -167,35 +167,6 @@ public class ToolsFragment extends Fragment
 
 
     }
-
-//    private void initListView(View view)
-//    {
-//        listTools = (ListView) view.findViewById(R.id.list_tools);
-//
-//        final List<Tool> tools = new ArrayList<Tool>();
-//        tools.add(Tool.VIEW_HISTORY);
-////        tools.add(Tool.BACKUP);
-//        ToolArrayAdapter adapter = new ToolArrayAdapter(super.getActivity(), android.R.layout.simple_list_item_1, tools);
-//        listTools.setAdapter(adapter);
-//        listTools.setOnItemClickListener(new AdapterView.OnItemClickListener()
-//        {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l)
-//            {
-//                Tool tool = tools.get(i);
-//                //TODO launch the activity
-//                switch (tool)
-//                {
-//                    case VIEW_HISTORY:
-//                        launchViewHistory();
-//                        break;
-////                    case BACKUP:
-////                        Toast.makeText(ToolsFragment.super.getActivity(), "not implemented", Toast.LENGTH_SHORT).show();
-////                        break;
-//                }
-//            }
-//        });
-//    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)

@@ -1,6 +1,7 @@
 package com.liftlog;
 
 import android.app.ActionBar;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Collections;
@@ -87,6 +89,10 @@ public class SessionsFragment extends Fragment implements  DateInputDialog.DateI
                     doAdd();
                     return;
                 }
+
+                view.setBackgroundColor(getResources().getColor(R.color.material_blue_200));
+//                view.setBackgroundResource(R.drawable.list_click_background);
+
                 intent.putExtra(ViewSession.SESSION_ID_KEY, sessionId);
                 startActivity(intent);
             }
@@ -195,6 +201,36 @@ public class SessionsFragment extends Fragment implements  DateInputDialog.DateI
         loadSessions();
     }
 
+    public class SessionListAdapter extends ArrayAdapter<Session>
+    {
 
+        public SessionListAdapter(Context context, int resource, List<Session> elements)
+        {
+            super(context, resource, elements);
+            this.elements = elements;
+        }
+
+        private List<Session> elements;
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent)
+        {
+
+            View view = convertView;
+
+            if (view == null) {
+                LayoutInflater vi;
+                vi = LayoutInflater.from(getContext());
+                view = vi.inflate(R.layout.session_item, null);
+            }
+
+            Session session = getItem(position);
+
+            TextView lblSession = (TextView) view.findViewById(R.id.lbl_session);
+
+            return view;
+        }
+
+    }
 
 }

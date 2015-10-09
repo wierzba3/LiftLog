@@ -52,6 +52,7 @@ public class ViewLift extends AppCompatActivity implements ExerciseInputDialog.E
 
     private Map<Long, Exercise> exercises;
 
+    private static long prevSelected = -1;
     Spinner spnExercise;
     //    RadioButton rbtnWarmup;
     //    NumberPicker pckWeight;
@@ -88,6 +89,11 @@ public class ViewLift extends AppCompatActivity implements ExerciseInputDialog.E
             //txtWeight.setText(String.valueOf(0));
             pckReps.setValue(5);
             pckSets.setValue(1);
+            if(prevSelected > -1)
+            {
+                setSelectedExercise(prevSelected);
+            }
+
         }
         else {
             Lift lift = dao.selectLift(id);
@@ -317,9 +323,8 @@ public class ViewLift extends AppCompatActivity implements ExerciseInputDialog.E
             Log.d(LOG_TAG, "" + ret);
         }
 
+        prevSelected = exerciseId;
         this.finish();
-
-
     }
 
     /**
