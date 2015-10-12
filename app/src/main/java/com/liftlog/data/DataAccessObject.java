@@ -11,6 +11,7 @@ import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -1331,6 +1332,10 @@ public class DataAccessObject extends SQLiteOpenHelper
             File srcFile = new File(Environment.getExternalStorageDirectory(), DB_COPY_NAME);
             FileInputStream fis = new FileInputStream(srcFile);
 
+            if (!srcFile.exists())
+            {
+                Toast.makeText(ctx, "DB backup not found", Toast.LENGTH_SHORT).show();
+            }
             final String destFileName = "/data/data/com.liftlog/databases/" + DB_NAME;
             OutputStream output = new FileOutputStream(destFileName);
 

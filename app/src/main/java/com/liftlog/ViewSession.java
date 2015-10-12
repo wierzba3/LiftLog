@@ -35,6 +35,8 @@ import com.liftlog.models.Lift;
 import com.liftlog.data.DataAccessObject;
 import com.liftlog.models.Session;
 
+import org.w3c.dom.Text;
+
 public class ViewSession extends AppCompatActivity
 {
 //public class ViewSession extends Activity {
@@ -51,6 +53,7 @@ public class ViewSession extends AppCompatActivity
     private ListView listLifts;
     private ExpandableListView exListLifts;
     private LiftExpendableListAdapter extListLiftsAdapter;
+    private TextView lblEmpty;
 
     private long sessionId = -1;
 
@@ -96,17 +99,7 @@ public class ViewSession extends AppCompatActivity
                 return true;
             }
         });
-
-//        listLifts.setOnItemClickListener(new AdapterView.OnItemClickListener()
-//        {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position,
-//                                    long id)
-//            {
-//                Lift lift = (Lift) parent.getItemAtPosition(position);
-//                doAdd(lift.getId());
-//            }
-//        });
+        lblEmpty = (TextView) findViewById(R.id.lbl_empty_session);
 
 
     }
@@ -124,9 +117,14 @@ public class ViewSession extends AppCompatActivity
         else
         {
             lifts = session.getLifts();
-            String lbl = session.toString();
             setTitle(session.toString());
         }
+        if(lifts == null || lifts.isEmpty())
+        {
+            lblEmpty.setText("No lifts have been added");
+            return;
+        }
+        lblEmpty.setText("");
         Collections.sort(lifts);
 
         Map<Long, Exercise> exerciseMap = dao.selectExerciseMap(false);
@@ -231,10 +229,7 @@ public class ViewSession extends AppCompatActivity
                     @Override
                     public void onClick(DialogInterface dialog, int which)
                     {
-                        //can I get the Session object from somewhere previous in the lifecycle ?
-                        Session session = dao.selectSession(sessionId);
-                        session.setDeleted(true);
-                        if (!dao.update(session))
+                        if (!dao.deleteSession(sessionId))
                         {
                             Toast.makeText(ViewSession.this, "Error deleting session.", Toast.LENGTH_SHORT).show();
                             return;

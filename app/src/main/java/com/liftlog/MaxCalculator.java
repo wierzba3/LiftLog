@@ -58,15 +58,16 @@ public class MaxCalculator extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_history);
+        setContentView(R.layout.activity_max_calc);
 
         dao = new DataAccessObject(this);
 
+        createContents();
     }
 
 
 
-    private void createContents(View view)
+    private void createContents()
     {
 
         ActionBar actionBar = this.getActionBar();
@@ -80,8 +81,6 @@ public class MaxCalculator extends AppCompatActivity
         txtWeight = (EditText) findViewById(R.id.txt_weight_calc);
         txtReps = (EditText) findViewById(R.id.txt_reps_calc);
         lblMax = (TextView) findViewById(R.id.lbl_max);
-
-
     }
 
     /**
@@ -115,7 +114,6 @@ public class MaxCalculator extends AppCompatActivity
         double max = weight / (1.0278 - (0.0278 * reps));
         lblMax.setText(String.valueOf(Math.round(max)));
     }
-
 
     @Override
     protected void onSaveInstanceState(Bundle bundle)

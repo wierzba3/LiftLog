@@ -28,12 +28,14 @@ import com.liftlog.models.Category;
 /**
  * TODO
  * BUGS:
- * - can't get the listselector to work on ViewSession, I think it's because of the custom layout for items
  * - Switch back delete operations to actually delete records instead of marking them deleted
  * - Removing category seems to cause an IndexOutOfBoundsException but I can't recreate it
  *
  *
  * Implement now:
+ * - Make increment button larger
+ * - Implement find best lifts
+ * - Implement data backup copy
  * - Implement DataBackup service
  *      http://developer.android.com/guide/topics/data/backup.html
  * - Implement calendar view for ViewSessions
@@ -42,9 +44,6 @@ import com.liftlog.models.Category;
  *
  *
  * Implement in the future:
- * - Tools
- *      1RM calculator
- *      History of lifts
  * - Programmable training routines. Define rules that the user can set for an exercise.
  * Display planned lifts separately from the completed lifts in the sessions.
  * e.g. repeat selected lift every M/W/F, increase weight each day/week
@@ -54,7 +53,6 @@ import com.liftlog.models.Category;
  * Publishing TODO:
  * - App icon https://www.google.com/design/spec/style/icons.html
  * - Test on tablet device(s)
- * - private key for signing application (?) http://developer.android.com/tools/publishing/app-signing.html
  * - End User License Agreement (EULA)
  *
  */
@@ -105,6 +103,12 @@ public class MainActivity extends AppCompatActivity
 
 
     @Override
+    protected void onResume()
+    {
+        super.onResume();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState)
     {
 
@@ -128,6 +132,10 @@ public class MainActivity extends AppCompatActivity
                 {
                     mCustomPagerAdapter.getExercisesFragment().expandListGroupItems();
                 }
+                if(position == FragmentPagerAdapter.SESSIONS_INDEX)
+                {
+                    mCustomPagerAdapter.getSessionsFragment().loadSessions();
+                }
             }
             @Override
             public void onPageScrollStateChanged(int state)
@@ -135,6 +143,8 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
+
+
 
 //        accountType = getString(R.string.accountType);
 //        mAccount = CreateSyncAccount(this);
@@ -150,7 +160,7 @@ public class MainActivity extends AppCompatActivity
 
 
         dao = new DataAccessObject(this);
-        dao.createBackupCopy(this);
+//        dao.createBackupCopy(this);
 //        DataLoader.load(this);
 //        dao.restoreBackupCopy(this);
     }

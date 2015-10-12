@@ -50,6 +50,7 @@ public class ViewHistory extends AppCompatActivity
     private DataAccessObject dao;
 
     private ExpandableListView exListHistory;
+    private TextView lblEmpty;
 
     private long exerciseId = -1;
     private String exerciseName = null;
@@ -166,17 +167,16 @@ public class ViewHistory extends AppCompatActivity
 
 
         exListHistory = (ExpandableListView) findViewById(R.id.exList_history);
-
+        lblEmpty = (TextView) findViewById(R.id.lbl_empty);
 
     }
 
     private void loadLifts(long exerciseId)
     {
-//        List<Lift> lifts = dao.selectLiftsByExercise(exerciseId);
         List<Session> sessions = dao.selectSessionsByExercise(exerciseId);
-        if(sessions == null)
+        if(sessions == null || sessions.isEmpty())
         {
-            Toast.makeText(this, "No history for Exercise: " + exerciseName, Toast.LENGTH_LONG).show();
+            lblEmpty.setText("No history to display");
             return;
         }
 
