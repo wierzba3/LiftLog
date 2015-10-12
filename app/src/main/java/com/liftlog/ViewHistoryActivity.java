@@ -36,16 +36,16 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class ViewHistory extends AppCompatActivity
+public class ViewHistoryActivity extends AppCompatActivity
 {
-//public class ViewSession extends Activity {
+//public class ViewSessionActivity extends Activity {
 
     /**
      * The key for this intent's extended data: the id of the session (-1 if new instance)
      */
     public static final String EXERCISE_ID_KEY = "exercise_id";
 
-    private static final String LOG_TAG = "LiftLog.ViewHistory";
+    private static final String LOG_TAG = "LiftLog.ViewHistoryActivity";
 
     private DataAccessObject dao;
 
@@ -123,8 +123,8 @@ public class ViewHistory extends AppCompatActivity
                 Exercise exercise = (Exercise) input.getSelectedItem();
                 if (exercise != null)
                 {
-                    ViewHistory.this.exerciseId = exercise.getId();
-                    ViewHistory.this.exerciseName = exercise.getName();
+                    ViewHistoryActivity.this.exerciseId = exercise.getId();
+                    ViewHistoryActivity.this.exerciseName = exercise.getName();
                     loadLifts(exercise.getId());
                 }
             }
@@ -220,9 +220,9 @@ public class ViewHistory extends AppCompatActivity
      */
     private void doEditLift(long liftId, long sessionId)
     {
-        Intent intent = new Intent(ViewHistory.this, ViewLift.class);
-        intent.putExtra(ViewLift.LIFT_ID_KEY, liftId);
-        intent.putExtra(ViewLift.SESSION_ID_KEY, sessionId);
+        Intent intent = new Intent(ViewHistoryActivity.this, ViewLiftActivity.class);
+        intent.putExtra(ViewLiftActivity.LIFT_ID_KEY, liftId);
+        intent.putExtra(ViewLiftActivity.SESSION_ID_KEY, sessionId);
         startActivity(intent);
     }
 
@@ -267,7 +267,7 @@ public class ViewHistory extends AppCompatActivity
 //                        session.setDeleted(true);
 //                        if (!dao.update(session))
 //                        {
-//                            Toast.makeText(ViewHistory.this, "Error deleting session.", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(ViewHistoryActivity.this, "Error deleting session.", Toast.LENGTH_SHORT).show();
 //                            return;
 //                        }
 //                        //successfully deleted

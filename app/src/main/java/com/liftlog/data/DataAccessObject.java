@@ -451,6 +451,52 @@ public class DataAccessObject extends SQLiteOpenHelper
 
         return result;
     }
+
+    public Lift selectBestLift(long exerciseId, int reps)
+    {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return selectBestLift(db, exerciseId, reps);
+    }
+    public Lift selectBestLift(SQLiteDatabase db, long exerciseId, int reps)
+    {
+        //TODO
+        String qry = "SELECT * FROM " + LIFT_TABLE_NAME
+                + " WHERE " + LIFT_COLUMN_EXERCISE_FK + " = " + exerciseId
+                + " AND " + LIFT_COLUMN_REPS + " = " + reps
+                + " ORDER BY " + LIFT_COLUMN_WEIGHT + " DESC LIMIT 1";
+
+        Cursor cursor = db.rawQuery(qry, null);
+        if(cursor == null || cursor.getCount() == 0)
+        {
+            return null;
+        }
+        cursor.moveToFirst();
+
+        long id = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_PK));
+        long sessionId = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_SESSION_FK));
+        double weight = cursor.getDouble(cursor.getColumnIndex(LIFT_COLUMN_WEIGHT));
+        int sets = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_SETS));
+        int warmup = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_WARMUP));
+        long dateCreated = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_DATE_CREATED));
+        boolean isNew = (cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_NEW)) == 1);
+        boolean isModified = (cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_MODIFIED)) == 1);
+        boolean isDeleted = (cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_DELETED)) == 1);
+
+        Lift result = new Lift();
+        result.setId(id);
+        result.setExerciseId(exerciseId);
+        result.setSessionId(sessionId);
+        result.setWeight(weight);
+        result.setSets(sets);
+        result.setReps(reps);
+        result.setWarmup(warmup == 1 ? true : false);
+        result.setDateCreated(dateCreated);
+        result.setNew(isNew);
+        result.setModified(isModified);
+        result.setDeleted(isDeleted);
+
+        return result;
+    }
     public void clearLiftsTable()
     {
         SQLiteDatabase db = this.getWritableDatabase();

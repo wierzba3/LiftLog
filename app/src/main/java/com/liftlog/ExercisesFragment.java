@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.text.InputFilter;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,6 +31,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
+import com.liftlog.common.Util;
 import com.liftlog.data.DataAccessObject;
 import com.liftlog.components.ExerciseInputDialog;
 import com.liftlog.models.Category;
@@ -171,6 +173,7 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
 
         // Set up the input
         final EditText input = new EditText(super.getActivity());
+        input.setFilters(new InputFilter[]{ Util.ALPHANUMERIC_FILTER });
         input.setSingleLine();
         input.setInputType(InputType.TYPE_CLASS_TEXT);
 
@@ -308,10 +311,15 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
                     public void onClick(DialogInterface dialog, int which)
                     {
                         //TODO CHECK THIS, IT IS CRASHING BECAUSE LISTVIEW IS STILL EXPECTING THE OBJECT!
-                        dao.deleteCategory(category.getId());
-                        ExercisesFragment.this.loadExercises();
-                    }
+                        if (category != null)
+                        {
 
+                            if (dao.deleteCategory(category.getId()))
+                            {
+                                ExercisesFragment.this.loadExercises();
+                            }
+                        }
+                    }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener()
                         {
@@ -334,9 +342,12 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
         String msg = "Are you sure you want to delete exercise " + exercise.getName() + "?";
 
         boolean found = false;
-        for (Lift lift : lifts)
+        if(lifts != null)
         {
-            if (lift.getExerciseId() == exercise.getId()) found = true;
+            for (Lift lift : lifts)
+            {
+                if (lift.getExerciseId() == exercise.getId()) found = true;
+            }
         }
         if(found)
         {
@@ -553,60 +564,6 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
             return;
         }
         deleteExercise(exercise);
-
-//        String msg = "Are you sure you want to delete this Exercise?";
-        //exercise is referencing existing lifts, give relevant warning
-//        if (found)
-//        {
-//            msg = "Are you sure you want to delete this Exercise?\nThis Exercise is currently referenced by existing Lifts.";
-//            new AlertDialog.Builder(super.getActivity())
-//                    .setIcon(android.R.drawable.ic_dialog_alert)
-//                    .setTitle("Delete Exercise")
-//                    .setMessage(msg)
-//                    .setPositiveButton("Yes", new DialogInterface.OnClickListener()
-//                    {
-//                        @Override
-//                        public void onClick(DialogInterface dialog, int which)
-//                        {
-//                            dao.deleteExercise(exercise.getId());
-//                            loadExercises();
-//                        }
-//
-//                    })
-//                    .setNegativeButton("No", new DialogInterface.OnClickListener()
-//                            {
-//                                @Override
-//                                public void onClick(DialogInterface dialog, int which)
-//                                {
-//                                    return;
-//                                }
-//
-//                            }
-//                    )
-//                    .show();
-//        }
-//        else
-//        //Exercise is not referencing existing lifts, give generic message.
-//        {
-//            new AlertDialog.Builder(super.getActivity())
-//                    .setIcon(android.R.drawable.ic_dialog_alert)
-//                    .setTitle("Delete Exercise")
-//                    .setMessage(msg)
-//                    .setPositiveButton("Yes", new DialogInterface.OnClickListener()
-//                    {
-//                        @Override
-//                        public void onClick(DialogInterface dialog, int which)
-//                        {
-//
-//                            deleteExercise(exercise);
-//                            loadExercises();
-//                        }
-//
-//                    })
-//                    .setNegativeButton("No", null)
-//                    .show();
-//        }
-
     }
 
 

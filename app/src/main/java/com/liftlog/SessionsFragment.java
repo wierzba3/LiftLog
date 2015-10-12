@@ -23,8 +23,6 @@ import android.widget.Toast;
 import java.util.Collections;
 import java.util.List;
 
-import com.liftlog.R;
-
 import com.liftlog.data.DataAccessObject;
 import com.liftlog.components.DateInputDialog;
 import com.liftlog.models.Session;
@@ -80,7 +78,7 @@ public class SessionsFragment extends Fragment implements  DateInputDialog.DateI
             public void onItemClick(AdapterView<?> parent, View view, int position,
                                     long id)
             {
-                Intent intent = new Intent(SessionsFragment.super.getActivity(), ViewSession.class);
+                Intent intent = new Intent(SessionsFragment.super.getActivity(), ViewSessionActivity.class);
                 Session session = (Session) parent.getItemAtPosition(position);
                 long sessionId = session.getId();
                 //if id is -1, the user selected the <New session> dummy item
@@ -93,7 +91,7 @@ public class SessionsFragment extends Fragment implements  DateInputDialog.DateI
                 view.setBackgroundColor(getResources().getColor(R.color.material_blue_200));
 //                view.setBackgroundResource(R.drawable.list_click_background);
 
-                intent.putExtra(ViewSession.SESSION_ID_KEY, sessionId);
+                intent.putExtra(ViewSessionActivity.SESSION_ID_KEY, sessionId);
                 startActivity(intent);
             }
         });

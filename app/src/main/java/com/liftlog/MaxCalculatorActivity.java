@@ -1,26 +1,58 @@
 package com.liftlog;
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.BaseExpandableListAdapter;
 import android.widget.EditText;
+import android.widget.ExpandableListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.liftlog.data.DataAccessObject;
+import com.liftlog.models.Exercise;
+import com.liftlog.models.Lift;
+import com.liftlog.models.Session;
 
-public class BestLift extends AppCompatActivity
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+public class MaxCalculatorActivity extends AppCompatActivity
 {
+//public class ViewSessionActivity extends Activity {
 
-    private static final String LOG_TAG = "BestLift";
+    /**
+     * The key for this intent's extended data: the id of the session (-1 if new instance)
+     */
+    public static final String EXERCISE_ID_KEY = "exercise_id";
+
+    private static final String LOG_TAG = "MaxCalculatorActivity";
 
     private DataAccessObject dao;
 
+    private EditText txtWeight;
+    private EditText txtReps;
+    private TextView lblMax;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -46,6 +78,9 @@ public class BestLift extends AppCompatActivity
             actionBar.show();
         }
 
+        txtWeight = (EditText) findViewById(R.id.txt_weight_calc);
+        txtReps = (EditText) findViewById(R.id.txt_reps_calc);
+        lblMax = (TextView) findViewById(R.id.lbl_max);
     }
 
     /**
@@ -54,7 +89,31 @@ public class BestLift extends AppCompatActivity
      */
     public void doCalculate(View view)
     {
+        String weightValue = txtWeight.getText().toString().trim();
+        double weight;
+        try
+        {
+            weight = Double.parseDouble(weightValue);
+        } catch (NumberFormatException e)
+        {
+            Toast.makeText(this, "Invalid Weight value: " + weightValue, Toast.LENGTH_SHORT).show();
+            return;
+        }
 
+        String repsValue = txtReps.getText().toString().trim();
+        int reps;
+        try
+        {
+            reps = Integer.parseInt(repsValue);
+        } catch (NumberFormatException e)
+        {
+            Toast.makeText(this, "Invalid Reps value: " + repsValue, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+//        double max = weight / (1.0278 - (0.0278 * reps));
+        double max = (weight * 0.033 * reps) + weight;
+        lblMax.setText(String.valueOf(Math.round(max)));
     }
 
     @Override

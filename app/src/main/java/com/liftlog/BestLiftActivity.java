@@ -1,24 +1,16 @@
 package com.liftlog;
 
 import android.app.ActionBar;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.BaseExpandableListAdapter;
 import android.widget.EditText;
-import android.widget.ExpandableListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,39 +18,28 @@ import android.widget.Toast;
 import com.liftlog.data.DataAccessObject;
 import com.liftlog.models.Exercise;
 import com.liftlog.models.Lift;
-import com.liftlog.models.Session;
-
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
-public class MaxCalculator extends AppCompatActivity
+public class BestLiftActivity extends AppCompatActivity
 {
-//public class ViewSession extends Activity {
 
-    /**
-     * The key for this intent's extended data: the id of the session (-1 if new instance)
-     */
-    public static final String EXERCISE_ID_KEY = "exercise_id";
-
-    private static final String LOG_TAG = "MaxCalculator";
+    private static final String LOG_TAG = "BestLiftActivity";
 
     private DataAccessObject dao;
 
-    private EditText txtWeight;
+    private Spinner spnExercise;
     private EditText txtReps;
-    private TextView lblMax;
+    private TextView lblResult;
+    private TextView lblResultExercise;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_max_calc);
+        setContentView(R.layout.activity_best_lift);
 
         dao = new DataAccessObject(this);
 
@@ -78,41 +59,69 @@ public class MaxCalculator extends AppCompatActivity
             actionBar.show();
         }
 
-        txtWeight = (EditText) findViewById(R.id.txt_weight_calc);
-        txtReps = (EditText) findViewById(R.id.txt_reps_calc);
-        lblMax = (TextView) findViewById(R.id.lbl_max);
+        spnExercise = (Spinner) findViewById(R.id.spn_exercise_best);
+        txtReps = (EditText) findViewById(R.id.txt_reps_best);
+        lblResult = (TextView) findViewById(R.id.lbl_result);
+        lblResultExercise = (TextView) findViewById(R.id.lbl_result_exercise);
+
+        loadExercises();
+    }
+
+    private void loadExercises()
+    {
+        List<Exercise> exercises = dao.selectExercises(false);
+        if(exercises != null && !exercises.isEmpty())
+        {
+            Collections.sort(exercises, Exercise.byNameDummyLast);
+
+            ArrayAdapter<Exercise> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, exercises);
+            adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+            spnExercise.setAdapter(adapter);
+        }
+        else
+        {
+            Toast.makeText(this, "No exercises exist to search for.", Toast.LENGTH_SHORT).show();
+            finish();
+        }
     }
 
     /**
      * Handle "Calculate" button click
      * @param view
      */
-    public void doCalculate(View view)
+    public void doSearch(View view)
     {
-        String weightValue = txtWeight.getText().toString().trim();
-        double weight;
-        try
+        Exercise exercise = (Exercise) spnExercise.getSelectedItem();
+        if (exercise == null)
         {
-            weight = Double.parseDouble(weightValue);
-        } catch (NumberFormatException e)
-        {
-            Toast.makeText(this, "Invalid Weight value: " + weightValue, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Unknown exercise.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        String repsValue = txtReps.getText().toString().trim();
         int reps;
         try
         {
-            reps = Integer.parseInt(repsValue);
+            reps = Integer.parseInt(txtReps.getText().toString());
         } catch (NumberFormatException e)
         {
-            Toast.makeText(this, "Invalid Reps value: " + repsValue, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Invalid reps.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        double max = weight / (1.0278 - (0.0278 * reps));
-        lblMax.setText(String.valueOf(Math.round(max)));
+        Lift lift = dao.selectBestLift(exercise.getId(), reps);
+        String msg = "Best " + reps + " rep set: " ;
+        if (lift == null)
+        {
+            msg += "n/a";
+        }
+        else
+        {
+            double w = lift.getWeight();
+            msg += (w == Math.ceil(w) ? String.valueOf((int)w) : String.valueOf(w));
+        }
+
+        lblResultExercise.setText(exercise.getName());
+        lblResult.setText(msg);
     }
 
     @Override
