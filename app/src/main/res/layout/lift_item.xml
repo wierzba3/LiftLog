@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
-              android:layout_height="40dp"
+              android:layout_height="50dp"
               android:padding="6dip"
               xmlns:app="http://schemas.android.com/apk/res-auto"
             >
@@ -20,8 +20,8 @@
         <ImageButton
             android:id="@+id/btn_increment"
             android:src="@drawable/ic_add_box_blue_24dp"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:gravity="center_vertical"
             android:layout_marginRight="20dp"
             />

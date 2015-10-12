@@ -1,9 +1,16 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'LiftlogKey'
+            keyPassword 'a1b2c3d3'
+            storeFile file('/home/james/keystores/liftlog.jks')
+            storePassword 'a1b2c3d3'
+        }
+    }
     compileSdkVersion 22
     buildToolsVersion "22.0.1"
-
     defaultConfig {
         applicationId "com.liftlog"
         minSdkVersion 15
@@ -15,12 +22,13 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
     }
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.2.0'
     compile 'com.android.support:design:22.2.0'
     //compile project(path: ':liftlog backend', configuration: 'android-endpoints')

@@ -33,7 +33,8 @@ import com.liftlog.models.Session;
 public class SessionsFragment extends Fragment implements  DateInputDialog.DateInputDialogListener
 {
 
-    ListView listSessions;
+    private ListView listSessions;
+    private TextView lblEmpty;
 
     DataAccessObject dao;
 
@@ -63,7 +64,6 @@ public class SessionsFragment extends Fragment implements  DateInputDialog.DateI
         setHasOptionsMenu(true);
 
         ActionBar actionBar = super.getActivity().getActionBar();
-//        if(actionBar == null) actionBar =
         if (actionBar != null)
         {
             actionBar.setDisplayUseLogoEnabled(false);
@@ -71,9 +71,9 @@ public class SessionsFragment extends Fragment implements  DateInputDialog.DateI
             actionBar.show();
         }
 
+        lblEmpty = (TextView) view.findViewById(R.id.lbl_empty_sessions);
+
         listSessions = (ListView) view.findViewById(R.id.list_sessions_fragment);
-
-
         listSessions.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
             @Override
@@ -126,12 +126,20 @@ public class SessionsFragment extends Fragment implements  DateInputDialog.DateI
         }
 
         List<Session> sessions = dao.selectSessions(false);
+        if(sessions == null || sessions.isEmpty())
+        {
+            lblEmpty.setText("No sessions have been added");
+            listSessions.setAdapter(null);
+            return;
+        }
+        lblEmpty.setText("");
+
         Session.computeDuplicateDays(sessions);
         Collections.sort(sessions, Session.byDateDesc);
 
-        Session dummySession = new Session();
-        dummySession.setId(-1);
-        sessions.add(0, dummySession);
+//        Session dummySession = new Session();
+//        dummySession.setId(-1);
+//        sessions.add(0, dummySession);
 
 //            ArrayList<String> sessionLabels = new ArrayList<String>();
 //            for (Session session : sessions) sessionLabels.add(String.valueOf(session.getDate()));

@@ -121,6 +121,16 @@ public class ToolsFragment extends Fragment
         Toast.makeText(super.getActivity(), "Not implemented yet.", Toast.LENGTH_LONG).show();
     }
 
+    /**
+     * Launch backup activity
+     */
+    public void launchBackup()
+    {
+        //TODO launch backup view
+        Toast.makeText(super.getActivity(), "Not implemented yet.", Toast.LENGTH_LONG).show();
+    }
+
+
 
     private void createContents(View view)
     {
@@ -164,7 +174,15 @@ public class ToolsFragment extends Fragment
             }
         });
 
-
+        Button btnBackup = (Button) view.findViewById(R.id.btn_backup);
+        btnBackup.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                launchBackup();
+            }
+        });
 
     }
 
