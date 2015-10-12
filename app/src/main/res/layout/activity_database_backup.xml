@@ -1,0 +1,73 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.liftlog.DataBaseBackupActivity"
+    android:weightSum="1">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_margin="20dp"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Last Backup: "
+            android:textSize="12pt"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="never"
+            android:textSize="12pt"
+            android:textStyle="bold"
+            />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_create_backup"
+        android:layout_width="fill_parent"
+        android:layout_height="70dp"
+        android:textColor="@color/white"
+        android:text="Create Backup"
+        android:textSize="20sp"
+        android:background="@drawable/round_button"
+        android:layout_margin="25dp"
+        />
+
+    <Button
+        android:id="@+id/btn_restore_backup"
+        android:layout_width="fill_parent"
+        android:layout_height="70dp"
+        android:textColor="@color/white"
+        android:text="Restore Backup"
+        android:textSize="20sp"
+        android:background="@drawable/round_button"
+        android:layout_margin="25dp"
+        />
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="* Only one backup can exist at any given time"
+        android:textStyle="italic"
+        android:layout_margin="25dp"
+        />
+
+
+
+</LinearLayout>

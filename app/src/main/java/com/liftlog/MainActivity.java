@@ -2,9 +2,7 @@ package com.liftlog;
 
 
 import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.database.ContentObserver;
 import android.os.Bundle;
 
@@ -20,21 +18,17 @@ import android.content.Intent;
 
 import android.net.Uri;
 
-import com.liftlog.common.DataLoader;
 import com.liftlog.data.DataAccessObject;
-import com.liftlog.models.Category;
 
 
 /**
  * TODO
  * BUGS:
- * - Switch back delete operations to actually delete records instead of marking them deleted
  * - Removing category seems to cause an IndexOutOfBoundsException but I can't recreate it
  *
  *
  * Implement now:
- * - Make increment button larger
- * - Implement find best lifts
+ * - Limit Exercise,Category add/edit textboxes limited to alphanumeric characters
  * - Implement data backup copy
  * - Implement DataBackup service
  *      http://developer.android.com/guide/topics/data/backup.html
@@ -44,6 +38,7 @@ import com.liftlog.models.Category;
  *
  *
  * Implement in the future:
+ * - Refactor DataAccessObject by extracting methods that create the model objects from cursors (lots of code repetition)
  * - Programmable training routines. Define rules that the user can set for an exercise.
  * Display planned lifts separately from the completed lifts in the sessions.
  * e.g. repeat selected lift every M/W/F, increase weight each day/week
@@ -198,7 +193,7 @@ public class MainActivity extends AppCompatActivity
      */
     public void startAddLift(View view)
     {
-        Intent intent = new Intent(this, ViewLift.class);
+        Intent intent = new Intent(this, ViewLiftActivity.class);
         this.startActivity(intent);
     }
 
@@ -276,54 +271,35 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    /**
-     * Create a new dummy account for the sync adapter
-     *
-     * @param context The application context
-     */
-    public Account CreateSyncAccount(Context context)
-    {
-        // Create the account type and default account
-        Account newAccount = new Account(
-                ACCOUNT, accountType);
-        // Get an instance of the Android account manager
-//        AccountManager accountManager = (AccountManager) context.getSystemService(ACCOUNT_SERVICE);
-        AccountManager accountManager = AccountManager.get(this);
-        /*
-         * Add the account and account type, no password or user data
-         * If successful, return the Account object, otherwise report an error.
-         */
-        Account[] accounts = accountManager.getAccountsByType(accountType);
-        if (accounts.length == 0)
-        {
-            boolean ret = false;
-            ret = accountManager.addAccountExplicitly(newAccount, null, null);
-        }
-        else
-        {
-            return accounts[0];
-        }
-
-//        if (ret)
+//    /**
+//     * Create a new dummy account for the sync adapter
+//     *
+//     * @param context The application context
+//     */
+//    public Account CreateSyncAccount(Context context)
+//    {
+//        // Create the account type and default account
+//        Account newAccount = new Account(
+//                ACCOUNT, accountType);
+//        // Get an instance of the Android account manager
+//        AccountManager accountManager = AccountManager.get(this);
+//        /*
+//         * Add the account and account type, no password or user data
+//         * If successful, return the Account object, otherwise report an error.
+//         */
+//        Account[] accounts = accountManager.getAccountsByType(accountType);
+//        if (accounts.length == 0)
 //        {
-//            /*
-//             * If you don't set android:syncable="true" in
-//             * in your <provider> element in the manifest,
-//             * then call context.setIsSyncable(account, AUTHORITY, 1)
-//             * here.
-//             */
+//            boolean ret = false;
+//            ret = accountManager.addAccountExplicitly(newAccount, null, null);
 //        }
 //        else
 //        {
-//            /*
-//             * The account exists or some other error occurred. Log this, report it,
-//             * or handle it internally.
-//             */
-//            Log.d(LOG_TAG, "Error creating account");
-//            return null;
+//            return accounts[0];
 //        }
-
-        return newAccount;
-    }
+//
+//
+//        return newAccount;
+//    }
 
 }

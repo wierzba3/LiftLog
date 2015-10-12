@@ -31,27 +31,27 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.liftlog.ViewSession"
+            android:name=".ViewSessionActivity"
             android:label="View Session" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.liftlog.ViewSession"
+                android:value=".ViewSessionActivity"
                 />
         </activity>
         <!--android:launchMode="singleTop"-->
         <activity
-            android:name="com.liftlog.ViewLift"
+            android:name=".ViewLiftActivity"
             android:label="@string/title_activity_add_lift"
 
-            android:parentActivityName="com.liftlog.ViewSession" >
+            android:parentActivityName=".ViewSessionActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.liftlog.ViewLift"
+                android:value=".ViewLiftActivity"
                 />
         </activity>
 
         <activity
-            android:name="com.liftlog.ViewHistory"
+            android:name=".ViewHistoryActivity"
             android:label="View History"
 
             android:parentActivityName="com.liftlog.MainActivity" >
@@ -62,8 +62,19 @@
         </activity>
 
         <activity
-            android:name="com.liftlog.MaxCalculator"
+            android:name=".MaxCalculatorActivity"
             android:label="Max Calculator"
+
+            android:parentActivityName="com.liftlog.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.liftlog.MainActivity"
+                />
+        </activity>
+
+        <activity
+            android:name="com.liftlog.BestLiftActivity"
+            android:label="Best Lift"
 
             android:parentActivityName="com.liftlog.MainActivity" >
             <meta-data

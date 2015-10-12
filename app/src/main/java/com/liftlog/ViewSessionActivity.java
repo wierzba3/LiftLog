@@ -35,18 +35,16 @@ import com.liftlog.models.Lift;
 import com.liftlog.data.DataAccessObject;
 import com.liftlog.models.Session;
 
-import org.w3c.dom.Text;
-
-public class ViewSession extends AppCompatActivity
+public class ViewSessionActivity extends AppCompatActivity
 {
-//public class ViewSession extends Activity {
+//public class ViewSessionActivity extends Activity {
 
     /**
      * The key for this intent's extended data: the id of the session (-1 if new instance)
      */
     public static final String SESSION_ID_KEY = "session_id";
 
-    private static final String LOG_TAG = "LiftLog.ViewSession";
+    private static final String LOG_TAG = "LiftLog.ViewSessionActivity";
 
     private DataAccessObject dao;
 
@@ -184,9 +182,9 @@ public class ViewSession extends AppCompatActivity
      */
     private void doAdd(long liftId)
     {
-        Intent intent = new Intent(ViewSession.this, ViewLift.class);
-        intent.putExtra(ViewLift.LIFT_ID_KEY, liftId);
-        intent.putExtra(ViewLift.SESSION_ID_KEY, sessionId);
+        Intent intent = new Intent(ViewSessionActivity.this, ViewLiftActivity.class);
+        intent.putExtra(ViewLiftActivity.LIFT_ID_KEY, liftId);
+        intent.putExtra(ViewLiftActivity.SESSION_ID_KEY, sessionId);
         startActivity(intent);
 //        startActivityForResult(intent, 1);
     }
@@ -231,7 +229,7 @@ public class ViewSession extends AppCompatActivity
                     {
                         if (!dao.deleteSession(sessionId))
                         {
-                            Toast.makeText(ViewSession.this, "Error deleting session.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ViewSessionActivity.this, "Error deleting session.", Toast.LENGTH_SHORT).show();
                             return;
                         }
                         //successfully deleted

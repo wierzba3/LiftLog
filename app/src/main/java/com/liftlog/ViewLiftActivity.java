@@ -29,8 +29,8 @@ import com.liftlog.data.DataAccessObject;
 import com.liftlog.components.ExerciseInputDialog;
 import com.liftlog.models.Exercise;
 
-//public class ViewLift extends Activity {
-public class ViewLift extends AppCompatActivity implements ExerciseInputDialog.ExerciseInputDialogListener {
+//public class ViewLiftActivity extends Activity {
+public class ViewLiftActivity extends AppCompatActivity implements ExerciseInputDialog.ExerciseInputDialogListener {
 
     private static final String LOG_TAG = "LiftLog.AddLift";
 
@@ -198,14 +198,14 @@ public class ViewLift extends AppCompatActivity implements ExerciseInputDialog.E
                 finish();
                 return true;
             case R.id.action_view_history:
-                Intent intent = new Intent(this, ViewHistory.class);
+                Intent intent = new Intent(this, ViewHistoryActivity.class);
                 Exercise selectedExercise = (Exercise) spnExercise.getSelectedItem();
                 if(selectedExercise == null)
                 {
                     Toast.makeText(this, "Error loading exercise history.", Toast.LENGTH_LONG).show();
                     return false;
                 }
-                intent.putExtra(ViewHistory.EXERCISE_ID_KEY, selectedExercise.getId());
+                intent.putExtra(ViewHistoryActivity.EXERCISE_ID_KEY, selectedExercise.getId());
                 super.startActivity(intent);
                 break;
         }
@@ -256,7 +256,7 @@ public class ViewLift extends AppCompatActivity implements ExerciseInputDialog.E
 //                if(selectedExercise == null) return;
 //                if(selectedExercise.getId() == -1)
 //                {
-//                    ViewLift.this.doNewExercise();
+//                    ViewLiftActivity.this.doNewExercise();
 //                }
 //                //remember the last actual exercise that was selected
 //                else previousExercisePos = position;
@@ -335,7 +335,7 @@ public class ViewLift extends AppCompatActivity implements ExerciseInputDialog.E
     {
         if (liftId == -1)
         {
-            Toast.makeText(ViewLift.this, "Can't delete. This Lift has not been created yet.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(ViewLiftActivity.this, "Can't delete. This Lift has not been created yet.", Toast.LENGTH_SHORT).show();
             return;
         }
         new AlertDialog.Builder(this)
@@ -347,7 +347,7 @@ public class ViewLift extends AppCompatActivity implements ExerciseInputDialog.E
                     public void onClick(DialogInterface dialog, int which) {
 
                         if (!dao.deleteLift(liftId)) {
-                            Toast.makeText(ViewLift.this, "Error deleting lift.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(ViewLiftActivity.this, "Error deleting lift.", Toast.LENGTH_LONG).show();
                             return;
                         }
                         //successfully deleted
@@ -364,7 +364,7 @@ public class ViewLift extends AppCompatActivity implements ExerciseInputDialog.E
 //    {
 //        //super.finish();
 //        Intent intent = new Intent();
-//        intent.putExtra(ViewSession.SESSION_ID_KEY, sessionId);
+//        intent.putExtra(ViewSessionActivity.SESSION_ID_KEY, sessionId);
 //        setResult(RESULT_OK, intent);
 //    }
 
@@ -372,7 +372,7 @@ public class ViewLift extends AppCompatActivity implements ExerciseInputDialog.E
     public void onBackPressed() {
         super.onBackPressed();
         Intent intent = new Intent();
-        intent.putExtra(ViewSession.SESSION_ID_KEY, sessionId);
+        intent.putExtra(ViewSessionActivity.SESSION_ID_KEY, sessionId);
         setResult(RESULT_OK, intent);
     }
 
@@ -390,7 +390,7 @@ public class ViewLift extends AppCompatActivity implements ExerciseInputDialog.E
     {
         if(exercise == null) return;
         long id = exercise.getId();
-        //this should always be true (we don't allow editing from ViewLift context)
+        //this should always be true (we don't allow editing from ViewLiftActivity context)
         if(id == -1)
         {
             long newExerciseId = dao.insert(exercise);
