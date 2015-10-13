@@ -30,6 +30,8 @@ import com.liftlog.models.Lift;
 import com.liftlog.models.Exercise;
 import com.liftlog.models.Session;
 
+import org.joda.time.DateTime;
+
 /**
  * Created by James Wierzba on 6/8/2015.
  */
@@ -1317,23 +1319,34 @@ public class DataAccessObject extends SQLiteOpenHelper
 
 
 
-
-
-
+    //BEGIN DATABASE BACKUP METHODS
+    public boolean hasBackup(Context ctx)
+    {
+        return getLastBackup(ctx) != null;
+    }
+    public DateTime getLastBackup(Context ctx)
+    {
+        File backupFile = new File(Environment.getExternalStorageDirectory(), DB_COPY_NAME);
+        if(!backupFile.exists())
+        {
+            return null;
+        }
+        SharedPreferences sharedPref = ctx.getSharedPreferences(ctx.getString(R.string.preferencesFileKey), Context.MODE_PRIVATE);
+        int lastUpdate = sharedPref.getInt(DB_BACKUP_PREFERENCE_KEY, -1);
+        return Util.dateFromDays(lastUpdate);
+    }
     public void createBackupCopy(Context ctx)
     {
         SharedPreferences sharedPref = ctx.getSharedPreferences(ctx.getString(R.string.preferencesFileKey), Context.MODE_PRIVATE);
-
         int daysSinceEpoch = Util.getDaysSinceEpoch();
-        int lastUpdate = sharedPref.getInt(DB_BACKUP_PREFERENCE_KEY, -1);
 
-        int diff = daysSinceEpoch - lastUpdate;
-
-        if(lastUpdate != -1 && diff < dbBackupFrequency)
-        {
-            //if not enough time has passed, don't backup the db
-            return;
-        }
+//        int lastUpdate = sharedPref.getInt(DB_BACKUP_PREFERENCE_KEY, -1);
+//        int diff = daysSinceEpoch - lastUpdate;
+//        if(lastUpdate != -1 && diff < dbBackupFrequency)
+//        {
+//            //if not enough time has passed, don't backup the db
+//            return;
+//        }
 
         try
         {
@@ -1403,6 +1416,21 @@ public class DataAccessObject extends SQLiteOpenHelper
         }
     }
 
+    public boolean deleteBackupCopy(Context ctx)
+    {
+        try
+        {
+            File srcFile = new File(Environment.getExternalStorageDirectory(), DB_COPY_NAME);
+            return srcFile.delete();
+        } catch (Exception e)
+        {
+            Log.d(LOG_TAG, "Error in DataAccessObject.deleteBackupCopy(Context): " + e.getMessage());
+            return false;
+        }
+    }
+
+
+    //END DATABASE BACKUP METHODS
 
 
 

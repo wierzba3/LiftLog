@@ -22,15 +22,14 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="Last Backup: "
-            android:textSize="12pt"
             />
 
         <TextView
+            android:id="@+id/lbl_last_backup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="never"
-            android:textSize="12pt"
+            android:text=""
             android:textStyle="bold"
             />
 
@@ -44,7 +43,8 @@
         android:text="Create Backup"
         android:textSize="20sp"
         android:background="@drawable/round_button"
-        android:layout_margin="25dp"
+        android:layout_margin="15dp"
+        android:onClick="doCreateBackup"
         />
 
     <Button
@@ -55,7 +55,20 @@
         android:text="Restore Backup"
         android:textSize="20sp"
         android:background="@drawable/round_button"
-        android:layout_margin="25dp"
+        android:layout_margin="15dp"
+        android:onClick="doRestoreBackup"
+        />
+
+    <Button
+        android:id="@+id/btn_delete_backup"
+        android:layout_width="fill_parent"
+        android:layout_height="70dp"
+        android:textColor="@color/white"
+        android:text="Delete Backup"
+        android:textSize="20sp"
+        android:background="@drawable/round_button"
+        android:layout_margin="15dp"
+        android:onClick="doDeleteBackup"
         />
 
 
@@ -65,7 +78,7 @@
         android:layout_gravity="center"
         android:text="* Only one backup can exist at any given time"
         android:textStyle="italic"
-        android:layout_margin="25dp"
+        android:layout_margin="15dp"
         />
 
 

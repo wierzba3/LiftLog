@@ -1,5 +1,6 @@
 package com.liftlog.models;
 
+import com.liftlog.common.Util;
 import com.liftlog.data.DataAccessObject;
 
 import org.joda.time.DateTime;
@@ -248,8 +249,8 @@ public class Session
 
 
         DateTime dt = new DateTime(date);
-        DateTimeFormatter dtf = DateTimeFormat.forPattern("E, MMM dd yyyy");
-        result = dtf.print(dt);
+//        DateTimeFormatter dtf = DateTimeFormat.forPattern("E, MMM dd yyyy");
+        result = Util.DATE_FORMAT.print(dt);
 
         if(sequenceNum > 0)
         {
