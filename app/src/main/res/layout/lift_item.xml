@@ -19,10 +19,10 @@
 
         <ImageButton
             android:id="@+id/btn_increment"
-            android:src="@drawable/ic_add_box_blue_40dp"
+            android:src="@drawable/ic_add_box_blue_24dp"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:background="@color/white"
+            android:background="@android:color/transparent"
             android:gravity="center_vertical"
             android:layout_marginRight="20dp"
             />
