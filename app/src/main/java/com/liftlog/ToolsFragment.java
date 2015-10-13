@@ -108,11 +108,9 @@ public class ToolsFragment extends Fragment
      */
     public void launchBackup()
     {
-        //TODO launch backup view
-        Toast.makeText(super.getActivity(), "Not implemented yet.", Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(super.getActivity(), DatabaseBackupActivity.class);
+        super.startActivity(intent);
     }
-
-
 
     private void createContents(View view)
     {

@@ -1,6 +1,8 @@
 package com.liftlog;
 
 import android.app.ActionBar;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,18 +10,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.Spinner;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.liftlog.common.Util;
 import com.liftlog.data.DataAccessObject;
-import com.liftlog.models.Exercise;
-import com.liftlog.models.Lift;
 
-import java.util.Collections;
-import java.util.List;
+import org.joda.time.DateTime;
 
 public class DatabaseBackupActivity extends AppCompatActivity
 {
@@ -28,19 +26,22 @@ public class DatabaseBackupActivity extends AppCompatActivity
 
     private DataAccessObject dao;
 
+    private TextView lblLastBackup;
+    private Button btnRestoreBackup;
+    private Button btnDeleteBackup;
+
+    private static final String LABEL_NO_BACKUP = "never";
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_best_lift);
+        setContentView(R.layout.activity_database_backup);
 
         dao = new DataAccessObject(this);
 
         createContents();
     }
-
-
 
     private void createContents()
     {
@@ -52,7 +53,162 @@ public class DatabaseBackupActivity extends AppCompatActivity
             actionBar.show();
         }
 
+        lblLastBackup = (TextView) findViewById(R.id.lbl_last_backup);
+        btnRestoreBackup = (Button) findViewById(R.id.btn_restore_backup);
+        btnDeleteBackup = (Button) findViewById(R.id.btn_delete_backup);
 
+        DateTime lastBackup = dao.getLastBackup(this);
+        if(lastBackup == null)
+        {
+            lblLastBackup.setText(LABEL_NO_BACKUP);
+            btnRestoreBackup.setEnabled(false);
+            btnDeleteBackup.setEnabled(false);
+        }
+        else
+        {
+
+            lblLastBackup.setText(Util.DATE_FORMAT.print(lastBackup));
+        }
+    }
+
+    /**
+     * Handle "Create Backup" button click
+     * @param view
+     */
+    public void doCreateBackup(View view)
+    {
+        DateTime dt = dao.getLastBackup(this);
+        if(dt != null)
+        {
+            String dtStr = Util.DATE_FORMAT.print(dt);
+            new AlertDialog.Builder(this)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setTitle("Restore Backup")
+                    .setMessage("Are you sure you want to create a new backup?"
+                            + "\nThe backup from " + dtStr + " will be replaced.")
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which)
+                        {
+                            createBackup();
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which)
+                                {
+                                    return;
+                                }
+
+                            }
+                    )
+                    .show();
+        }
+        else
+        {
+            createBackup();
+        }
+    }
+
+    private void createBackup()
+    {
+        dao.createBackupCopy(this);
+        if(dao.hasBackup(this))
+        {
+            btnDeleteBackup.setEnabled(true);
+            btnRestoreBackup.setEnabled(true);
+            DateTime dt = dao.getLastBackup(this);
+            lblLastBackup.setText(Util.DATE_FORMAT.print(dt));
+        }
+    }
+
+
+    /**
+     * Handle "Restore Backup" button click
+     * @param view
+     */
+    public void doRestoreBackup(View view)
+    {
+        DateTime dt = dao.getLastBackup(this);
+        if(dt == null)
+        {
+            Toast.makeText(this, "No backup to restore.", Toast.LENGTH_SHORT).show();
+        }
+        String dtStr = Util.DATE_FORMAT.print(dt);
+        new AlertDialog.Builder(this)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle("Restore Backup")
+                .setMessage("Are you sure you want to restore the backup from " + dtStr + "?"
+                        + "All data since then will be permanently destroyed.")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        dao.restoreBackupCopy(DatabaseBackupActivity.this);
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                return;
+                            }
+
+                        }
+                )
+                .show();
+    }
+
+    /**
+     * Handle "Delete Backup" button click
+     * @param view
+     */
+    public void doDeleteBackup(View view)
+    {
+        DateTime dt = dao.getLastBackup(this);
+        if(dt == null)
+        {
+            Toast.makeText(this, "No backup to delete.", Toast.LENGTH_SHORT).show();
+        }
+        String dtStr = Util.DATE_FORMAT.print(dt);
+        new AlertDialog.Builder(this)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle("Restore Backup")
+                .setMessage("Are you sure you want to delete the backup from " + dtStr)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        if (dao.deleteBackupCopy(DatabaseBackupActivity.this))
+                        {
+                            btnRestoreBackup.setEnabled(false);
+                            btnDeleteBackup.setEnabled(false);
+                            lblLastBackup.setText(LABEL_NO_BACKUP);
+                        }
+                        else
+                        {
+                            Toast.makeText(DatabaseBackupActivity.this,
+                                    "Error deleting backup",
+                                    Toast.LENGTH_SHORT)
+                                    .show();
+                        }
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                return;
+                            }
+                        }
+                )
+                .show();
     }
 
 

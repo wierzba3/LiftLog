@@ -28,8 +28,6 @@ import com.liftlog.data.DataAccessObject;
  *
  *
  * Implement now:
- * - Limit Exercise,Category add/edit textboxes limited to alphanumeric characters
- * - Implement data backup copy
  * - Implement DataBackup service
  *      http://developer.android.com/guide/topics/data/backup.html
  * - Implement calendar view for ViewSessions

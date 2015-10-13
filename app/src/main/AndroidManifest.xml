@@ -20,7 +20,9 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme"
+        android:backupAgent="com.liftlog.data.MyBackupAgent"
+        >
         <activity
             android:name="com.liftlog.MainActivity"
             android:label="@string/app_name" >
@@ -75,6 +77,17 @@
         <activity
             android:name="com.liftlog.BestLiftActivity"
             android:label="Best Lift"
+
+            android:parentActivityName="com.liftlog.MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.liftlog.MainActivity"
+                />
+        </activity>
+
+        <activity
+            android:name="com.liftlog.DatabaseBackupActivity"
+            android:label="Data Backup"
 
             android:parentActivityName="com.liftlog.MainActivity" >
             <meta-data
