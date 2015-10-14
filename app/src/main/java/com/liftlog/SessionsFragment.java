@@ -16,16 +16,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseExpandableListAdapter;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.liftlog.data.DataAccessObject;
 import com.liftlog.components.DateInputDialog;
+import com.liftlog.models.Exercise;
+import com.liftlog.models.Lift;
 import com.liftlog.models.Session;
+
+import org.joda.time.DateTime;
+import org.joda.time.Months;
 
 
 public class SessionsFragment extends Fragment implements  DateInputDialog.DateInputDialogListener
@@ -205,6 +216,143 @@ public class SessionsFragment extends Fragment implements  DateInputDialog.DateI
         }
 
         loadSessions();
+    }
+
+    private class SessionGroupElement
+    {
+        public SessionGroupElement() {}
+
+        private List<Session> sessions;
+        private DateTime date;
+
+        public List<Session> getSessions()
+        {
+            return sessions;
+        }
+
+        public void setSessions(List<Session> sessions)
+        {
+            this.sessions = sessions;
+        }
+
+        public DateTime getDateTime()
+        {
+            return date;
+        }
+
+        public void setDateTime(DateTime date)
+        {
+            this.date = date;
+        }
+    }
+
+    private class SessionsExpendableListAdapter extends BaseExpandableListAdapter
+    {
+        public SessionsExpendableListAdapter(Context ctx, List<Session> allSessions)
+        {
+            elements = new ArrayList<SessionGroupElement>();
+
+            if(allSessions == null) return;
+
+
+
+            Collections.sort(elements, comparator);
+        }
+
+        private Comparator<SessionGroupElement> comparator = new Comparator<SessionGroupElement>(){
+            @Override
+            public int compare(SessionGroupElement e1, SessionGroupElement e2)
+            {
+                //TODO
+                return 0;
+            }
+        };
+
+        private List<SessionGroupElement> elements;
+        public List<SessionGroupElement> getElements()
+        {
+            return elements;
+        }
+
+        @Override
+        public boolean isChildSelectable(int i, int i1)
+        {
+            return true;
+        }
+
+        @Override
+        public int getGroupCount()
+        {
+            return elements.size();
+        }
+
+        @Override
+        public int getChildrenCount(int i)
+        {
+            SessionGroupElement e = elements.get(i);
+            if(e == null || e.getSessions() == null) return 0;
+            return e.getSessions().size();
+        }
+
+        @Override
+        public Object getGroup(int i)
+        {
+            return elements.get(i);
+        }
+
+        @Override
+        public Object getChild(int i, int j)
+        {
+            //return liftLists.get(i).get(j);
+            return elements.get(i).getSessions().get(j);
+        }
+
+        @Override
+        public long getGroupId(int i)
+        {
+            //return exercises.get(i).getId();
+            return elements.get(i).getDateTime().getMonthOfYear();
+        }
+
+        @Override
+        public long getChildId(int i, int j)
+        {
+            return elements.get(i).getSessions().get(j).getId();
+        }
+
+        @Override
+        public boolean hasStableIds()
+        {
+            return false;
+        }
+
+        @Override
+        public View getGroupView(int i, boolean b, View view, ViewGroup viewGroup)
+        {
+            if (view == null)
+            {
+                LayoutInflater vi = (LayoutInflater) SessionsFragment.super.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                view = vi.inflate(R.layout.session_group_item, viewGroup, false);
+            }
+
+            //TODO
+
+            return view;
+        }
+
+        @Override
+        public View getChildView(final int i, final int j, boolean b, View view, ViewGroup viewGroup)
+        {
+            if (view == null)
+            {
+                LayoutInflater vi = (LayoutInflater) SessionsFragment.super.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                view = vi.inflate(R.layout.session_item, viewGroup, false);
+            }
+
+            //TODO
+
+            return view;
+        }
     }
 
     public class SessionListAdapter extends ArrayAdapter<Session>
