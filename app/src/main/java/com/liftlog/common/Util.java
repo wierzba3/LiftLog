@@ -1,8 +1,5 @@
 package com.liftlog.common;
 
-import android.text.InputFilter;
-import android.text.Spanned;
-
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.MutableDateTime;
@@ -19,22 +16,6 @@ public class Util
     public static final String ALPHANUMERIC_REGEX = "[A-Za-z0-9]*";
 
     public static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("E, MMM dd yyyy");
-
-    /**
-     * Custom InputFilter for allowing only whitespace, alphanumeric characters
-     */
-    public static final InputFilter ALPHANUMERIC_FILTER = new InputFilter() {
-
-        @Override
-        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-
-            if (source != null && !source.toString().trim().matches(ALPHANUMERIC_REGEX))
-            {
-                return "";
-            }
-            return null;
-        }
-    };
 
     /**
      * Calcuate the number of days since the epoch (exclusive)

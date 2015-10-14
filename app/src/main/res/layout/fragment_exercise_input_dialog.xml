@@ -38,7 +38,6 @@
         android:layout_marginBottom="4dp"
         android:hint="Exercise name"
         android:inputType="textNoSuggestions"
-        android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890"
         android:singleLine="true"
         />
 

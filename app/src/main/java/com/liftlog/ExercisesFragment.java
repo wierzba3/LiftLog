@@ -173,7 +173,8 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
 
         // Set up the input
         final EditText input = new EditText(super.getActivity());
-        input.setFilters(new InputFilter[]{ Util.ALPHANUMERIC_FILTER });
+        //filter doesn't work on some devices...
+        //input.setFilters(new InputFilter[]{ Util.ALPHANUMERIC_FILTER });
         input.setSingleLine();
         input.setInputType(InputType.TYPE_CLASS_TEXT);
 
