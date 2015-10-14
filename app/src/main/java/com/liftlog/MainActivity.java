@@ -24,6 +24,7 @@ import com.liftlog.data.DataAccessObject;
 /**
  * TODO
  * BUGS:
+ * - Exercise, Category names not accepting spaces
  * - Removing category seems to cause an IndexOutOfBoundsException but I can't recreate it
  *
  *
