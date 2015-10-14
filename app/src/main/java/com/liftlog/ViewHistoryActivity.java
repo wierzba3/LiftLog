@@ -110,6 +110,7 @@ public class ViewHistoryActivity extends AppCompatActivity
             finish();
             return;
         }
+        Collections.sort(exercises, Exercise.byNameDummyLast);
         ArrayAdapter<Exercise> spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, exercises);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         input.setAdapter(spinnerAdapter);
