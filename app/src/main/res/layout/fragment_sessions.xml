@@ -20,6 +20,16 @@
         android:listSelector="@drawable/list_click_item"
         />
 
+    <ExpandableListView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/exlist_sessions_fragment"
+        android:clickable="true"
+
+        android:listSelector="@drawable/list_click_item"
+        android:choiceMode="singleChoice"
+        />
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_add_session"
         android:layout_width="wrap_content"
