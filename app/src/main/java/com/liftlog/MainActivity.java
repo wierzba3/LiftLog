@@ -130,11 +130,12 @@ public class MainActivity extends AppCompatActivity
             {
                 if(position == FragmentPagerAdapter.EXERCISES_INDEX)
                 {
-                    mCustomPagerAdapter.getExercisesFragment().expandListGroupItems();
+//                    mCustomPagerAdapter.getExercisesFragment().expandListGroupItems();
                 }
                 if(position == FragmentPagerAdapter.SESSIONS_INDEX)
                 {
-                    mCustomPagerAdapter.getSessionsFragment().loadSessions();
+//                    mCustomPagerAdapter.getSessionsFragment().loadSessions();
+//                    mCustomPagerAdapter.getSessionsFragment().expandListGroupItems();
                 }
             }
             @Override
