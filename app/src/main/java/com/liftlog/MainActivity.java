@@ -3,6 +3,8 @@ package com.liftlog;
 
 import android.accounts.Account;
 import android.content.ContentResolver;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.ContentObserver;
 import android.os.Bundle;
 
@@ -19,6 +21,7 @@ import android.content.Intent;
 import android.net.Uri;
 
 import com.liftlog.data.DataAccessObject;
+import com.liftlog.models.Exercise;
 
 
 /**
@@ -53,6 +56,9 @@ import com.liftlog.data.DataAccessObject;
 
 public class MainActivity extends AppCompatActivity
 {
+
+    /** The key for the shared preferences value indicating if this application has been executed before */
+    private static final String PREVIOUS_EXECUTION_PREFERENCE_KEY = "previous_execution";
 
     private DataAccessObject dao;
 
@@ -140,25 +146,14 @@ public class MainActivity extends AppCompatActivity
 
 
 
-//        accountType = getString(R.string.accountType);
-//        mAccount = CreateSyncAccount(this);
-//        dao.restoreBackupCopy(this);
-//        mResolver = getContentResolver();
-//        ContentResolver.setSyncAutomatically(mAccount, AUTHORITY, true);
-//        ContentResolver.addPeriodicSync(
-//                mAccount,
-//                AUTHORITY,
-//                Bundle.EMPTY,
-//                2
-//        );
-
-
         dao = new DataAccessObject(this);
+        checkFirstExecution();
+
+
 //        dao.createBackupCopy(this);
 //        DataLoader.load(this);
 //        dao.restoreBackupCopy(this);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
@@ -194,6 +189,23 @@ public class MainActivity extends AppCompatActivity
     {
         Intent intent = new Intent(this, ViewLiftActivity.class);
         this.startActivity(intent);
+    }
+
+    /**
+     * Check the flag to determine if this is the first time running the app
+     * If true, and also the Exercises and Categories tables are empty, add default records
+     */
+    private void checkFirstExecution()
+    {
+        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preferencesFileKey), Context.MODE_PRIVATE);
+        int previouslyExecuted = sharedPref.getInt(PREVIOUS_EXECUTION_PREFERENCE_KEY, 0);
+        if(previouslyExecuted != 1)
+        {
+            dao.insert(Exercise.Squat());
+            dao.insert(Exercise.BenchPress());
+            dao.insert(Exercise.Deadlift());
+            dao.insert(Exercise.Press());
+        }
     }
 
 
