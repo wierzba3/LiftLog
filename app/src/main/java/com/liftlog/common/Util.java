@@ -16,6 +16,7 @@ public class Util
     public static final String ALPHANUMERIC_REGEX = "[A-Za-z0-9]*";
 
     public static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("E, MMM dd yyyy");
+    public static final DateTimeFormatter DATE_FORMAT_MONTH = DateTimeFormat.forPattern("MMMM, yyyy");
 
     /**
      * Calcuate the number of days since the epoch (exclusive)

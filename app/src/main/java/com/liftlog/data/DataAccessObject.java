@@ -31,6 +31,7 @@ import com.liftlog.models.Exercise;
 import com.liftlog.models.Session;
 
 import org.joda.time.DateTime;
+import org.joda.time.MutableDateTime;
 
 /**
  * Created by James Wierzba on 6/8/2015.
@@ -1432,6 +1433,31 @@ public class DataAccessObject extends SQLiteOpenHelper
 
     //END DATABASE BACKUP METHODS
 
+
+
+    public void test()
+    {
+        try
+        {
+            MutableDateTime mdt = new MutableDateTime();
+            mdt.setYear(2015);
+            for(int i = 1; i <= 12; i++)
+            {
+                for(int j = 1; j <= 20; j++)
+                {
+                    mdt.setMonthOfYear(i);
+                    mdt.setDayOfMonth(j);
+                    Session session = new Session();
+                    session.setDate(mdt.getMillis());
+                    insert(session);
+                }
+            }
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+    }
 
 
 
