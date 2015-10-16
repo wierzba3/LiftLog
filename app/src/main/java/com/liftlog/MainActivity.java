@@ -27,11 +27,9 @@ import com.liftlog.models.Exercise;
 /**
  * TODO
  * BUGS:
- * - Exercise, Category names not accepting spaces
- * - Removing category seems to cause an IndexOutOfBoundsException but I can't recreate it
- *
  *
  * Implement now:
+ * - create a blue ic_alert icon on dialogs instead of the default white
  * - Implement DataBackup service
  *      http://developer.android.com/guide/topics/data/backup.html
  * - Implement calendar view for ViewSessions
@@ -149,11 +147,6 @@ public class MainActivity extends AppCompatActivity
 
         dao = new DataAccessObject(this);
         checkFirstExecution();
-
-
-//        dao.createBackupCopy(this);
-//        DataLoader.load(this);
-//        dao.restoreBackupCopy(this);
     }
 
     @Override
@@ -193,20 +186,27 @@ public class MainActivity extends AppCompatActivity
     }
 
     /**
-     * Check the flag to determine if this is the first time running the app
+     * Check the shared preferences flag to determine if this is the first time running the app
      * If true, and also the Exercises and Categories tables are empty, add default records
      */
     private void checkFirstExecution()
     {
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.preferencesFileKey), Context.MODE_PRIVATE);
         int previouslyExecuted = sharedPref.getInt(PREVIOUS_EXECUTION_PREFERENCE_KEY, 0);
-        if(previouslyExecuted != 1)
+        if(previouslyExecuted == 1) return;
+
+        long exerciseCount = dao.exerciseCount();
+        if(exerciseCount == 0)
         {
             dao.insert(Exercise.Squat());
             dao.insert(Exercise.BenchPress());
             dao.insert(Exercise.Deadlift());
             dao.insert(Exercise.Press());
         }
+
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt(PREVIOUS_EXECUTION_PREFERENCE_KEY, 1);
+        editor.commit();
     }
 
 

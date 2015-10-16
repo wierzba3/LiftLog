@@ -120,6 +120,7 @@ public class ViewSessionActivity extends AppCompatActivity
         if(lifts == null || lifts.isEmpty())
         {
             lblEmpty.setText("No lifts have been added");
+            exListLifts.setAdapter((LiftExpendableListAdapter)null);
             return;
         }
         lblEmpty.setText("");
@@ -352,10 +353,10 @@ public class ViewSessionActivity extends AppCompatActivity
 			LiftGroupElement uncategorized = null;
 			Exercise dummy = new Exercise();
 			dummy.setId(-1l);
-			dummy.setName("Uncategorized");
+			dummy.setName("?");
 			for(long exerciseId : map.keySet())
             {
-				
+
 				List<Lift> lifts = map.get(exerciseId);
 				if(lifts == null || lifts.size() == 0) continue;
 
@@ -379,35 +380,35 @@ public class ViewSessionActivity extends AppCompatActivity
 			Collections.sort(elements, comparator);
 		}
 
-        private Comparator<List<Lift>> liftsComparator = new Comparator<List<Lift>>(){
-            @Override
-            public int compare(List<Lift> l1, List<Lift> l2)
-            {
-                if((l1 == null || l1.size() == 0) && (l2 == null || l2.size() == 0)) return 0;
-                else if(l1 == null || l1.size() == 0) return -1;
-                else if(l2 == null || l2.size() == 0) return 1;
-				
-				int result = 0;
-				long minDate = Long.MAX_VALUE;
-				for(Lift lift : l1)
-				{
-					if(lift.getDateCreated() < minDate)
-					{
-						minDate = lift.getDateCreated();
-						result = -1;
-					}
-				}
-				for(Lift lift : l2)
-				{
-					if(lift.getDateCreated() < minDate)
-					{
-						minDate = lift.getDateCreated();
-						result = 1;
-					}
-				}
-                return result;
-            }
-        };
+//        private Comparator<List<Lift>> liftsComparator = new Comparator<List<Lift>>(){
+//            @Override
+//            public int compare(List<Lift> l1, List<Lift> l2)
+//            {
+//                if((l1 == null || l1.size() == 0) && (l2 == null || l2.size() == 0)) return 0;
+//                else if(l1 == null || l1.size() == 0) return -1;
+//                else if(l2 == null || l2.size() == 0) return 1;
+//
+//				int result = 0;
+//				long minDate = Long.MAX_VALUE;
+//				for(Lift lift : l1)
+//				{
+//					if(lift.getDateCreated() < minDate)
+//					{
+//						minDate = lift.getDateCreated();
+//						result = -1;
+//					}
+//				}
+//				for(Lift lift : l2)
+//				{
+//					if(lift.getDateCreated() < minDate)
+//					{
+//						minDate = lift.getDateCreated();
+//						result = 1;
+//					}
+//				}
+//                return result;
+//            }
+//        };
 		
         private Comparator<LiftGroupElement> comparator = new Comparator<LiftGroupElement>(){
             @Override
@@ -418,6 +419,8 @@ public class ViewSessionActivity extends AppCompatActivity
                 if((l1 == null || l1.size() == 0) && (l2 == null || l2.size() == 0)) return 0;
                 else if(l1 == null || l1.size() == 0) return -1;
                 else if(l2 == null || l2.size() == 0) return 1;
+                if(e1.getExercise().getId() == -1) return 1;
+                if(e2.getExercise().getId() == -1) return -1;
 
                 int result = 0;
                 long minDate = Long.MAX_VALUE;

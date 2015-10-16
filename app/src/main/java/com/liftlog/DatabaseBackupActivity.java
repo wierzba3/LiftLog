@@ -140,7 +140,7 @@ public class DatabaseBackupActivity extends AppCompatActivity
         new AlertDialog.Builder(this)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .setTitle("Restore Backup")
-                .setMessage("Are you sure you want to restore the backup from " + dtStr + "?"
+                .setMessage("Are you sure you want to restore the backup from " + dtStr + "?\n"
                         + "All data since then will be permanently destroyed.")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener()
                 {
