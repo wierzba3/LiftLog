@@ -147,7 +147,7 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
 //        listExercises.setAdapter(adapter);
 
         Map<Category, List<Exercise>> categoryMap = dao.selectCategoryMap(false);
-        ExerciseExpendableListAdapter exListAdapter = new ExerciseExpendableListAdapter(super.getActivity(), categoryMap);
+        exListAdapter = new ExerciseExpendableListAdapter(super.getActivity(), categoryMap);
         exListExercises.setAdapter(exListAdapter);
 
         expandListGroupItems();
@@ -275,8 +275,12 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
-                dao.update(category);
-                ExercisesFragment.this.loadExercises();
+                category.setName(input.getText().toString());
+                boolean rVal = dao.update(category);
+                if(rVal)
+                {
+                    ExercisesFragment.this.loadExercises();
+                }
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener()
@@ -314,7 +318,6 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
                         //TODO CHECK THIS, IT IS CRASHING BECAUSE LISTVIEW IS STILL EXPECTING THE OBJECT!
                         if (category != null)
                         {
-
                             if (dao.deleteCategory(category.getId()))
                             {
                                 ExercisesFragment.this.loadExercises();

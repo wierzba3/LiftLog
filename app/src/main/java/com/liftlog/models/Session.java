@@ -151,7 +151,7 @@ public class Session
     {
         if(sessions == null || sessions.size() == 0) return;
 
-        Collections.sort(sessions, byDateAsc);
+        Collections.sort(sessions, byDateDesc);
 
         Map<Long, Integer> instanceCount = new HashMap<Long, Integer>();
 

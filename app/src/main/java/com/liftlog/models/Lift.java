@@ -241,7 +241,10 @@ public class Lift implements Comparable<Lift> {
         {
             result += weight;
         }
-        result += " x " + String.valueOf(reps) + " reps x " + String.valueOf(sets) + " sets";
+        result += " x ";
+        result += String.valueOf(reps) + (reps == 1 ? " rep" : " reps");
+        result += " x ";
+        result += String.valueOf(sets) + (sets == 1 ? " set" : " sets");
         return result;
     }
 

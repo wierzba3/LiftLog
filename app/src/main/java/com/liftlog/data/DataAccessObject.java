@@ -656,14 +656,14 @@ public class DataAccessObject extends SQLiteOpenHelper
         values.put(CATEGORY_COLUMN_DELETED, category.isDeleted() ? 1 : 0);
         try
         {
-            db.update(CATEGORY_TABLE_NAME, values, CATEGORY_COLUMN_PK + " = " + category.getId(), null);
+            int rVal = db.update(CATEGORY_TABLE_NAME, values, CATEGORY_COLUMN_PK + " = " + category.getId(), null);
+            return rVal > 0;
         } catch (SQLException e)
         {
             Log.d(LOG_TAG, "exception in update(Category): " + e.getMessage());
             e.printStackTrace();
             return false;
         }
-        return true;
     }
     public List<Category> selectCategories(boolean includeDeleted)
     {
@@ -767,14 +767,14 @@ public class DataAccessObject extends SQLiteOpenHelper
             //delete the category
             db.execSQL(qry);
             //update exercises whose category_id was referencing this category
-            db.update(EXERCISE_TABLE_NAME, values, EXERCISE_COLUMN_CATEGORY_FK + " = " + id, null);
+            int rVal = db.update(EXERCISE_TABLE_NAME, values, EXERCISE_COLUMN_CATEGORY_FK + " = " + id, null);
+            return rVal > 0;
         } catch (SQLException e)
         {
             e.printStackTrace();
             Log.d(LOG_TAG, "Error removing category id=" + id + ":" + e.getMessage());
             return false;
         }
-        return true;
     }
     public void clearCategoryTable()
     {
@@ -937,6 +937,16 @@ public class DataAccessObject extends SQLiteOpenHelper
         }
 
         return result;
+    }
+
+    public long exerciseCount()
+    {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return exerciseCount(db);
+    }
+    public long exerciseCount(SQLiteDatabase db)
+    {
+        return DatabaseUtils.queryNumEntries(db, EXERCISE_TABLE_NAME);
     }
     /**
      * Delete the Exercise matching the id.
@@ -1458,6 +1468,7 @@ public class DataAccessObject extends SQLiteOpenHelper
         }
 
     }
+
 
 
 
