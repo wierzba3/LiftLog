@@ -48,7 +48,7 @@ public class SessionsFragment extends Fragment implements  DateInputDialog.DateI
     private ExpandableListView exListSessions;
     private SessionsExpendableListAdapter exListAdapter;
 
-    private ListView listSessions;
+//    private ListView listSessions;
     private TextView lblEmpty;
 
     DataAccessObject dao;
@@ -88,30 +88,30 @@ public class SessionsFragment extends Fragment implements  DateInputDialog.DateI
 
         lblEmpty = (TextView) view.findViewById(R.id.lbl_empty_sessions);
 
-        listSessions = (ListView) view.findViewById(R.id.list_sessions_fragment);
-        listSessions.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position,
-                                    long id)
-            {
-                Intent intent = new Intent(SessionsFragment.super.getActivity(), ViewSessionActivity.class);
-                Session session = (Session) parent.getItemAtPosition(position);
-                long sessionId = session.getId();
-                //if id is -1, the user selected the <New session> dummy item
-                if (sessionId == -1)
-                {
-                    doAdd();
-                    return;
-                }
-
-                view.setBackgroundColor(getResources().getColor(R.color.material_blue_200));
-//                view.setBackgroundResource(R.drawable.list_click_background);
-
-                intent.putExtra(ViewSessionActivity.SESSION_ID_KEY, sessionId);
-                startActivity(intent);
-            }
-        });
+//        listSessions = (ListView) view.findViewById(R.id.list_sessions_fragment);
+//        listSessions.setOnItemClickListener(new AdapterView.OnItemClickListener()
+//        {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position,
+//                                    long id)
+//            {
+//                Intent intent = new Intent(SessionsFragment.super.getActivity(), ViewSessionActivity.class);
+//                Session session = (Session) parent.getItemAtPosition(position);
+//                long sessionId = session.getId();
+//                //if id is -1, the user selected the <New session> dummy item
+//                if (sessionId == -1)
+//                {
+//                    doAdd();
+//                    return;
+//                }
+//
+//                view.setBackgroundColor(getResources().getColor(R.color.material_blue_200));
+////                view.setBackgroundResource(R.drawable.list_click_background);
+//
+//                intent.putExtra(ViewSessionActivity.SESSION_ID_KEY, sessionId);
+//                startActivity(intent);
+//            }
+//        });
 
         exListSessions = (ExpandableListView) view.findViewById(R.id.exlist_sessions_fragment);
 
@@ -146,7 +146,6 @@ public class SessionsFragment extends Fragment implements  DateInputDialog.DateI
         if(sessions == null || sessions.isEmpty())
         {
             lblEmpty.setText("No sessions have been added");
-            listSessions.setAdapter(null);
             exListSessions.setAdapter((SessionsExpendableListAdapter)null);
             return;
         }
