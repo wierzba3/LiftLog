@@ -194,7 +194,15 @@ public class DataAccessObject extends SQLiteOpenHelper
             db.execSQL(SESSION_TABLE_CREATE_QUERY);
             db.execSQL(EXERCISE_TABLE_CREATE_QUERY);
             db.execSQL(CATEGORY_TABLE_CREATE_QUERY);
-        } catch (SQLException e)
+            insert(db, Exercise.Squat());
+            insert(db, Exercise.BenchPress());
+            insert(db, Exercise.Deadlift());
+            insert(db, Exercise.Press());
+            List<Exercise> exercises = selectExercises(db, true);
+            List<Exercise> exercises2 = selectExercises(db, false);
+            System.out.println();
+        }
+        catch (SQLException e)
         {
             Log.d(LOG_TAG, "Error creating tables: " + e.getMessage());
         }
@@ -221,7 +229,10 @@ public class DataAccessObject extends SQLiteOpenHelper
         db.execSQL("DROP TABLE IF EXISTS " + SESSION_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + EXERCISE_TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + CATEGORY_TABLE_NAME);
+
         onCreate(db);
+        //clear exercises table because onCreate adds some default ones
+        clearExerciseTable();
 
         if (sessions != null)
         {
@@ -239,7 +250,7 @@ public class DataAccessObject extends SQLiteOpenHelper
                 System.out.println(ret);
             }
         }
-        if (exercises != null)
+        if (exercises != null && exercises.size() > 0)
         {
             for (Exercise exercise : exercises.values())
             {
@@ -790,8 +801,15 @@ public class DataAccessObject extends SQLiteOpenHelper
 
     public long insert(Exercise exercise)
     {
-        SQLiteDatabase db = this.getWritableDatabase();
-        return insert(db, exercise);
+        try
+        {
+            SQLiteDatabase db = this.getWritableDatabase();
+            return insert(db, exercise);
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+            return -1;
+        }
     }
     public long insert(SQLiteDatabase db, Exercise exercise)
     {
@@ -886,7 +904,11 @@ public class DataAccessObject extends SQLiteOpenHelper
         Map<Long, Exercise> exerciseMap = selectExerciseMap(includeDeleted);
         return new ArrayList<>(exerciseMap.values());
     }
-
+    public List<Exercise> selectExercises(SQLiteDatabase db, boolean includeDeleted)
+    {
+        Map<Long, Exercise> exerciseMap = selectExerciseMap(db, includeDeleted);
+        return new ArrayList<>(exerciseMap.values());
+    }
     public Map<Long, Exercise> selectExerciseMap(boolean includeDeleted)
     {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -1467,6 +1489,19 @@ public class DataAccessObject extends SQLiteOpenHelper
             e.printStackTrace();
         }
 
+    }
+
+
+    public void test2()
+    {
+        List<Exercise> exercises = selectExercises(true);
+        for(Exercise exercise : exercises)
+        {
+            if(exercise.getDescription() != null && exercise.getDescription().length() > 20)
+            {
+                deleteExercise(exercise.getId());
+            }
+        }
     }
 
 
