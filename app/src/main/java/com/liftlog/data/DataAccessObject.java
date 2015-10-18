@@ -1352,6 +1352,7 @@ public class DataAccessObject extends SQLiteOpenHelper
 
 
 
+
     //BEGIN DATABASE BACKUP METHODS
     public boolean hasBackup(Context ctx)
     {
@@ -1364,9 +1365,12 @@ public class DataAccessObject extends SQLiteOpenHelper
         {
             return null;
         }
-        SharedPreferences sharedPref = ctx.getSharedPreferences(ctx.getString(R.string.preferencesFileKey), Context.MODE_PRIVATE);
-        int lastUpdate = sharedPref.getInt(DB_BACKUP_PREFERENCE_KEY, -1);
-        return Util.dateFromDays(lastUpdate);
+        return new DateTime(backupFile.lastModified());
+
+//        SharedPreferences sharedPref = ctx.getSharedPreferences(ctx.getString(R.string.preferencesFileKey), Context.MODE_PRIVATE);
+//        int lastUpdate = sharedPref.getInt(DB_BACKUP_PREFERENCE_KEY, -1);
+//        return lastUpdate;
+//        return Util.dateFromDays(lastUpdate);
     }
     public void createBackupCopy(Context ctx)
     {
