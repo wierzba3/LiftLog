@@ -220,7 +220,8 @@ public class ViewSessionActivity extends AppCompatActivity
         }
 
         new AlertDialog.Builder(this)
-                .setIcon(android.R.drawable.ic_dialog_alert)
+//                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setIcon(R.drawable.ic_warning_blue_24dp)
                 .setTitle("Delete Session")
                 .setMessage("Are you sure you want to delete this Session? All associated Lifts will also be deleted.")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener()
