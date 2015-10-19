@@ -50,6 +50,7 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
     //    private ListView listExercises;
     private ExpandableListView exListExercises;
     private ExerciseExpendableListAdapter exListAdapter;
+    private TextView lblEmpty;
 
     DataAccessObject dao;
 
@@ -96,6 +97,8 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.show();
         }
+
+        lblEmpty = (TextView) view.findViewById(R.id.lbl_empty_exercises);
 
         exListExercises = (ExpandableListView) view.findViewById(R.id.exList_exercises);
         Map<Category, List<Exercise>> categoryMap = dao.selectCategoryMap(false);
@@ -147,6 +150,23 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
 //        listExercises.setAdapter(adapter);
 
         Map<Category, List<Exercise>> categoryMap = dao.selectCategoryMap(false);
+        int exerciseCnt = 0;
+        if(categoryMap != null)
+        {
+            for(List<Exercise> exercises : categoryMap.values())
+            {
+                if(exercises == null) continue;
+                exerciseCnt += exercises.size();
+            }
+        }
+        if(exerciseCnt == 0)
+        {
+            lblEmpty.setText("No exercises have been added");
+            exListExercises.setAdapter((ExerciseExpendableListAdapter)null);
+            return;
+        }
+        lblEmpty.setText("");
+
         exListAdapter = new ExerciseExpendableListAdapter(super.getActivity(), categoryMap);
         exListExercises.setAdapter(exListAdapter);
 
@@ -307,7 +327,8 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
     {
         String msg = "Are you sure you want to delete category " + category.getName();
         new AlertDialog.Builder(super.getActivity())
-                .setIcon(android.R.drawable.ic_dialog_alert)
+//                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setIcon(R.drawable.ic_warning_blue_24dp)
                 .setTitle("Delete Category")
                 .setMessage(msg)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener()
@@ -360,7 +381,8 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
         }
 
         new AlertDialog.Builder(super.getActivity())
-                .setIcon(android.R.drawable.ic_dialog_alert)
+//                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setIcon(R.drawable.ic_warning_blue_24dp)
                 .setTitle("Delete Exercise")
                 .setMessage(msg)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener()

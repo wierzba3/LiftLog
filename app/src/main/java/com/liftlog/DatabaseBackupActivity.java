@@ -31,6 +31,7 @@ public class DatabaseBackupActivity extends AppCompatActivity
     private Button btnDeleteBackup;
 
     private static final String LABEL_NO_BACKUP = "never";
+    private static final String LABEL_UNKNOWN_BACKUP = "unknown";
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -66,7 +67,6 @@ public class DatabaseBackupActivity extends AppCompatActivity
         }
         else
         {
-
             lblLastBackup.setText(Util.DATE_FORMAT.print(lastBackup));
         }
     }
@@ -82,7 +82,8 @@ public class DatabaseBackupActivity extends AppCompatActivity
         {
             String dtStr = Util.DATE_FORMAT.print(dt);
             new AlertDialog.Builder(this)
-                    .setIcon(android.R.drawable.ic_dialog_alert)
+//                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setIcon(R.drawable.ic_warning_blue_24dp)
                     .setTitle("Restore Backup")
                     .setMessage("Are you sure you want to create a new backup?"
                             + "\nThe backup from " + dtStr + " will be replaced.")
@@ -119,6 +120,7 @@ public class DatabaseBackupActivity extends AppCompatActivity
         {
             btnDeleteBackup.setEnabled(true);
             btnRestoreBackup.setEnabled(true);
+//            int days  = dao.getLastBackup(this);
             DateTime dt = dao.getLastBackup(this);
             lblLastBackup.setText(Util.DATE_FORMAT.print(dt));
         }
@@ -135,10 +137,12 @@ public class DatabaseBackupActivity extends AppCompatActivity
         if(dt == null)
         {
             Toast.makeText(this, "No backup to restore.", Toast.LENGTH_SHORT).show();
+            return;
         }
         String dtStr = Util.DATE_FORMAT.print(dt);
         new AlertDialog.Builder(this)
-                .setIcon(android.R.drawable.ic_dialog_alert)
+//                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setIcon(R.drawable.ic_warning_blue_24dp)
                 .setTitle("Restore Backup")
                 .setMessage("Are you sure you want to restore the backup from " + dtStr + "?\n"
                         + "All data since then will be permanently destroyed.")
@@ -169,14 +173,17 @@ public class DatabaseBackupActivity extends AppCompatActivity
      */
     public void doDeleteBackup(View view)
     {
+//        DateTime dt = dao.getLastBackup(this);
         DateTime dt = dao.getLastBackup(this);
         if(dt == null)
         {
             Toast.makeText(this, "No backup to delete.", Toast.LENGTH_SHORT).show();
+            return;
         }
         String dtStr = Util.DATE_FORMAT.print(dt);
         new AlertDialog.Builder(this)
-                .setIcon(android.R.drawable.ic_dialog_alert)
+//                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setIcon(R.drawable.ic_warning_blue_24dp)
                 .setTitle("Restore Backup")
                 .setMessage("Are you sure you want to delete the backup from " + dtStr)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener()
