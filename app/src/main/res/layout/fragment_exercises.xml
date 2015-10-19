@@ -12,6 +12,14 @@
         <!--android:clickable="true"-->
         <!--/>-->
 
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/lbl_empty_exercises"
+        android:gravity="center_horizontal"
+        />
+
     <ExpandableListView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"

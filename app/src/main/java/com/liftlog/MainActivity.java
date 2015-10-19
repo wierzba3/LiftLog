@@ -27,11 +27,11 @@ import com.liftlog.models.Exercise;
 /**
  * TODO
  * BUGS:
+ * -
  *
  * Implement now:
+ * - add default textview for empty exerciess
  * - create a blue ic_alert icon on dialogs instead of the default white
- * - Implement DataBackup service
- *      http://developer.android.com/guide/topics/data/backup.html
  * - Implement calendar view for ViewSessions
  *		 https://github.com/roomorama/Caldroid
  *
@@ -42,8 +42,8 @@ import com.liftlog.models.Exercise;
  * - Programmable training routines. Define rules that the user can set for an exercise.
  * Display planned lifts separately from the completed lifts in the sessions.
  * e.g. repeat selected lift every M/W/F, increase weight each day/week
- * - Copy option for session?
- *
+ * - Implement DataBackup service
+ *      http://developer.android.com/guide/topics/data/backup.html
  *
  * Publishing TODO:
  * - App icon https://www.google.com/design/spec/style/icons.html
@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity
 
 
         dao = new DataAccessObject(this);
-        checkFirstExecution();
+        //checkFirstExecution();
     }
 
     @Override

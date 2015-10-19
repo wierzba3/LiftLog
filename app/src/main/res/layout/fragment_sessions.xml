@@ -12,13 +12,13 @@
         android:gravity="center_horizontal"
         />
 
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/list_sessions_fragment"
-        android:clickable="true"
-        android:listSelector="@drawable/list_click_item"
-        />
+    <!--<ListView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:id="@+id/list_sessions_fragment"-->
+        <!--android:clickable="true"-->
+        <!--android:listSelector="@drawable/list_click_item"-->
+        <!--/>-->
 
     <ExpandableListView
         android:layout_width="fill_parent"
