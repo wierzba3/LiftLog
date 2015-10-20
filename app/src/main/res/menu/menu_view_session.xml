@@ -18,4 +18,9 @@
         android:icon="@drawable/ic_add_white_24dp"
         android:title="Add Lift"/>
 
+    <item
+        android:id="@+id/action_about_session"
+        app:showAsAction="never"
+        android:title="About"/>
+
 </menu>

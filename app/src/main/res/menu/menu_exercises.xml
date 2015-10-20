@@ -19,5 +19,9 @@
         android:title="Add Exercise"/>
 
 
+    <item
+        android:id="@+id/action_about_exercises"
+        app:showAsAction="never"
+        android:title="About"/>
 
 </menu>

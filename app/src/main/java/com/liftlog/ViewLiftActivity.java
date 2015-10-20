@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import com.liftlog.common.Util;
 import com.liftlog.models.Lift;
 import com.liftlog.data.DataAccessObject;
 import com.liftlog.components.ExerciseInputDialog;
@@ -208,6 +209,10 @@ public class ViewLiftActivity extends AppCompatActivity implements ExerciseInput
                 intent.putExtra(ViewHistoryActivity.EXERCISE_ID_KEY, selectedExercise.getId());
                 super.startActivity(intent);
                 break;
+
+            case R.id.action_about_viewlift:
+                Util.launchAboutWebsiteIntent(this);
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -339,8 +344,8 @@ public class ViewLiftActivity extends AppCompatActivity implements ExerciseInput
             return;
         }
         new AlertDialog.Builder(this)
-//                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setIcon(R.drawable.ic_warning_blue_24dp)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+//                .setIcon(R.drawable.ic_warning_blue_24dp)
                 .setTitle("Delete Lift")
                 .setMessage("Are you sure you want to delete this lift?")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {

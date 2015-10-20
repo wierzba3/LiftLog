@@ -327,8 +327,8 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
     {
         String msg = "Are you sure you want to delete category " + category.getName();
         new AlertDialog.Builder(super.getActivity())
-//                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setIcon(R.drawable.ic_warning_blue_24dp)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+//                .setIcon(R.drawable.ic_warning_blue_24dp)
                 .setTitle("Delete Category")
                 .setMessage(msg)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener()
@@ -381,8 +381,8 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
         }
 
         new AlertDialog.Builder(super.getActivity())
-//                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setIcon(R.drawable.ic_warning_blue_24dp)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+//                .setIcon(R.drawable.ic_warning_blue_24dp)
                 .setTitle("Delete Exercise")
                 .setMessage(msg)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener()
@@ -545,6 +545,10 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
 
             case R.id.action_edit_exercise:
                 editExerciseOrCategory();
+                break;
+
+            case R.id.action_about_exercises:
+                Util.launchAboutWebsiteIntent(super.getActivity());
                 break;
         }
 
