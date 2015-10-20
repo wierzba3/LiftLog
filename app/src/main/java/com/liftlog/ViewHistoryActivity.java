@@ -85,7 +85,10 @@ public class ViewHistoryActivity extends AppCompatActivity
                 return;
             }
             exerciseName = exercise.getName();
-            this.setTitle(exerciseName);
+            if(exerciseName != null)
+            {
+                this.setTitle(exerciseName + " History");
+            }
         }
 
         loadLifts(exerciseId);
