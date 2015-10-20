@@ -46,7 +46,7 @@ public class ViewHistoryActivity extends AppCompatActivity
      */
     public static final String EXERCISE_ID_KEY = "exercise_id";
 
-    private static final String LOG_TAG = "LiftLog.ViewHistoryActivity";
+    private static final String LOG_TAG = "ViewHistoryActivity";
 
     private DataAccessObject dao;
 
