@@ -1,7 +1,6 @@
 package com.liftlog;
 
 import android.app.ActionBar;
-import android.app.ExpandableListActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,31 +14,23 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.ExpandableListView;
-import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.liftlog.common.Util;
 import com.liftlog.data.DataAccessObject;
 import com.liftlog.components.DateInputDialog;
-import com.liftlog.models.Exercise;
-import com.liftlog.models.Lift;
 import com.liftlog.models.Session;
 
 import org.joda.time.DateTime;
-import org.joda.time.Months;
 
 
 public class SessionsFragment extends Fragment implements  DateInputDialog.DateInputDialogListener
@@ -191,6 +182,9 @@ public class SessionsFragment extends Fragment implements  DateInputDialog.DateI
         {
             case R.id.action_add_session:
                 doAdd();
+                break;
+            case R.id.action_about_sessions:
+                Util.launchAboutWebsiteIntent(super.getActivity());
                 break;
         }
 

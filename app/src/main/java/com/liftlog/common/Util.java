@@ -1,5 +1,9 @@
 package com.liftlog.common;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.MutableDateTime;
@@ -11,6 +15,8 @@ import org.joda.time.format.DateTimeFormatter;
  */
 public class Util
 {
+
+    public static final String ABOUT_URL = "http://wierzba3.github.io/LiftLog/";
 
     public static final String ALPHANUMERIC_DIGITS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
     public static final String ALPHANUMERIC_REGEX = "[A-Za-z0-9]*";
@@ -42,8 +48,11 @@ public class Util
         return dt.toDateTime();
     }
 
-
-
+    public static void launchAboutWebsiteIntent(Context ctx)
+    {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(ABOUT_URL));
+        ctx.startActivity(browserIntent);
+    }
 
 
 }

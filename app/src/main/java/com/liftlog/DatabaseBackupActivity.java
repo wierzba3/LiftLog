@@ -82,8 +82,8 @@ public class DatabaseBackupActivity extends AppCompatActivity
         {
             String dtStr = Util.DATE_FORMAT.print(dt);
             new AlertDialog.Builder(this)
-//                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setIcon(R.drawable.ic_warning_blue_24dp)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+//                    .setIcon(R.drawable.ic_warning_blue_24dp)
                     .setTitle("Restore Backup")
                     .setMessage("Are you sure you want to create a new backup?"
                             + "\nThe backup from " + dtStr + " will be replaced.")
@@ -141,8 +141,8 @@ public class DatabaseBackupActivity extends AppCompatActivity
         }
         String dtStr = Util.DATE_FORMAT.print(dt);
         new AlertDialog.Builder(this)
-//                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setIcon(R.drawable.ic_warning_blue_24dp)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+//                .setIcon(R.drawable.ic_warning_blue_24dp)
                 .setTitle("Restore Backup")
                 .setMessage("Are you sure you want to restore the backup from " + dtStr + "?\n"
                         + "All data since then will be permanently destroyed.")
@@ -182,8 +182,8 @@ public class DatabaseBackupActivity extends AppCompatActivity
         }
         String dtStr = Util.DATE_FORMAT.print(dt);
         new AlertDialog.Builder(this)
-//                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setIcon(R.drawable.ic_warning_blue_24dp)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+//                .setIcon(R.drawable.ic_warning_blue_24dp)
                 .setTitle("Restore Backup")
                 .setMessage("Are you sure you want to delete the backup from " + dtStr)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener()
