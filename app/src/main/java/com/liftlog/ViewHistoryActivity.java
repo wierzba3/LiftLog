@@ -22,6 +22,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.liftlog.common.Util;
 import com.liftlog.data.DataAccessObject;
 import com.liftlog.models.Exercise;
 import com.liftlog.models.Lift;
@@ -45,7 +46,7 @@ public class ViewHistoryActivity extends AppCompatActivity
      */
     public static final String EXERCISE_ID_KEY = "exercise_id";
 
-    private static final String LOG_TAG = "LiftLog.ViewHistoryActivity";
+    private static final String LOG_TAG = "ViewHistoryActivity";
 
     private DataAccessObject dao;
 
@@ -84,7 +85,10 @@ public class ViewHistoryActivity extends AppCompatActivity
                 return;
             }
             exerciseName = exercise.getName();
-            this.setTitle(exerciseName);
+            if(exerciseName != null)
+            {
+                this.setTitle(exerciseName + " History");
+            }
         }
 
         loadLifts(exerciseId);
@@ -298,8 +302,7 @@ public class ViewHistoryActivity extends AppCompatActivity
     {
         // Inflate the menu; this adds items to the action bar if it is present.
         MenuInflater inflater = getMenuInflater();
-        //TODO create a menu for this activity
-//       inflater.inflate(R.menu.menu_view_session, menu);
+        inflater.inflate(R.menu.menu_view_history, menu);
         return true;
     }
 
@@ -315,6 +318,9 @@ public class ViewHistoryActivity extends AppCompatActivity
         {
             case R.id.home:
                 break;
+            case R.id.action_about_viewhistory:
+                Util.launchAboutWebsiteIntent(this);
+                break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -323,7 +329,7 @@ public class ViewHistoryActivity extends AppCompatActivity
 //
 
     /**
-        Encapsulates the elements of the ExpandableListView (Lifts categorized by the exercise type)
+     Encapsulates the elements of the ExpandableListView (Lifts categorized by the exercise type)
      */
     private class HistoryGroupElement
     {

@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.liftlog.common.Util;
 import com.liftlog.data.DataAccessObject;
 
 import java.util.List;
@@ -184,10 +185,11 @@ public class ToolsFragment extends Fragment
 
         switch (id)
         {
-//            case R.id.action_add_exercise:
-////                doAddExercise(-1);
-//                promptExerciseOrCategory();
-//                break;
+
+            case R.id.action_about_tools:
+                Util.launchAboutWebsiteIntent(super.getActivity());
+                break;
+
         }
 
         return super.onOptionsItemSelected(item);

@@ -30,8 +30,8 @@ import com.liftlog.models.Exercise;
  * -
  *
  * Implement now:
- * - add default textview for empty exerciess
- * - create a blue ic_alert icon on dialogs instead of the default white
+ * - Hide keystore passwords from build.gradle file
+ *      https://www.thoughtworks.com/insights/blog/signing-open-source-android-apps-without-disclosing-passwords
  * - Implement calendar view for ViewSessions
  *		 https://github.com/roomorama/Caldroid
  *
