@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.liftlog.common.Util;
 import com.liftlog.models.Exercise;
 import com.liftlog.models.Lift;
 import com.liftlog.data.DataAccessObject;
@@ -220,8 +221,8 @@ public class ViewSessionActivity extends AppCompatActivity
         }
 
         new AlertDialog.Builder(this)
-//                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setIcon(R.drawable.ic_warning_blue_24dp)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+//                .setIcon(R.drawable.ic_warning_blue_24dp)
                 .setTitle("Delete Session")
                 .setMessage("Are you sure you want to delete this Session? All associated Lifts will also be deleted.")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener()
@@ -283,6 +284,9 @@ public class ViewSessionActivity extends AppCompatActivity
                 doAdd(-1);
                 break;
             case R.id.home:
+                break;
+            case R.id.action_about_session:
+                Util.launchAboutWebsiteIntent(this);
                 break;
         }
 

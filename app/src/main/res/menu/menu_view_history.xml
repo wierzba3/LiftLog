@@ -1,9 +1,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.liftlog.BrowseExercises">
+    xmlns:tools="http://schemas.android.com/tools" tools:context="com.liftlog.ViewLiftActivity">
+
     <item
-        android:id="@+id/action_about_tools"
+        android:id="@+id/action_about_viewhistory"
         app:showAsAction="never"
         android:title="About"/>
 
