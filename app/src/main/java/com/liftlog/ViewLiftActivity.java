@@ -344,8 +344,8 @@ public class ViewLiftActivity extends AppCompatActivity implements ExerciseInput
             return;
         }
         new AlertDialog.Builder(this)
-                .setIcon(android.R.drawable.ic_dialog_alert)
-//                .setIcon(R.drawable.ic_warning_blue_24dp)
+//                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setIcon(R.drawable.ic_warning_blue_24dp)
                 .setTitle("Delete Lift")
                 .setMessage("Are you sure you want to delete this lift?")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
