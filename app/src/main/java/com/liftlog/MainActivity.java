@@ -26,10 +26,14 @@ import com.liftlog.models.Exercise;
 
 /**
  * TODO
+ * download wifi plugin for android debugger https://github.com/pedrovgs/AndroidWiFiADB 
+ * 
+ *
  * BUGS:
  * -
  *
  * Implement now:
+ * - Add a notes field to view session
  * - Hide keystore passwords from build.gradle file
  *      https://www.thoughtworks.com/insights/blog/signing-open-source-android-apps-without-disclosing-passwords
  * - Implement calendar view for ViewSessions
@@ -40,15 +44,10 @@ import com.liftlog.models.Exercise;
  * Implement in the future:
  * - Refactor DataAccessObject by extracting methods that create the model objects from cursors (lots of code repetition)
  * - Programmable training routines. Define rules that the user can set for an exercise.
- * Display planned lifts separately from the completed lifts in the sessions.
- * e.g. repeat selected lift every M/W/F, increase weight each day/week
+ * 		Display planned lifts separately from the completed lifts in the sessions.
+ * 		e.g. repeat selected lift every M/W/F, increase weight each day/week
  * - Implement DataBackup service
  *      http://developer.android.com/guide/topics/data/backup.html
- *
- * Publishing TODO:
- * - App icon https://www.google.com/design/spec/style/icons.html
- * - Test on tablet device(s)
- * - End User License Agreement (EULA)
  *
  */
 
