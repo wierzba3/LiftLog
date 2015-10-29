@@ -34,6 +34,7 @@ import com.liftlog.models.Exercise;
  *
  * Implement now:
  * - Add a notes field to view session
+ * - Wilks calculator
  * - Hide keystore passwords from build.gradle file
  *      https://www.thoughtworks.com/insights/blog/signing-open-source-android-apps-without-disclosing-passwords
  * - Implement calendar view for ViewSessions
