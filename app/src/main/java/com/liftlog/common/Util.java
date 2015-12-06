@@ -22,6 +22,7 @@ public class Util
     public static final String ALPHANUMERIC_REGEX = "[A-Za-z0-9]*";
 
     public static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("E, MMM dd yyyy");
+    public static final DateTimeFormatter DATE_FORMAT_SHORT = DateTimeFormat.forPattern("MM/dd/yy");
     public static final DateTimeFormatter DATE_FORMAT_MONTH = DateTimeFormat.forPattern("MMMM, yyyy");
 
     /**
@@ -53,6 +54,9 @@ public class Util
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(ABOUT_URL));
         ctx.startActivity(browserIntent);
     }
+
+
+
 
 
 }

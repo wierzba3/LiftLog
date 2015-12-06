@@ -36,6 +36,8 @@ import com.liftlog.models.Lift;
 import com.liftlog.data.DataAccessObject;
 import com.liftlog.models.Session;
 
+import org.joda.time.DateTime;
+
 public class ViewSessionActivity extends AppCompatActivity
 {
 //public class ViewSessionActivity extends Activity {
@@ -116,7 +118,8 @@ public class ViewSessionActivity extends AppCompatActivity
         else
         {
             lifts = session.getLifts();
-            setTitle(session.toString());
+            DateTime dt = new DateTime(session.getDate());
+            setTitle(Util.DATE_FORMAT_SHORT.print(dt));
         }
         if(lifts == null || lifts.isEmpty())
         {
@@ -288,6 +291,9 @@ public class ViewSessionActivity extends AppCompatActivity
                 break;
             case R.id.action_about_session:
                 Util.launchAboutWebsiteIntent(this);
+                break;
+            case R.id.action_note:
+                //TODO
                 break;
         }
 

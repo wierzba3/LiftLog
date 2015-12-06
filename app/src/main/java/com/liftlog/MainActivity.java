@@ -4,12 +4,14 @@ package com.liftlog;
 import android.accounts.Account;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.database.ContentObserver;
 import android.os.Bundle;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +22,7 @@ import android.content.Intent;
 
 import android.net.Uri;
 
+import com.liftlog.components.ExerciseInputDialog;
 import com.liftlog.data.DataAccessObject;
 import com.liftlog.models.Exercise;
 
@@ -27,13 +30,11 @@ import com.liftlog.models.Exercise;
 /**
  * TODO
  * BUGS:
- * -
+ *
  *
  * Implement now:
  * - Notes on sessions
  * - Wilks calculator
- * - Hide keystore passwords from build.gradle file
- *      https://www.thoughtworks.com/insights/blog/signing-open-source-android-apps-without-disclosing-passwords
  * - Implement calendar view for ViewSessions
  *		 https://github.com/roomorama/Caldroid
  *
@@ -48,13 +49,14 @@ import com.liftlog.models.Exercise;
  *      http://developer.android.com/guide/topics/data/backup.html
  *
  * Publishing TODO:
- * - App icon https://www.google.com/design/spec/style/icons.html
- * - Test on tablet device(s)
  * - End User License Agreement (EULA)
+ *
+ * Version 2 log:
+ * - Fix bug where exercises remains highlighted after selecting it and canceling the dialog
  *
  */
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends AppCompatActivity implements ExerciseInputDialog.ExerciseInputDialogListener
 {
 
     /** The key for the shared preferences value indicating if this application has been executed before */
@@ -316,4 +318,28 @@ public class MainActivity extends AppCompatActivity
 //        return newAccount;
 //    }
 
+
+    @Override
+    public void onDialogSaveClick(DialogFragment dialog, Exercise exercise)
+    {
+
+    }
+
+    @Override
+    public void onDialogCancelClick(DialogFragment dialog)
+    {
+
+    }
+
+    @Override
+    public void onDialogDeleteClick(DialogFragment dialog, Exercise exercise)
+    {
+
+    }
+
+    @Override
+    public void handleDialogClose(DialogInterface dialog)
+    {
+        mCustomPagerAdapter.getExercisesFragment().clearSelectedExercises();
+    }
 }

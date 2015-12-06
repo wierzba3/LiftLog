@@ -196,6 +196,13 @@ public class ExerciseInputDialog extends DialogFragment
 
     }
 
+    public void onDismiss(DialogInterface dialog)
+    {
+        Activity activity = getActivity();
+        if(activity instanceof ExerciseInputDialogListener)
+            ((ExerciseInputDialogListener)activity).handleDialogClose(dialog);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -257,6 +264,12 @@ public class ExerciseInputDialog extends DialogFragment
          * @param exercise The currentExercise to delete
          */
         public void onDialogDeleteClick(DialogFragment dialog, Exercise exercise);
+
+        /**
+         *
+         * @param dialog
+         */
+        public void handleDialogClose(DialogInterface dialog);
     }
     private ExerciseInputDialogListener mListener;
 

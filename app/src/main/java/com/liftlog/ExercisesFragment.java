@@ -2,6 +2,7 @@ package com.liftlog;
 
 import android.app.ActionBar;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -64,7 +65,6 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_browse_exercises);
         View view = inflater.inflate(R.layout.fragment_exercises, container, false);
 
         dao =  new DataAccessObject(super.getActivity());
@@ -135,20 +135,6 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
             return;
         }
 
-//        Map<Long, Exercise> exercises = dao.selectExerciseMap(false);
-//        if (exercises == null)
-//        {
-//            return;
-//        }
-//        List<Exercise> exerciseList = new ArrayList<>(exercises.values());
-//        Exercise dummyExercise = new Exercise();
-//        dummyExercise.setId(-1);
-//        dummyExercise.setName("<Add New>");
-//        exerciseList.add(dummyExercise);
-//        Collections.sort(exerciseList, Exercise.byNameDummyFirst);
-//        ArrayAdapter<Exercise> adapter = new ArrayAdapter<Exercise>(super.getActivity(), android.R.layout.simple_list_item_1, exerciseList);
-//        listExercises.setAdapter(adapter);
-
         Map<Category, List<Exercise>> categoryMap = dao.selectCategoryMap(false);
         int exerciseCnt = 0;
         if(categoryMap != null)
@@ -206,12 +192,12 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
             public void onClick(DialogInterface dialog, int which)
             {
                 String inputValue = input.getText().toString();
-                if(inputValue == null || inputValue.isEmpty())
+                if (inputValue == null || inputValue.isEmpty())
                 {
                     Toast.makeText(ExercisesFragment.super.getActivity(), "Category name must not be empty.", Toast.LENGTH_LONG).show();
                     return;
                 }
-                if(dao.categoryExists(inputValue))
+                if (dao.categoryExists(inputValue))
                 {
                     Toast.makeText(ExercisesFragment.super.getActivity(), "Category name already exists.", Toast.LENGTH_LONG).show();
                     return;
@@ -297,7 +283,7 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
             {
                 category.setName(input.getText().toString());
                 boolean rVal = dao.update(category);
-                if(rVal)
+                if (rVal)
                 {
                     ExercisesFragment.this.loadExercises();
                 }
@@ -446,6 +432,7 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(super.getActivity());
         builder.setTitle("Type to edit");
+
         builder.setPositiveButton("Exercise", new DialogInterface.OnClickListener()
         {
             @Override
@@ -517,7 +504,7 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
         ExerciseInputDialog dialog = ExerciseInputDialog.newInstance(exercise);
         dialog.setTargetFragment(this, ExerciseInputDialog.RequestType.DEFAULT.getValue());
         dialog.show(getFragmentManager().beginTransaction(), "ExerciseInputDialog");
-//        loadExercises();
+
     }
 
 
@@ -594,6 +581,11 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
             return;
         }
         deleteExercise(exercise);
+    }
+
+    public void clearSelectedExercises()
+    {
+        loadExercises();
     }
 
 
@@ -799,6 +791,9 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
         }
     }
 
-
-
+    @Override
+    public void handleDialogClose(DialogInterface dialog)
+    {
+        //do nothing
+    }
 }

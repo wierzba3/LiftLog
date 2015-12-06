@@ -419,4 +419,10 @@ public class ViewLiftActivity extends AppCompatActivity implements ExerciseInput
     {
         //do nothing
     }
+
+    @Override
+    public void handleDialogClose(DialogInterface dialog)
+    {
+        //do nothing
+    }
 }
