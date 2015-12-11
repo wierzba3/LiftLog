@@ -121,6 +121,7 @@ public class DataAccessObject extends SQLiteOpenHelper
     public static final String SESSION_COLUMN_DATE = "date";
     public static final String SESSION_COLUMN_DATE_CREATED = "date_created";
     //    public static final String SESSION_COLUMN_STATE = "state";
+    public static final String SESSION_COLUMN_NOTE = "note";
     public static final String SESSION_COLUMN_NEW = "is_new";
     public static final String SESSION_COLUMN_MODIFIED = "is_modified";
     public static final String SESSION_COLUMN_DELETED = "is_deleted";
@@ -130,6 +131,7 @@ public class DataAccessObject extends SQLiteOpenHelper
                     + SESSION_COLUMN_PK + " INTEGER PRIMARY KEY, "
                     + SESSION_COLUMN_DATE + " INTEGER, "
                     + SESSION_COLUMN_DATE_CREATED + " INTEGER, "
+                    + SESSION_COLUMN_NOTE + " TEXT, "
                     + SESSION_COLUMN_NEW + " INTEGER DEFAULT 1, "
                     + SESSION_COLUMN_MODIFIED + " INTEGER DEFAULT 0, "
                     + SESSION_COLUMN_DELETED + " INTEGER DEFAULT 0"
@@ -160,7 +162,6 @@ public class DataAccessObject extends SQLiteOpenHelper
                     + EXERCISE_COLUMN_DELETED + " INTEGER DEFAULT 0"
                     + ")";
 
-    //TODO category
     public static String CATEGORY_TABLE_NAME = "category";
     public static String CATEGORY_COLUMN_PK = "id";
     public static String CATEGORY_COLUMN_NAME = "name";
@@ -182,7 +183,7 @@ public class DataAccessObject extends SQLiteOpenHelper
     private static final String LOG_TAG = "LiftLog";
 
     public DataAccessObject(Context context) {
-        super(context, DB_NAME, null, 28);
+        super(context, DB_NAME, null, 29);
     }
 
     @Override
@@ -198,9 +199,6 @@ public class DataAccessObject extends SQLiteOpenHelper
             insert(db, Exercise.BenchPress());
             insert(db, Exercise.Deadlift());
             insert(db, Exercise.Press());
-            List<Exercise> exercises = selectExercises(db, true);
-            List<Exercise> exercises2 = selectExercises(db, false);
-            System.out.println();
         }
         catch (SQLException e)
         {
@@ -216,54 +214,55 @@ public class DataAccessObject extends SQLiteOpenHelper
         List<Category> categories = null;
 
         try {
-            sessions = selectSessions(db, 0, Integer.MAX_VALUE, true);
+            sessions = selectSessions(db, true);
             lifts = selectLifts(db, true);
             exercises = selectExerciseMap(db, true);
             categories = selectCategories(db, true);
+
+
+            db.execSQL("DROP TABLE IF EXISTS " + LIFT_TABLE_NAME);
+            db.execSQL("DROP TABLE IF EXISTS " + SESSION_TABLE_NAME);
+            db.execSQL("DROP TABLE IF EXISTS " + EXERCISE_TABLE_NAME);
+            db.execSQL("DROP TABLE IF EXISTS " + CATEGORY_TABLE_NAME);
+
+            onCreate(db);
+            //clear exercises table because onCreate adds some default ones
+            clearExerciseTable(db);
+
+            if (sessions != null)
+            {
+                for (Session session : sessions)
+                {
+                    long ret = insert(db, session);
+                    System.out.println(ret);
+                }
+            }
+            if (lifts != null)
+            {
+                for (Lift lift : lifts)
+                {
+                    long ret = insert(db, lift);
+                    System.out.println(ret);
+                }
+            }
+            if (exercises != null && exercises.size() > 0)
+            {
+                for (Exercise exercise : exercises.values())
+                {
+                    long ret = insert(db, exercise);
+                    System.out.println(ret);
+                }
+            }
+            if(categories != null)
+            {
+                for(Category category : categories)
+                {
+                    insert(db, category);
+                }
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
             Log.d(LOG_TAG, "exception in onUpgrade: " + ex.getMessage());
-        }
-
-        db.execSQL("DROP TABLE IF EXISTS " + LIFT_TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + SESSION_TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + EXERCISE_TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + CATEGORY_TABLE_NAME);
-
-        onCreate(db);
-        //clear exercises table because onCreate adds some default ones
-        clearExerciseTable();
-
-        if (sessions != null)
-        {
-            for (Session session : sessions)
-            {
-                long ret = insert(db, session);
-                System.out.println(ret);
-            }
-        }
-        if (lifts != null)
-        {
-            for (Lift lift : lifts)
-            {
-                long ret = insert(db, lift);
-                System.out.println(ret);
-            }
-        }
-        if (exercises != null && exercises.size() > 0)
-        {
-            for (Exercise exercise : exercises.values())
-            {
-                long ret = insert(db, exercise);
-                System.out.println(ret);
-            }
-        }
-        if(categories != null)
-        {
-            for(Category category : categories)
-            {
-                insert(db, category);
-            }
         }
     }
 
@@ -829,7 +828,7 @@ public class DataAccessObject extends SQLiteOpenHelper
         long id = db.insert(EXERCISE_TABLE_NAME, null, values);
         return id;
     }
-//    public long insert(SQLiteDatabase db, ExerciseAPI exercise)
+    //    public long insert(SQLiteDatabase db, ExerciseAPI exercise)
 //    {
 //        ContentValues values = new ContentValues();
 //        values.put(EXERCISE_COLUMN_NAME, exercise.getName());
@@ -992,9 +991,22 @@ public class DataAccessObject extends SQLiteOpenHelper
         }
         return true;
     }
+
+    /**
+     * Clear all of the Exercises in the database
+     */
     public void clearExerciseTable()
     {
         SQLiteDatabase db = this.getWritableDatabase();
+        clearExerciseTable(db);
+    }
+
+    /**
+     * {@link #clearExerciseTable()
+     */
+    public void clearExerciseTable(SQLiteDatabase db)
+    {
+//        SQLiteDatabase db = this.getWritableDatabase();
         String qry = "DELETE FROM " + EXERCISE_TABLE_NAME;
         db.execSQL(qry);
     }
@@ -1011,6 +1023,7 @@ public class DataAccessObject extends SQLiteOpenHelper
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(SESSION_COLUMN_DATE, session.getDate());
+        values.put(SESSION_COLUMN_NOTE, session.getNote());
         values.put(SESSION_COLUMN_NEW, session.isNew() ? 1 : 0);
         values.put(SESSION_COLUMN_MODIFIED, session.isModified() ? 1 : 0);
         values.put(SESSION_COLUMN_DELETED, session.isDeleted() ? 1 : 0);
@@ -1038,6 +1051,7 @@ public class DataAccessObject extends SQLiteOpenHelper
         values.put(SESSION_COLUMN_NEW, session.isNew() ? 1 : 0);
         values.put(SESSION_COLUMN_MODIFIED, session.isModified() ? 1 : 0);
         values.put(SESSION_COLUMN_DELETED, session.isDeleted() ? 1 : 0);
+        values.put(SESSION_COLUMN_NOTE, session.getNote());
         long id = db.insert(SESSION_TABLE_NAME, null, values);
         return id;
     }
@@ -1062,6 +1076,26 @@ public class DataAccessObject extends SQLiteOpenHelper
     {
         return selectSessions(db, 0, Integer.MAX_VALUE, includeDeleted);
     }
+
+
+
+    /**
+     *
+     * @param startDate
+     * @param endDate
+     * @param includeDeleted
+     * @return
+     */
+    public List<Session> selectSessions(int startDate, int endDate, boolean includeDeleted)
+    {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return selectSessions(db, startDate, endDate, includeDeleted);
+    }
+
+    /**
+     *
+     * {@link #selectSessions(int, int, boolean)
+     */
     public List<Session> selectSessions(SQLiteDatabase db, int startDate, int endDate, boolean includeDeleted)
     {
         ArrayList<Session> result = null;
@@ -1092,6 +1126,7 @@ public class DataAccessObject extends SQLiteOpenHelper
 
             long id = cursor.getInt(cursor.getColumnIndex(SESSION_COLUMN_PK));
             long date = cursor.getLong(cursor.getColumnIndex(SESSION_COLUMN_DATE));
+            String note = cursor.getString(cursor.getColumnIndex(SESSION_COLUMN_NOTE));
             boolean isNew = (cursor.getInt(cursor.getColumnIndex(SESSION_COLUMN_NEW)) == 1);
             boolean isModified = (cursor.getInt(cursor.getColumnIndex(SESSION_COLUMN_MODIFIED)) == 1);
             boolean isDeleted = (cursor.getInt(cursor.getColumnIndex(SESSION_COLUMN_DELETED)) == 1);
@@ -1099,6 +1134,7 @@ public class DataAccessObject extends SQLiteOpenHelper
             Session session = new Session();
             session.setId(id);
             session.setDate(date);
+            session.setNote(note);
             session.setNew(isNew);
             session.setModified(isModified);
             session.setDeleted(isDeleted);
@@ -1112,6 +1148,12 @@ public class DataAccessObject extends SQLiteOpenHelper
 
         return result;
     }
+
+    /**
+     * Select all Sessions which contain the specified Exercise
+     * @param exerciseId The ID of the Exercise to select the Sessions by
+     * @return A list of Sessions
+     */
     public List<Session> selectSessionsByExercise(long exerciseId)
     {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -1128,6 +1170,7 @@ public class DataAccessObject extends SQLiteOpenHelper
                 "b." + LIFT_COLUMN_SETS + ", " +
                 "b." + LIFT_COLUMN_DATE_CREATED + ", " +
                 "b." + LIFT_COLUMN_WARMUP + ", " +
+                "a." + SESSION_COLUMN_NOTE + ", " +
                 "a." + SESSION_COLUMN_DATE  +
                 " FROM " + SESSION_TABLE_NAME + " as a," + LIFT_TABLE_NAME + " as b" +
                 " WHERE a." + SESSION_COLUMN_PK + " = b." + LIFT_COLUMN_SESSION_FK +
@@ -1155,12 +1198,14 @@ public class DataAccessObject extends SQLiteOpenHelper
         {
             long sessionId = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_SESSION_FK));
             long date = cursor.getLong(cursor.getColumnIndex(SESSION_COLUMN_DATE));
+            String note = cursor.getString(cursor.getColumnIndex(SESSION_COLUMN_NOTE));
             Session session = sessions.get(sessionId);
             if(session == null)
             {
                 session = new Session();
                 session.setId(sessionId);
                 session.setDate(date);
+                session.setNote(note);
             }
 
 
@@ -1193,6 +1238,11 @@ public class DataAccessObject extends SQLiteOpenHelper
         return new ArrayList<>(sessions.values());
     }
 
+    /**
+     * Select the Session with the associated id, along with the associated Lifts
+     * @param id The id of the session
+     * @return A populated Session object
+     */
     public Session selectSession(long id)
     {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -1208,6 +1258,7 @@ public class DataAccessObject extends SQLiteOpenHelper
 
 
         long date = cursorSession.getLong(cursorSession.getColumnIndex(SESSION_COLUMN_DATE));
+        String note = cursorSession.getString(cursorSession.getColumnIndex(SESSION_COLUMN_NOTE));
         boolean isSessionNew = (cursorSession.getInt(cursorSession.getColumnIndex(SESSION_COLUMN_NEW)) == 1);
         boolean isSessionModified = (cursorSession.getInt(cursorSession.getColumnIndex(SESSION_COLUMN_MODIFIED)) == 1);
         boolean isSessionDeleted = (cursorSession.getInt(cursorSession.getColumnIndex(SESSION_COLUMN_DELETED)) == 1);
@@ -1215,6 +1266,7 @@ public class DataAccessObject extends SQLiteOpenHelper
         Session result = new Session();
         result.setId(id);
         result.setDate(date);
+        result.setNote(note);
         result.setNew(isSessionNew);
         result.setModified(isSessionModified);
         result.setDeleted(isSessionDeleted);
@@ -1330,7 +1382,37 @@ public class DataAccessObject extends SQLiteOpenHelper
 
 
 
+    //BEGIN NOTE METHODS
 
+    /**
+     * Select the note with the associated session
+     * @param sessionId The Session ID
+     * @return The note
+     */
+    public String selectNote(long sessionId)
+    {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return selectNote(db, sessionId);
+    }
+
+    /**
+     *
+     * {@link #selectNote(long)
+     */
+    public String selectNote(SQLiteDatabase db, long sessionId)
+    {
+        String qry = "SELECT " + SESSION_COLUMN_NOTE + " FROM " + SESSION_TABLE_NAME;
+        Cursor cursor = db.rawQuery(qry, null);
+
+        if(cursor == null || !cursor.moveToFirst())
+        {
+            return null;
+        }
+
+        return cursor.getString(cursor.getColumnIndex(SESSION_COLUMN_NOTE));
+    }
+
+    //END NOTE METHODS
 
 
 
@@ -1421,7 +1503,7 @@ public class DataAccessObject extends SQLiteOpenHelper
         }
     }
 
-    public void restoreBackupCopy(Context ctx)
+    public boolean restoreBackupCopy(Context ctx)
     {
         try
         {
@@ -1446,10 +1528,12 @@ public class DataAccessObject extends SQLiteOpenHelper
             output.flush();
             output.close();
             fis.close();
+            return true;
         }
         catch(IOException e)
         {
             e.printStackTrace();
+            return false;
         }
     }
 

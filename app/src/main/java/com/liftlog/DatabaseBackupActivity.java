@@ -151,7 +151,10 @@ public class DatabaseBackupActivity extends AppCompatActivity
                     @Override
                     public void onClick(DialogInterface dialog, int which)
                     {
-                        dao.restoreBackupCopy(DatabaseBackupActivity.this);
+                        if (dao.restoreBackupCopy(DatabaseBackupActivity.this))
+                        {
+                            Toast.makeText(DatabaseBackupActivity.this, "Successfully restored backup.", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 })
                 .setNegativeButton("No", new DialogInterface.OnClickListener()

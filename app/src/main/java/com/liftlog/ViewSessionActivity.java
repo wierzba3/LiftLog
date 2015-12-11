@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.EditText;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
 import android.widget.ListView;
@@ -47,7 +48,7 @@ public class ViewSessionActivity extends AppCompatActivity
      */
     public static final String SESSION_ID_KEY = "session_id";
 
-    private static final String LOG_TAG = "LiftLog.ViewSessionActivity";
+    private static final String LOG_TAG = "ViewSession";
 
     private DataAccessObject dao;
 
@@ -293,14 +294,71 @@ public class ViewSessionActivity extends AppCompatActivity
                 Util.launchAboutWebsiteIntent(this);
                 break;
             case R.id.action_note:
-                //TODO
+                editNote();
                 break;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-//
+    private void editNote()
+    {
+        //TODO launch a dialog to edit the note
+        String note = dao.selectNote(sessionId);
+
+        // get prompts.xml view
+        LayoutInflater li = LayoutInflater.from(this);
+        View promptsView = li.inflate(R.layout.session_note_input_dialog, null);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+
+        // set prompts.xml to alertdialog builder
+        alertDialogBuilder.setView(promptsView);
+
+        final EditText txtNoteInput = (EditText) promptsView.findViewById(R.id.txt_note_input);
+        if(note != null)
+        {
+            txtNoteInput.setText(note);
+        }
+
+        // set dialog message
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton("OK",
+                        new DialogInterface.OnClickListener()
+                        {
+                            public void onClick(DialogInterface dialog, int id)
+                            {
+                                Session session = dao.selectSession(sessionId);
+                                if (session == null)
+                                {
+                                    Toast.makeText(ViewSessionActivity.this, "Error updating note", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                                String txt = txtNoteInput.getText().toString();
+                                session.setNote(txt);
+                                if (!dao.update(session))
+                                {
+                                    Toast.makeText(ViewSessionActivity.this, "Error updating note", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        })
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener()
+                        {
+                            public void onClick(DialogInterface dialog, int id)
+                            {
+                                dialog.cancel();
+                            }
+                        });
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
+    }
+
 
 	/**
 		Encapsulates the elements of the ExpandableListView (Lifts categorized by the exercise type)

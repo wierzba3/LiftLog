@@ -52,8 +52,9 @@ import com.liftlog.models.Exercise;
  * - End User License Agreement (EULA)
  *
  * Version 2 log:
+ * - Implement note on Sessions
  * - Fix bug where exercises remains highlighted after selecting it and canceling the dialog
- *
+ * - Add success prompt when restoring data backup
  */
 
 public class MainActivity extends AppCompatActivity implements ExerciseInputDialog.ExerciseInputDialogListener

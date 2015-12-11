@@ -32,9 +32,11 @@ public class Session
     private long id;
     private long date;
     private ArrayList<Lift> lifts;
+    private String Note;
     private boolean isNew;
     private boolean isModified;
     private boolean isDeleted;
+
     /**
      * This variable having a value greater than 1 indicates that this is the i'th instance of session that has the same date.
      * (Same day of year, not same millisecond value.)
@@ -110,6 +112,16 @@ public class Session
     public void setDeleted(boolean isDeleted)
     {
         this.isDeleted = isDeleted;
+    }
+
+    public String getNote()
+    {
+        return Note;
+    }
+
+    public void setNote(String note)
+    {
+        Note = note;
     }
 
     public static final Comparator<Session> byDateAsc = new Comparator<Session>()
