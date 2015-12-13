@@ -216,7 +216,7 @@ public class SessionsFragment extends Fragment implements  DateInputDialog.DateI
         sessionId = dao.insert(session);
         if (sessionId == -1)
         {
-            Toast.makeText(SessionsFragment.super.getActivity(), "", Toast.LENGTH_LONG).show();
+            Toast.makeText(SessionsFragment.super.getActivity(), "Error creating session.", Toast.LENGTH_LONG).show();
             Log.d(LOG_TAG, "Error inserting new session.");
             return;
         }

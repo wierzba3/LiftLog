@@ -183,7 +183,7 @@ public class DataAccessObject extends SQLiteOpenHelper
     private static final String LOG_TAG = "LiftLog";
 
     public DataAccessObject(Context context) {
-        super(context, DB_NAME, null, 29);
+        super(context, DB_NAME, null, 30);
     }
 
     @Override
@@ -1023,7 +1023,7 @@ public class DataAccessObject extends SQLiteOpenHelper
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(SESSION_COLUMN_DATE, session.getDate());
-        values.put(SESSION_COLUMN_NOTE, session.getNote());
+        values.put(SESSION_COLUMN_NOTE, session.getNote() == null ? "" : session.getNote());
         values.put(SESSION_COLUMN_NEW, session.isNew() ? 1 : 0);
         values.put(SESSION_COLUMN_MODIFIED, session.isModified() ? 1 : 0);
         values.put(SESSION_COLUMN_DELETED, session.isDeleted() ? 1 : 0);
@@ -1051,7 +1051,7 @@ public class DataAccessObject extends SQLiteOpenHelper
         values.put(SESSION_COLUMN_NEW, session.isNew() ? 1 : 0);
         values.put(SESSION_COLUMN_MODIFIED, session.isModified() ? 1 : 0);
         values.put(SESSION_COLUMN_DELETED, session.isDeleted() ? 1 : 0);
-        values.put(SESSION_COLUMN_NOTE, session.getNote());
+        values.put(SESSION_COLUMN_NOTE, session.getNote() == null ? "" : session.getNote());
         long id = db.insert(SESSION_TABLE_NAME, null, values);
         return id;
     }
@@ -1126,7 +1126,12 @@ public class DataAccessObject extends SQLiteOpenHelper
 
             long id = cursor.getInt(cursor.getColumnIndex(SESSION_COLUMN_PK));
             long date = cursor.getLong(cursor.getColumnIndex(SESSION_COLUMN_DATE));
-            String note = cursor.getString(cursor.getColumnIndex(SESSION_COLUMN_NOTE));
+            int noteColIndex = cursor.getColumnIndex(SESSION_COLUMN_NOTE);
+            String note = "";
+            if(noteColIndex > -1)
+            {
+                note = cursor.getString(noteColIndex);
+            }
             boolean isNew = (cursor.getInt(cursor.getColumnIndex(SESSION_COLUMN_NEW)) == 1);
             boolean isModified = (cursor.getInt(cursor.getColumnIndex(SESSION_COLUMN_MODIFIED)) == 1);
             boolean isDeleted = (cursor.getInt(cursor.getColumnIndex(SESSION_COLUMN_DELETED)) == 1);
@@ -1258,7 +1263,12 @@ public class DataAccessObject extends SQLiteOpenHelper
 
 
         long date = cursorSession.getLong(cursorSession.getColumnIndex(SESSION_COLUMN_DATE));
-        String note = cursorSession.getString(cursorSession.getColumnIndex(SESSION_COLUMN_NOTE));
+        int noteColIndex = cursorSession.getColumnIndex(SESSION_COLUMN_NOTE);
+        String note = "";
+        if(noteColIndex > -1)
+        {
+            note = cursorSession.getString(noteColIndex);
+        }
         boolean isSessionNew = (cursorSession.getInt(cursorSession.getColumnIndex(SESSION_COLUMN_NEW)) == 1);
         boolean isSessionModified = (cursorSession.getInt(cursorSession.getColumnIndex(SESSION_COLUMN_MODIFIED)) == 1);
         boolean isSessionDeleted = (cursorSession.getInt(cursorSession.getColumnIndex(SESSION_COLUMN_DELETED)) == 1);
@@ -1409,7 +1419,13 @@ public class DataAccessObject extends SQLiteOpenHelper
             return null;
         }
 
-        return cursor.getString(cursor.getColumnIndex(SESSION_COLUMN_NOTE));
+        int noteColIndex = cursor.getColumnIndex(SESSION_COLUMN_NOTE);
+        String note = null;
+        if(noteColIndex > -1)
+        {
+            note = cursor.getString(noteColIndex);
+        }
+        return note;
     }
 
     //END NOTE METHODS
