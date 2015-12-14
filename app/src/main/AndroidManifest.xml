@@ -34,7 +34,8 @@
         </activity>
         <activity
             android:name=".ViewSessionActivity"
-            android:label="View Session" >
+            android:label="View Session"
+            >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ViewSessionActivity"

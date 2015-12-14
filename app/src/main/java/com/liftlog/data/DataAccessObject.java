@@ -1023,20 +1023,22 @@ public class DataAccessObject extends SQLiteOpenHelper
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(SESSION_COLUMN_DATE, session.getDate());
-        values.put(SESSION_COLUMN_NOTE, session.getNote() == null ? "" : session.getNote());
+        String note = session.getNote();
+        values.put(SESSION_COLUMN_NOTE, note == null ? "" : note);
         values.put(SESSION_COLUMN_NEW, session.isNew() ? 1 : 0);
         values.put(SESSION_COLUMN_MODIFIED, session.isModified() ? 1 : 0);
         values.put(SESSION_COLUMN_DELETED, session.isDeleted() ? 1 : 0);
+        int ret = -1;
         try
         {
-            db.update(SESSION_TABLE_NAME, values, SESSION_COLUMN_PK + " = " + session.getId(), null);
+            ret = db.update(SESSION_TABLE_NAME, values, SESSION_COLUMN_PK + " = " + session.getId(), null);
         } catch (SQLException e)
         {
             Log.d(LOG_TAG, "exception in update(Session): " + e.getMessage());
             e.printStackTrace();
             return false;
         }
-        return true;
+        return ret > 0;
     }
     public long insert(Session session)
     {
@@ -1411,9 +1413,9 @@ public class DataAccessObject extends SQLiteOpenHelper
      */
     public String selectNote(SQLiteDatabase db, long sessionId)
     {
-        String qry = "SELECT " + SESSION_COLUMN_NOTE + " FROM " + SESSION_TABLE_NAME;
+        String qry = "SELECT " + SESSION_COLUMN_NOTE + " FROM " + SESSION_TABLE_NAME
+                + " WHERE " + SESSION_COLUMN_PK + " = " + sessionId;
         Cursor cursor = db.rawQuery(qry, null);
-
         if(cursor == null || !cursor.moveToFirst())
         {
             return null;

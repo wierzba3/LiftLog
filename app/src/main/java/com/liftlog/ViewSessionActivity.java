@@ -16,6 +16,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
@@ -316,6 +318,8 @@ public class ViewSessionActivity extends AppCompatActivity
         alertDialogBuilder.setView(promptsView);
 
         final EditText txtNoteInput = (EditText) promptsView.findViewById(R.id.txt_note_input);
+
+        txtNoteInput.requestFocus();
         if(note != null)
         {
             txtNoteInput.setText(note);
@@ -353,10 +357,13 @@ public class ViewSessionActivity extends AppCompatActivity
                         });
 
         // create alert dialog
-        AlertDialog alertDialog = alertDialogBuilder.create();
+        final AlertDialog alertDialog = alertDialogBuilder.create();
 
         // show it
         alertDialog.show();
+
+        //set the text caret to the end of the Note text
+        txtNoteInput.setSelection(txtNoteInput.getText().length());
     }
 
 

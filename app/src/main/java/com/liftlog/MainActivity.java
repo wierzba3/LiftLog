@@ -30,14 +30,12 @@ import com.liftlog.models.Exercise;
 /**
  * TODO
  * BUGS:
+ * - Session note not being saved
+ * - Request focus on the text view upon editing Session note
  *
  *
  * Implement now:
- * - Notes on sessions
- * - Wilks calculator
- * - Implement calendar view for ViewSessions
- *		 https://github.com/roomorama/Caldroid
- *
+ * - 
  *
  *
  * Implement in the future:
