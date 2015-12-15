@@ -30,12 +30,11 @@ import com.liftlog.models.Exercise;
 /**
  * TODO
  * BUGS:
- * - Session note not being saved
- * - Request focus on the text view upon editing Session note
  *
  *
  * Implement now:
- * - 
+ * - Edit date on Session
+ *      Date input dialog code
  *
  *
  * Implement in the future:
@@ -50,9 +49,9 @@ import com.liftlog.models.Exercise;
  * - End User License Agreement (EULA)
  *
  * Version 2 log:
- * - Implement note on Sessions
- * - Fix bug where exercises remains highlighted after selecting it and canceling the dialog
- * - Add success prompt when restoring data backup
+ * - New feature to add a note to a Session
+ * - New option to edit the date of a Session
+ * - Other bug fixes
  */
 
 public class MainActivity extends AppCompatActivity implements ExerciseInputDialog.ExerciseInputDialogListener

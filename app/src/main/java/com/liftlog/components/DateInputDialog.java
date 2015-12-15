@@ -26,10 +26,18 @@ import org.joda.time.DateTime;
 public class DateInputDialog extends DialogFragment
 {
 
+    private long defaultDate = -1;
+
     public static DateInputDialog newInstance()
+    {
+        return DateInputDialog.newInstance(-1l);
+    }
+
+    public static DateInputDialog newInstance(long defaultDate)
     {
         DateInputDialog dialog = new DateInputDialog();
 
+        dialog.defaultDate = defaultDate;
         Bundle bundle = new Bundle();
         dialog.setArguments(bundle);
 
@@ -49,7 +57,11 @@ public class DateInputDialog extends DialogFragment
         builder.setView(customView);
 
         final DatePicker pckDate = (DatePicker) customView.findViewById(R.id.pckdate_input_dialog);
-
+        if(defaultDate > 0)
+        {
+            DateTime dt = new DateTime(defaultDate);
+            pckDate.updateDate(dt.getYear(), dt.getMonthOfYear() - 1, dt.getDayOfMonth());
+        }
 
         // Add action buttons
         builder.setNegativeButton("Save", new DialogInterface.OnClickListener() {
@@ -61,11 +73,11 @@ public class DateInputDialog extends DialogFragment
 
                 //Calendar cal = Calendar.getInstance();
                 //cal.set(year, month, day);
-				//long date = cal.getTimeInMillis();
-				
-				DateTime dt = new DateTime(year, month, day, 12, 0);
-				long date = dt.getMillis();
-                
+                //long date = cal.getTimeInMillis();
+
+                DateTime dt = new DateTime(year, month, day, 12, 0);
+                long date = dt.getMillis();
+
 
                 mListener.onDialogSaveClick(DateInputDialog.this, date);
             }
@@ -82,6 +94,11 @@ public class DateInputDialog extends DialogFragment
         return builder.create();
     }
 
+    public void setDate(long date)
+    {
+    }
+
+
     /**
      * Cast the caller to a DateInputDialogListener to communicate events back.
      * The class of the calling Fragment/Activity must implement DateInputDialogListener
@@ -94,7 +111,8 @@ public class DateInputDialog extends DialogFragment
         //if called from a fragment
         if(callingFragment != null)
         {
-            mListener = (DateInputDialogListener) getTargetFragment();
+            Fragment fragment = getTargetFragment();
+            mListener = (DateInputDialogListener) fragment;
         }
         //else called from an activity
         else

@@ -5,9 +5,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-//import android.support.v7.app.ActionBar;
-//import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,8 +16,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.EditText;
 import android.widget.ExpandableListView;
@@ -34,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.liftlog.common.Util;
+import com.liftlog.components.DateInputDialog;
 import com.liftlog.models.Exercise;
 import com.liftlog.models.Lift;
 import com.liftlog.data.DataAccessObject;
@@ -41,7 +40,7 @@ import com.liftlog.models.Session;
 
 import org.joda.time.DateTime;
 
-public class ViewSessionActivity extends AppCompatActivity
+public class ViewSessionActivity extends AppCompatActivity implements  DateInputDialog.DateInputDialogListener
 {
 //public class ViewSessionActivity extends Activity {
 
@@ -60,6 +59,8 @@ public class ViewSessionActivity extends AppCompatActivity
     private TextView lblEmpty;
 
     private long sessionId = -1;
+
+    public static final int REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -298,14 +299,27 @@ public class ViewSessionActivity extends AppCompatActivity
             case R.id.action_note:
                 editNote();
                 break;
+            case R.id.action_edit_date:
+                editDate();
+                break;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    private void editDate()
+    {
+        Session session = dao.selectSession(sessionId);
+        DateInputDialog dialog = DateInputDialog.newInstance(session.getDate());
+        FragmentManager fm = getSupportFragmentManager();
+//        DialogFragment dialogFragment = new DialogFragment();
+//        dialog.setTargetFragment(dialog, REQUEST_CODE);
+
+        dialog.show(fm, "DateInputDialog");
+    }
+
     private void editNote()
     {
-        //TODO launch a dialog to edit the note
         String note = dao.selectNote(sessionId);
 
         // get prompts.xml view
@@ -319,7 +333,7 @@ public class ViewSessionActivity extends AppCompatActivity
 
         final EditText txtNoteInput = (EditText) promptsView.findViewById(R.id.txt_note_input);
 
-        txtNoteInput.requestFocus();
+//        txtNoteInput.requestFocus();
         if(note != null)
         {
             txtNoteInput.setText(note);
@@ -367,7 +381,38 @@ public class ViewSessionActivity extends AppCompatActivity
     }
 
 
-	/**
+    /**
+     * Handle the Save action of the edit date dialog.
+     * @param dialog The event sender
+     * @param date The selected date
+     */
+    @Override
+    public void onDialogSaveClick(DialogFragment dialog, long date)
+    {
+        Session session = dao.selectSession(sessionId);
+        if(session == null)
+        {
+            Toast.makeText(this, "Error updating Session date. code=1", Toast.LENGTH_LONG).show();
+            return;
+        }
+        session.setDate(date);
+        if(dao.update(session))
+        {
+            setTitle(Util.DATE_FORMAT_SHORT.print(date));
+        }
+        else
+        {
+            Toast.makeText(this, "Error updating Session date. code=2", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void onDialogCancelClick(DialogFragment dialog)
+    {
+
+    }
+
+    /**
 		Encapsulates the elements of the ExpandableListView (Lifts categorized by the exercise type)
 	*/
     private class LiftGroupElement
@@ -380,7 +425,7 @@ public class ViewSessionActivity extends AppCompatActivity
 
         private Exercise exercise;
         private List<Lift> lifts;
-		
+
 		public void setLifts(List<Lift> value)
 		{
 			lifts = value;
@@ -389,7 +434,7 @@ public class ViewSessionActivity extends AppCompatActivity
 		{
 			return lifts;
 		}
-		
+
 		public Exercise getExercise()
 		{
 			return exercise;
@@ -408,9 +453,9 @@ public class ViewSessionActivity extends AppCompatActivity
 		public LiftExpendableListAdapter(Context ctx, List<Lift> allLifts, Map<Long, Exercise> exerciseMap)
 		{
 			elements = new ArrayList<LiftGroupElement>();
-			
+
             if(allLifts == null) return;
-			
+
 			//map the exercise ID to the list of lifts whose ID is equal to it
             Map<Long, List<Lift>> map = new HashMap<Long, List<Lift>>();
             for(Lift lift : allLifts)
@@ -426,7 +471,7 @@ public class ViewSessionActivity extends AppCompatActivity
 
                 map.put(lift.getExerciseId(), lifts);
             }
-			
+
 			LiftGroupElement uncategorized = null;
 			Exercise dummy = new Exercise();
 			dummy.setId(-1l);
@@ -453,7 +498,7 @@ public class ViewSessionActivity extends AppCompatActivity
 					elements.add(element);
 				}
 			}
-			
+
 			Collections.sort(elements, comparator);
 		}
 
@@ -486,7 +531,7 @@ public class ViewSessionActivity extends AppCompatActivity
 //                return result;
 //            }
 //        };
-		
+
         private Comparator<LiftGroupElement> comparator = new Comparator<LiftGroupElement>(){
             @Override
             public int compare(LiftGroupElement e1, LiftGroupElement e2)
@@ -520,7 +565,7 @@ public class ViewSessionActivity extends AppCompatActivity
                 return result;
 			}
 		};
-		
+
 
         //private List<List<Lift>> liftLists;
         //private List<Exercise> exercises;
