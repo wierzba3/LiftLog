@@ -1,3 +1,5 @@
+http://wierzba3.github.io/LiftLog/
+
 A simple and easy to use app to keep track of your weight-lifting progress.
 
 The basics:
