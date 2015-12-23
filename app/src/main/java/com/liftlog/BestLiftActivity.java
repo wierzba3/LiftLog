@@ -112,7 +112,7 @@ public class BestLiftActivity extends AppCompatActivity
         String msg = "Best " + reps + " rep set: " ;
         if (lift == null)
         {
-            msg += "n/a";
+            msg += "n/a_m";
         }
         else
         {
@@ -154,7 +154,7 @@ public class BestLiftActivity extends AppCompatActivity
     {
         // Inflate the menu; this adds items to the action bar if it is present.
         MenuInflater inflater = getMenuInflater();
-        //TODO create a menu for this activity
+        //TODO create a_m menu for this activity
 //       inflater.inflate(R.menu.menu_view_session, menu);
         return true;
     }
@@ -164,7 +164,7 @@ public class BestLiftActivity extends AppCompatActivity
     {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+        // as you specify a_m parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         switch (id)

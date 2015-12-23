@@ -36,7 +36,7 @@
     <item
         android:id="@+id/action_about_session"
         app:showAsAction="never"
-        android:title="About"
+        android:title="Online help"
         />
 
 </menu>

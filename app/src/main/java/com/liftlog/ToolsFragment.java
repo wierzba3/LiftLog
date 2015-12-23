@@ -113,6 +113,16 @@ public class ToolsFragment extends Fragment
         super.startActivity(intent);
     }
 
+    /**
+     * Launch Wilks calculator activity
+     */
+    private void launchWilksCalculator()
+    {
+        Intent intent = new Intent(super.getActivity(), WilksCalculatorActivity.class);
+        super.startActivity(intent);
+    }
+
+
     private void createContents(View view)
     {
         setHasOptionsMenu(true);
@@ -165,6 +175,15 @@ public class ToolsFragment extends Fragment
             }
         });
 
+        Button btnWilksCalc = (Button) view.findViewById(R.id.btn_wilks_calc);
+        btnWilksCalc.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                launchWilksCalculator();
+            }
+        });
     }
 
     @Override
@@ -180,7 +199,7 @@ public class ToolsFragment extends Fragment
     {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+        // as you specify a_m parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         switch (id)

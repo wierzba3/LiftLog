@@ -30,11 +30,12 @@ import com.liftlog.models.Exercise;
 /**
  * TODO
  * BUGS:
+ * - Note not being saved
+ * - Request focus on the text view upon editing Session note
  *
  *
  * Implement now:
- * - Edit date on Session
- *      Date input dialog code
+ * - 
  *
  *
  * Implement in the future:
@@ -44,11 +45,14 @@ import com.liftlog.models.Exercise;
  * e.g. repeat selected lift every M/W/F, increase weight each day/week
  * - Implement DataBackup service
  *      http://developer.android.com/guide/topics/data/backup.html
- *      http://www.vogella.com/tutorials/AndroidDataBackup/article.html
  *
  * Publishing TODO:
  * - End User License Agreement (EULA)
  *
+ * Version 2 log:
+ * - Implement note on Sessions
+ * - Fix bug where exercises remains highlighted after selecting it and canceling the dialog
+ * - Add success prompt when restoring data backup
  */
 
 public class MainActivity extends AppCompatActivity implements ExerciseInputDialog.ExerciseInputDialogListener
@@ -67,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements ExerciseInputDial
     // Constants
     // The authority for the sync adapter's content provider
     public static final String AUTHORITY = "com.liftlog.data.provider";
-    // An account type, in the form of a_m domain name
+    // An account type, in the form of a domain name
     public String accountType;
     // The account name
     public static final String ACCOUNT = "dummyaccount";
@@ -161,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements ExerciseInputDial
     {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
-        // as you specify a_m parent activity in AndroidManifest.xml.
+        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
@@ -174,7 +178,7 @@ public class MainActivity extends AppCompatActivity implements ExerciseInputDial
     }
 
     /**
-     * Start the activity to add a_m lift
+     * Start the activity to add a lift
      *
      * @param view The view
      */
@@ -283,7 +287,7 @@ public class MainActivity extends AppCompatActivity implements ExerciseInputDial
     }
 
 //    /**
-//     * Create a_m new dummy account for the sync adapter
+//     * Create a new dummy account for the sync adapter
 //     *
 //     * @param context The application context
 //     */
@@ -323,7 +327,7 @@ public class MainActivity extends AppCompatActivity implements ExerciseInputDial
     @Override
     public void onDialogCancelClick(DialogFragment dialog)
     {
-        dialog.dismiss();
+
     }
 
     @Override
@@ -336,6 +340,5 @@ public class MainActivity extends AppCompatActivity implements ExerciseInputDial
     public void handleDialogClose(DialogInterface dialog)
     {
         mCustomPagerAdapter.getExercisesFragment().clearSelectedExercises();
-        dialog.dismiss();
     }
 }

@@ -131,7 +131,7 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
     {
         if( super.getActivity() == null)
         {
-            //TODO figure out why this is returning null. Perhaps implement MainActivity as a singleton?
+            //TODO figure out why this is returning null. Perhaps implement MainActivity as a_m singleton?
             return;
         }
 
@@ -494,6 +494,7 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
             public void onClick(DialogInterface dialog, int which)
             {
                 dialog.cancel();
+                dialog.dismiss();
             }
         });
         builder.show();
@@ -521,7 +522,7 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
     {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+        // as you specify a_m parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         switch (id)
@@ -568,6 +569,7 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
     @Override
     public void onDialogCancelClick(DialogFragment dialog)
     {
+        dialog.dismiss();
         //load exercises again to remove the background highlight color
         loadExercises();
     }
@@ -795,5 +797,6 @@ public class ExercisesFragment extends Fragment implements ExerciseInputDialog.E
     public void handleDialogClose(DialogInterface dialog)
     {
         //do nothing
+        dialog.dismiss();
     }
 }

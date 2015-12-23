@@ -129,7 +129,7 @@ public class SessionsFragment extends Fragment implements  DateInputDialog.DateI
     {
         if(super.getActivity() == null)
         {
-            //TODO figure out why this is returning null. Perhaps implement MainActivity as a singleton?
+            //TODO figure out why this is returning null. Perhaps implement MainActivity as a_m singleton?
             return;
         }
 
@@ -175,7 +175,7 @@ public class SessionsFragment extends Fragment implements  DateInputDialog.DateI
     {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+        // as you specify a_m parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         switch (id)
@@ -429,7 +429,7 @@ public class SessionsFragment extends Fragment implements  DateInputDialog.DateI
 
             TextView lblSession = (TextView) view.findViewById(R.id.lbl_session);
             final Session session = elements.get(i).getSessions().get(j);
-            lblSession.setText(session == null ? "n/a" : session.toString());
+            lblSession.setText(session == null ? "n/a_m" : session.toString());
             lblSession.setOnClickListener(new View.OnClickListener()
             {
                 @Override

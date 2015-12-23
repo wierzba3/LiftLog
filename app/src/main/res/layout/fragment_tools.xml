@@ -13,7 +13,7 @@
         <Button
             android:id="@+id/btn_view_history"
             android:layout_width="fill_parent"
-            android:layout_height="70dp"
+            android:layout_height="50dp"
             android:textColor="@color/white"
             android:text="View Exercise History"
             android:textSize="20dp"
@@ -22,21 +22,9 @@
             />
 
         <Button
-            android:id="@+id/btn_1rm_calc"
-            android:layout_width="fill_parent"
-            android:layout_height="70dp"
-            android:textColor="@color/white"
-            android:text="1-Rep Max Calculator"
-            android:textSize="20dp"
-            android:background="@drawable/round_button"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            />
-
-        <Button
             android:id="@+id/btn_find_best_lifts"
             android:layout_width="fill_parent"
-            android:layout_height="70dp"
+            android:layout_height="50dp"
             android:textColor="@color/white"
             android:text="Find Personal Best"
             android:textSize="20dp"
@@ -46,9 +34,33 @@
             />
 
         <Button
+            android:id="@+id/btn_1rm_calc"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:textColor="@color/white"
+            android:text="1-Rep Max Calculator"
+            android:textSize="20dp"
+            android:background="@drawable/round_button"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            />
+
+        <Button
+            android:id="@+id/btn_wilks_calc"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:textColor="@color/white"
+            android:text="Wilks Calculator"
+            android:textSize="20dp"
+            android:background="@drawable/round_button"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            />
+
+        <Button
             android:id="@+id/btn_backup"
             android:layout_width="fill_parent"
-            android:layout_height="70dp"
+            android:layout_height="50dp"
             android:textColor="@color/white"
             android:text="Data Backup"
             android:textSize="20dp"
@@ -56,6 +68,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             />
+
 
     </LinearLayout>
 

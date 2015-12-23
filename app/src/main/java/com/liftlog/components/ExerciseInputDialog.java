@@ -142,6 +142,7 @@ public class ExerciseInputDialog extends DialogFragment
         builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 mListener.onDialogCancelClick(ExerciseInputDialog.this);
+                ExerciseInputDialog.this.dismiss();
             }
         });
 
@@ -196,11 +197,19 @@ public class ExerciseInputDialog extends DialogFragment
 
     }
 
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        dismiss();
+    }
+
     public void onDismiss(DialogInterface dialog)
     {
         Activity activity = getActivity();
         if(activity instanceof ExerciseInputDialogListener)
             ((ExerciseInputDialogListener)activity).handleDialogClose(dialog);
+        dialog.dismiss();
     }
 
     @Override

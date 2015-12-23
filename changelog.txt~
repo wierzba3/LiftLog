@@ -1,0 +1,13 @@
+0.3.0
+ - Add Wilks calculator feature
+
+0.2.1
+ - Fix bug where EditExercise dialog re-appears after navigating back to the main tab activity
+
+0.2.0
+ - New feature to add a note to a Session
+ - New option to edit the date of a Session
+ - Other bug fixes
+
+0.1.0
+ - First version

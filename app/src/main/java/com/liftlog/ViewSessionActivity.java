@@ -185,9 +185,9 @@ public class ViewSessionActivity extends AppCompatActivity implements  DateInput
     }
 
     /**
-     * Add a new Lift
+     * Add a_m new Lift
      *
-     * @param liftId The id of the lift (-1 for a new Lift)
+     * @param liftId The id of the lift (-1 for a_m new Lift)
      */
     private void doAdd(long liftId)
     {
@@ -280,7 +280,7 @@ public class ViewSessionActivity extends AppCompatActivity implements  DateInput
     {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+        // as you specify a_m parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         switch (id)

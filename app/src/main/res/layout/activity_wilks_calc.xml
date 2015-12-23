@@ -1,0 +1,242 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.liftlog.MaxCalculatorActivity">
+
+
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="0.17"
+        android:columnCount="2"
+        android:rowCount="6"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sex"
+            android:layout_row="0"
+            android:layout_column="0"
+            android:padding="5dp"
+            android:layout_gravity="center_vertical"
+            />
+
+        <RadioGroup
+            android:id="@+id/rg_sex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_row="0"
+            android:layout_column="1"
+
+            >
+            <RadioButton
+                android:id="@+id/rbtn_male"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Male"
+                android:layout_row="0"
+                android:layout_column="0"
+                android:checked="true"
+                android:padding="5dp"
+                />
+
+            <RadioButton
+                android:id="@+id/rbtn_female"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Female"
+                android:layout_row="0"
+                android:layout_column="1"
+                android:padding="5dp"
+                />
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Unit"
+            android:layout_row="1"
+            android:layout_column="0"
+            android:padding="5dp"
+            android:layout_gravity="center_vertical"
+            />
+
+        <RadioGroup
+            android:id="@+id/rg_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_row="1"
+            android:layout_column="1"
+            >
+
+            <RadioButton
+                android:id="@+id/rbtn_kg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="kg"
+                android:layout_row="1"
+                android:layout_column="0"
+                android:padding="5dp"
+                />
+
+            <RadioButton
+                android:id="@+id/rbtn_lb"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="lb"
+                android:layout_row="1"
+                android:layout_column="1"
+                android:checked="true"
+                android:padding="5dp"
+                />
+
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bodyweight"
+            android:layout_row="2"
+            android:layout_column="0"
+            android:padding="5dp"
+            />
+
+        <EditText
+            android:layout_width="82dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_bodyweight"
+            android:inputType="numberDecimal"
+            android:imeOptions="actionNext"
+            android:layout_row="2"
+            android:layout_column="1"
+            android:padding="5dp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Squat"
+            android:layout_row="3"
+            android:layout_column="0"
+            android:padding="5dp"
+            />
+
+        <EditText
+            android:layout_width="82dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_squat"
+            android:inputType="numberDecimal"
+            android:imeOptions="actionNext"
+            android:layout_row="3"
+            android:layout_column="1"
+            android:padding="5dp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bench"
+            android:layout_row="4"
+            android:layout_column="0"
+            android:padding="5dp"
+            />
+
+        <EditText
+            android:layout_width="82dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_bench"
+            android:inputType="numberDecimal"
+            android:imeOptions="actionDone"
+            android:layout_row="4"
+            android:layout_column="1"
+            android:padding="5dp"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Deadlift"
+            android:layout_row="5"
+            android:layout_column="0"
+            android:padding="5dp"
+            />
+
+        <EditText
+            android:layout_width="82dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/txt_deadlift"
+            android:inputType="numberDecimal"
+            android:imeOptions="actionDone"
+            android:layout_row="5"
+            android:layout_column="1"
+            android:padding="5dp"
+            />
+
+    </GridLayout>
+
+
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/round_button"
+        android:textColor="@color/white"
+        android:text="Calculate"
+        android:onClick="doCalculateWilks"
+        android:layout_gravity="center"
+        android:layout_margin="30dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        />
+
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.5"
+        android:layout_gravity="center"
+        android:columnCount="2"
+        android:rowCount="1"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Wilks score:"
+        android:layout_gravity="center"
+        android:textSize="12pt"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_row="0"
+        android:layout_column="0"
+        />
+
+    <TextView
+        android:id="@+id/lbl_wilks"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:textSize="15pt"
+        android:layout_gravity="center"
+        android:layout_marginLeft="10dp"
+        android:text=""
+        android:imeOptions="actionDone"
+        android:layout_row="0"
+        android:layout_column="1"
+        />
+
+    </GridLayout>
+
+</LinearLayout>

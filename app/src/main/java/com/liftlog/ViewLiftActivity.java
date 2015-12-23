@@ -162,7 +162,7 @@ public class ViewLiftActivity extends AppCompatActivity implements ExerciseInput
 
 
     /**
-     * Launch a ExerciseInputDialog
+     * Launch a_m ExerciseInputDialog
      */
     public void doNewExercise(View view)
     {
@@ -188,7 +188,7 @@ public class ViewLiftActivity extends AppCompatActivity implements ExerciseInput
     {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+        // as you specify a_m parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         switch (id)
         {
