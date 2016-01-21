@@ -41,6 +41,7 @@ public class DataAccessObject extends SQLiteOpenHelper
 
 //    public static Map<Long, Exercise> exerciseMap = new HashMap<>();
 
+    @Deprecated
     public enum RecordState
     {
 
@@ -92,6 +93,8 @@ public class DataAccessObject extends SQLiteOpenHelper
     public static final String LIFT_COLUMN_WEIGHT = "weight";
     public static final String LIFT_COLUMN_REPS = "reps";
     public static final String LIFT_COLUMN_SETS = "sets";
+    //TODO: add this field
+    public static final String LIFT_COLUMN_RPE = "rpe";
     public static final String LIFT_COLUMN_UNIT = "unit";
     //    public static final String LIFT_COLUMN_STATE = "state";
     public static final String LIFT_COLUMN_NEW = "is_new";
@@ -108,6 +111,7 @@ public class DataAccessObject extends SQLiteOpenHelper
                     + LIFT_COLUMN_WEIGHT + " REAL, "
                     + LIFT_COLUMN_REPS + " INTEGER, "
                     + LIFT_COLUMN_SETS + " INTEGER, "
+                    + LIFT_COLUMN_RPE + " INTEGER DEFAULT 0, "
                     + LIFT_COLUMN_UNIT + " TEXT, "
                     + LIFT_COLUMN_WARMUP + " INTEGER, "
                     + LIFT_COLUMN_NEW + " INTEGER DEFAULT 1, "
@@ -283,6 +287,7 @@ public class DataAccessObject extends SQLiteOpenHelper
         values.put(LIFT_COLUMN_WEIGHT, lift.getWeight());
         values.put(LIFT_COLUMN_REPS, lift.getReps());
         values.put(LIFT_COLUMN_SETS, lift.getSets());
+        values.put(LIFT_COLUMN_RPE, lift.getRPE());
         values.put(LIFT_COLUMN_UNIT, lift.getUnit() == null ? "lb" : lift.getUnit().toString().toUpperCase());
         values.put(LIFT_COLUMN_NEW, lift.isNew() ? 1 : 0);
         values.put(LIFT_COLUMN_MODIFIED, lift.isModified() ? 1 : 0);
@@ -297,6 +302,7 @@ public class DataAccessObject extends SQLiteOpenHelper
         values.put(LIFT_COLUMN_WEIGHT, lift.getWeight());
         values.put(LIFT_COLUMN_REPS, lift.getReps());
         values.put(LIFT_COLUMN_SETS, lift.getSets());
+        values.put(LIFT_COLUMN_RPE, lift.getRPE());
         values.put(LIFT_COLUMN_EXERCISE_FK, lift.getExerciseId());
         values.put(LIFT_COLUMN_SESSION_FK, lift.getSessionId());
         values.put(LIFT_COLUMN_NEW, lift.isNew() ? 1 : 0);
@@ -346,6 +352,7 @@ public class DataAccessObject extends SQLiteOpenHelper
             double weight = cursor.getDouble(cursor.getColumnIndex(LIFT_COLUMN_WEIGHT));
             int sets = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_SETS));
             int reps = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_REPS));
+            int rpe = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_RPE));
             int warmup = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_WARMUP));
             long dateCreated = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_DATE_CREATED));
             boolean isNew = (cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_NEW)) == 1);
@@ -359,6 +366,7 @@ public class DataAccessObject extends SQLiteOpenHelper
             lift.setWeight(weight);
             lift.setSets(sets);
             lift.setReps(reps);
+            lift.setRPE(rpe);
             lift.setWarmup(warmup == 1);
             lift.setDateCreated(dateCreated);
             lift.setNew(isNew);
@@ -443,6 +451,7 @@ public class DataAccessObject extends SQLiteOpenHelper
         double weight = cursor.getDouble(cursor.getColumnIndex(LIFT_COLUMN_WEIGHT));
         int sets = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_SETS));
         int reps = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_REPS));
+        int rpe = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_RPE));
         int warmup = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_WARMUP));
         long dateCreated = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_DATE_CREATED));
         boolean isNew = (cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_NEW)) == 1);
@@ -456,6 +465,7 @@ public class DataAccessObject extends SQLiteOpenHelper
         result.setWeight(weight);
         result.setSets(sets);
         result.setReps(reps);
+        result.setRPE(rpe);
         result.setWarmup(warmup == 1 ? true : false);
         result.setDateCreated(dateCreated);
         result.setNew(isNew);
@@ -472,7 +482,6 @@ public class DataAccessObject extends SQLiteOpenHelper
     }
     public Lift selectBestLift(SQLiteDatabase db, long exerciseId, int reps)
     {
-        //TODO
         String qry = "SELECT * FROM " + LIFT_TABLE_NAME
                 + " WHERE " + LIFT_COLUMN_EXERCISE_FK + " = " + exerciseId
                 + " AND " + LIFT_COLUMN_REPS + " = " + reps
@@ -489,6 +498,7 @@ public class DataAccessObject extends SQLiteOpenHelper
         long sessionId = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_SESSION_FK));
         double weight = cursor.getDouble(cursor.getColumnIndex(LIFT_COLUMN_WEIGHT));
         int sets = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_SETS));
+        int rpe = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_RPE));
         int warmup = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_WARMUP));
         long dateCreated = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_DATE_CREATED));
         boolean isNew = (cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_NEW)) == 1);
@@ -502,6 +512,7 @@ public class DataAccessObject extends SQLiteOpenHelper
         result.setWeight(weight);
         result.setSets(sets);
         result.setReps(reps);
+        result.setRPE(rpe);
         result.setWarmup(warmup == 1 ? true : false);
         result.setDateCreated(dateCreated);
         result.setNew(isNew);
@@ -1175,6 +1186,7 @@ public class DataAccessObject extends SQLiteOpenHelper
                 "b." + LIFT_COLUMN_WEIGHT + ", " +
                 "b." + LIFT_COLUMN_REPS + ", " +
                 "b." + LIFT_COLUMN_SETS + ", " +
+                "b." + LIFT_COLUMN_RPE + ", " +
                 "b." + LIFT_COLUMN_DATE_CREATED + ", " +
                 "b." + LIFT_COLUMN_WARMUP + ", " +
                 "a." + SESSION_COLUMN_NOTE + ", " +
@@ -1220,6 +1232,7 @@ public class DataAccessObject extends SQLiteOpenHelper
             double weight = cursor.getDouble(cursor.getColumnIndex(LIFT_COLUMN_WEIGHT));
             int reps = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_REPS));
             int sets = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_SETS));
+            int rpe = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_RPE));
             int warmup = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_WARMUP));
             long dateCreated = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_DATE_CREATED));
 
@@ -1231,6 +1244,7 @@ public class DataAccessObject extends SQLiteOpenHelper
             lift.setWeight(weight);
             lift.setReps(reps);
             lift.setSets(sets);
+            lift.setRPE(rpe);
             lift.setWarmup(warmup == 1);
             lift.setDateCreated(dateCreated);
 
@@ -1283,6 +1297,7 @@ public class DataAccessObject extends SQLiteOpenHelper
         result.setModified(isSessionModified);
         result.setDeleted(isSessionDeleted);
 
+
         String qryLifts = "SELECT " +
                 "b." + LIFT_COLUMN_PK + ", " +
                 "b." + LIFT_COLUMN_SESSION_FK + ", " +
@@ -1290,6 +1305,7 @@ public class DataAccessObject extends SQLiteOpenHelper
                 "b." + LIFT_COLUMN_WEIGHT + ", " +
                 "b." + LIFT_COLUMN_REPS + ", " +
                 "b." + LIFT_COLUMN_SETS + ", " +
+                "b." + LIFT_COLUMN_RPE + ", " +
                 "b." + LIFT_COLUMN_DATE_CREATED + ", " +
                 "b." + LIFT_COLUMN_WARMUP + ", " +
                 "b." + LIFT_COLUMN_NEW + ", " +
@@ -1323,6 +1339,7 @@ public class DataAccessObject extends SQLiteOpenHelper
             double weight = cursor.getDouble(cursor.getColumnIndex(LIFT_COLUMN_WEIGHT));
             int reps = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_REPS));
             int sets = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_SETS));
+            int rpe = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_RPE));
             int warmup = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_WARMUP));
             long dateCreated = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_DATE_CREATED));
             boolean isNew = (cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_NEW)) == 1);
@@ -1336,6 +1353,7 @@ public class DataAccessObject extends SQLiteOpenHelper
             lift.setWeight(weight);
             lift.setReps(reps);
             lift.setSets(sets);
+            lift.setRPE(rpe);
             lift.setWarmup(warmup == 1);
             lift.setDateCreated(dateCreated);
             lift.setNew(isNew);

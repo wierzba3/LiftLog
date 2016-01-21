@@ -1,8 +1,13 @@
 package com.liftlog.common;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.widget.Toast;
+
+import com.liftlog.R;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -50,10 +55,26 @@ public class Util
     }
 
 
-    public static void launchAboutWebsiteIntent(Context ctx)
+    public static void launchAboutWebsiteIntent(final Context ctx)
     {
-        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(ABOUT_URL));
-        ctx.startActivity(browserIntent);
+
+        new AlertDialog.Builder(ctx)
+                .setIcon(R.drawable.ic_warning_blue_24dp)
+
+                .setTitle("View Online Help")
+                .setMessage("Are you sure you want to open Online Help? A web page will be opened with your default browser.")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(ABOUT_URL));
+                        ctx.startActivity(browserIntent);
+                    }
+
+                })
+                .setNegativeButton("No", null)
+                .show();
     }
 
 

@@ -33,8 +33,8 @@ import com.liftlog.models.Exercise;
  *
  *
  * Implement now:
- * - Edit date on Session
- *      Date input dialog code
+ * - Settings activity
+ * - RPE field on lift
  *
  *
  * Implement in the future:
