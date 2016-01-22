@@ -110,7 +110,7 @@ public class DataAccessObject extends SQLiteOpenHelper
                     + LIFT_COLUMN_WEIGHT + " REAL, "
                     + LIFT_COLUMN_REPS + " INTEGER, "
                     + LIFT_COLUMN_SETS + " INTEGER, "
-                    + LIFT_COLUMN_RPE + " INTEGER DEFAULT 0, "
+                    + LIFT_COLUMN_RPE + " REAL, "
                     + LIFT_COLUMN_UNIT + " TEXT, "
                     + LIFT_COLUMN_WARMUP + " INTEGER, "
                     + LIFT_COLUMN_NEW + " INTEGER DEFAULT 1, "
