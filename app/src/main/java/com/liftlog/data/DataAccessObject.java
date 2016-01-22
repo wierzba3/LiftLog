@@ -93,7 +93,6 @@ public class DataAccessObject extends SQLiteOpenHelper
     public static final String LIFT_COLUMN_WEIGHT = "weight";
     public static final String LIFT_COLUMN_REPS = "reps";
     public static final String LIFT_COLUMN_SETS = "sets";
-    //TODO: add this field
     public static final String LIFT_COLUMN_RPE = "rpe";
     public static final String LIFT_COLUMN_UNIT = "unit";
     //    public static final String LIFT_COLUMN_STATE = "state";

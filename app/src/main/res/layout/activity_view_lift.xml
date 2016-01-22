@@ -112,6 +112,29 @@
     </GridLayout>
 
     <LinearLayout
+        android:id="@+id/layout_rpe"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        >
+
+        <TextView
+            android:id="@+id/lbl_rpe"
+            android:text="RPE"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+
+        <Spinner
+            android:id="@+id/spn_rpe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
         android:orientation="horizontal"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"

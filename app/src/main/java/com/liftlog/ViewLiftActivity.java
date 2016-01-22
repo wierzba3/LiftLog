@@ -29,6 +29,7 @@ import com.liftlog.models.Lift;
 import com.liftlog.data.DataAccessObject;
 import com.liftlog.components.ExerciseInputDialog;
 import com.liftlog.models.Exercise;
+import com.liftlog.models.RPEScale;
 
 //public class ViewLiftActivity extends Activity {
 public class ViewLiftActivity extends AppCompatActivity implements ExerciseInputDialog.ExerciseInputDialogListener {
@@ -54,12 +55,13 @@ public class ViewLiftActivity extends AppCompatActivity implements ExerciseInput
     private Map<Long, Exercise> exercises;
 
     private static long prevSelected = -1;
-    Spinner spnExercise;
+    private Spinner spnExercise;
     //    RadioButton rbtnWarmup;
     //    NumberPicker pckWeight;
-    EditText txtWeight;
-    NumberPicker pckReps;
-    NumberPicker pckSets;
+    private EditText txtWeight;
+    private NumberPicker pckReps;
+    private NumberPicker pckSets;
+    private Spinner spnRPE;
 
     Button btnSave;
 
@@ -239,7 +241,7 @@ public class ViewLiftActivity extends AppCompatActivity implements ExerciseInput
         pckReps = (NumberPicker) findViewById(R.id.pck_reps);
         pckSets = (NumberPicker) findViewById(R.id.pck_sets);
         btnSave = (Button) findViewById(R.id.btn_save);
-
+        spnRPE = (Spinner) findViewById(R.id.spn_rpe);
 
         openOrCreateDatabase(DataAccessObject.DB_NAME, MODE_PRIVATE, null);
 
@@ -274,6 +276,9 @@ public class ViewLiftActivity extends AppCompatActivity implements ExerciseInput
             }
         });
 
+
+        ArrayAdapter<RPEScale> rpeScaleArrayAdapter = new ArrayAdapter<RPEScale>(this, android.R.layout.simple_spinner_dropdown_item, RPEScale.values());
+        spnRPE.setAdapter(rpeScaleArrayAdapter);
 
     }
 
