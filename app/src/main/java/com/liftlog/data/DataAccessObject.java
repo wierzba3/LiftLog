@@ -351,7 +351,16 @@ public class DataAccessObject extends SQLiteOpenHelper
             double weight = cursor.getDouble(cursor.getColumnIndex(LIFT_COLUMN_WEIGHT));
             int sets = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_SETS));
             int reps = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_REPS));
-            int rpe = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_RPE));
+            
+            //need to verify the RPE column exists first, as this field was added to the database as an update
+            //the user may be in the process of upgrading and migrating the database
+            int rpeColIndex = cursor.getColumnIndex(LIFT_COLUMN_RPE);
+            double rpe = 0;
+            if(rpeColIndex > -1)
+            {
+                rpe = cursor.getDouble(rpeColIndex);   
+            }
+            
             int warmup = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_WARMUP));
             long dateCreated = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_DATE_CREATED));
             boolean isNew = (cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_NEW)) == 1);
@@ -450,7 +459,16 @@ public class DataAccessObject extends SQLiteOpenHelper
         double weight = cursor.getDouble(cursor.getColumnIndex(LIFT_COLUMN_WEIGHT));
         int sets = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_SETS));
         int reps = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_REPS));
-        int rpe = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_RPE));
+            
+        //need to verify the RPE column exists first, as this field was added to the database as an update
+        //the user may be in the process of upgrading and migrating the database
+        int rpeColIndex = cursor.getColumnIndex(LIFT_COLUMN_RPE);
+        double rpe = 0;
+        if(rpeColIndex > -1)
+        {
+            rpe = cursor.getDouble(rpeColIndex);   
+        }
+            
         int warmup = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_WARMUP));
         long dateCreated = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_DATE_CREATED));
         boolean isNew = (cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_NEW)) == 1);
@@ -497,7 +515,16 @@ public class DataAccessObject extends SQLiteOpenHelper
         long sessionId = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_SESSION_FK));
         double weight = cursor.getDouble(cursor.getColumnIndex(LIFT_COLUMN_WEIGHT));
         int sets = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_SETS));
-        int rpe = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_RPE));
+            
+        //need to verify the RPE column exists first, as this field was added to the database as an update
+        //the user may be in the process of upgrading and migrating the database
+        int rpeColIndex = cursor.getColumnIndex(LIFT_COLUMN_RPE);
+        double rpe = 0;
+        if(rpeColIndex > -1)
+        {
+            rpe = cursor.getDouble(rpeColIndex);   
+        }
+            
         int warmup = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_WARMUP));
         long dateCreated = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_DATE_CREATED));
         boolean isNew = (cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_NEW)) == 1);
@@ -1231,7 +1258,16 @@ public class DataAccessObject extends SQLiteOpenHelper
             double weight = cursor.getDouble(cursor.getColumnIndex(LIFT_COLUMN_WEIGHT));
             int reps = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_REPS));
             int sets = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_SETS));
-            int rpe = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_RPE));
+            
+            //need to verify the RPE column exists first, as this field was added to the database as an update
+            //the user may be in the process of upgrading and migrating the database
+            int rpeColIndex = cursor.getColumnIndex(LIFT_COLUMN_RPE);
+            double rpe = 0;
+            if(rpeColIndex > -1)
+            {
+                rpe = cursor.getDouble(rpeColIndex);   
+            }
+            
             int warmup = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_WARMUP));
             long dateCreated = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_DATE_CREATED));
 
@@ -1338,7 +1374,16 @@ public class DataAccessObject extends SQLiteOpenHelper
             double weight = cursor.getDouble(cursor.getColumnIndex(LIFT_COLUMN_WEIGHT));
             int reps = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_REPS));
             int sets = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_SETS));
-            int rpe = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_RPE));
+            
+            //need to verify the RPE column exists first, as this field was added to the database as an update
+            //the user may be in the process of upgrading and migrating the database
+            int rpeColIndex = cursor.getColumnIndex(LIFT_COLUMN_RPE);
+            double rpe = 0;
+            if(rpeColIndex > -1)
+            {
+                rpe = cursor.getDouble(rpeColIndex);   
+            }
+            
             int warmup = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_WARMUP));
             long dateCreated = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_DATE_CREATED));
             boolean isNew = (cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_NEW)) == 1);
