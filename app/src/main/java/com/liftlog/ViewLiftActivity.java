@@ -109,6 +109,9 @@ public class ViewLiftActivity extends AppCompatActivity implements ExerciseInput
             //find and select the exercise matching the id
             long exerciseId = lift.getExerciseId();
             setSelectedExercise(exerciseId);
+            
+            double rpe = lift.getRPE();
+            setSelectedRPE(rpe);
 
             //focus on weight EditText and set caret to end
             txtWeight.requestFocus();
@@ -133,6 +136,29 @@ public class ViewLiftActivity extends AppCompatActivity implements ExerciseInput
             }
         }
         spnExercise.setSelection(0);
+    }
+    
+    private void setSelectedRPE(double rpe)
+    {
+        int cnt = spnRPE.getAdapter().getCount();
+        RPEScale rpe;
+        int unspecifiedIndex;
+        for(int i = 0; i < cnt; i++)
+        {
+            rpe = (RPEScale) spnRPE.getItemAtPosition(i);
+            if(rpe == RPEScale.DEFAULT)
+            {
+                unspecifiedIndex = i;
+            }
+            if(rpe != null && rpe.getValue() == rpe)
+            {
+                spnRPE.setSelection(i);
+                return;
+            }
+        }
+        
+        //no match found, set to the "Unspecified" default item
+        spnRPE.setSelection(unspecifiedIndex);
     }
 
 
