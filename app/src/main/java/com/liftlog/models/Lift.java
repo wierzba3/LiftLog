@@ -27,7 +27,7 @@ public class Lift implements Comparable<Lift> {
     private Unit unit;
     private int sets;
     private int reps;
-    private int RPE;
+    private double RPE;
     private boolean isWarmup;
     private long dateCreated;
     private boolean isNew;
@@ -162,12 +162,12 @@ public class Lift implements Comparable<Lift> {
         this.isDeleted = isDeleted;
     }
 
-    public int getRPE()
+    public double getRPE()
     {
         return RPE;
     }
 
-    public void setRPE(int RPE)
+    public void setRPE(double RPE)
     {
         this.RPE = RPE;
     }
