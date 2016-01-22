@@ -278,6 +278,7 @@ public class ViewLiftActivity extends AppCompatActivity implements ExerciseInput
 
 
         ArrayAdapter<RPEScale> rpeScaleArrayAdapter = new ArrayAdapter<RPEScale>(this, android.R.layout.simple_spinner_dropdown_item, RPEScale.values());
+        rpeScaleArrayAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         spnRPE.setAdapter(rpeScaleArrayAdapter);
 
     }
@@ -331,6 +332,12 @@ public class ViewLiftActivity extends AppCompatActivity implements ExerciseInput
             boolean ret =  dao.update(lift);
             lift.setModified(true);
             Log.d(LOG_TAG, "" + ret);
+        }
+        
+        RPEScale rpe = (RPEScale)spnRPE.getSelectedItem();
+        if(rpe != null)
+        {
+            lift.setRPE(rpe.getValue());
         }
 
         prevSelected = exerciseId;
