@@ -1,5 +1,8 @@
-0.?.?
+0.4.0
  - Adjust Wilks calcuator layout
+ - Add confirmation prompt to online help.
+ - Add Settings screen
+ - Add RPE field to add lift (with option to disable)
 
 0.3.0
  - Add Wilks calculator feature
