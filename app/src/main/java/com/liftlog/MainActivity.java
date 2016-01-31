@@ -30,7 +30,6 @@ import com.liftlog.models.Exercise;
 /**
  * TODO
  * BUGS:
- *xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
  *
  * Implement now:
  * - Remove "sets" from Lift. In database update, split up multi-set Lifts into multiple records
