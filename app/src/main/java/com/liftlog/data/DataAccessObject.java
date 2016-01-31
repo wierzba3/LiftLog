@@ -186,7 +186,7 @@ public class DataAccessObject extends SQLiteOpenHelper
     private static final String LOG_TAG = "LiftLog";
 
     public DataAccessObject(Context context) {
-        super(context, DB_NAME, null, 30);
+        super(context, DB_NAME, null, 32);
     }
 
     @Override
@@ -495,14 +495,33 @@ public class DataAccessObject extends SQLiteOpenHelper
     public Lift selectBestLift(long exerciseId, int reps)
     {
         SQLiteDatabase db = this.getReadableDatabase();
-        return selectBestLift(db, exerciseId, reps);
+        return selectBestLift(db, exerciseId, reps, -1);
     }
-    public Lift selectBestLift(SQLiteDatabase db, long exerciseId, int reps)
+    public Lift selectBestLift(long exerciseId, int reps, int sets)
+    {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return selectBestLift(db, exerciseId, reps, sets);
+    }
+
+    /**
+     *
+     * @param db The SQLiteDatabase object to read from
+     * @param exerciseId The ID of the exercise
+     * @param reps The number of reps
+     * @param sets The number of sets (optional, a value <= 0 signifies any
+     * @return The Lift with the highest weight that matches the requested reps, and sets (if specified).
+     *  Returns null if no Lift matches.
+     */
+    private Lift selectBestLift(SQLiteDatabase db, long exerciseId, int reps, int setsArg)
     {
         String qry = "SELECT * FROM " + LIFT_TABLE_NAME
                 + " WHERE " + LIFT_COLUMN_EXERCISE_FK + " = " + exerciseId
-                + " AND " + LIFT_COLUMN_REPS + " = " + reps
-                + " ORDER BY " + LIFT_COLUMN_WEIGHT + " DESC LIMIT 1";
+                + " AND " + LIFT_COLUMN_REPS + " = " + reps;
+        if(setsArg > 0)
+        {
+            qry += " AND " + LIFT_COLUMN_SETS + " = " + setsArg;
+        }
+        qry += " ORDER BY " + LIFT_COLUMN_WEIGHT + " DESC LIMIT 1";
 
         Cursor cursor = db.rawQuery(qry, null);
         if(cursor == null || cursor.getCount() == 0)

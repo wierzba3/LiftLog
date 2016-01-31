@@ -138,11 +138,11 @@ public class ViewLiftActivity extends AppCompatActivity implements ExerciseInput
         spnExercise.setSelection(0);
     }
     
-    private void setSelectedRPE(double rpe)
+    private void setSelectedRPE(double rpeValue)
     {
         int cnt = spnRPE.getAdapter().getCount();
         RPEScale rpe;
-        int unspecifiedIndex;
+        int unspecifiedIndex = 0;
         for(int i = 0; i < cnt; i++)
         {
             rpe = (RPEScale) spnRPE.getItemAtPosition(i);
@@ -150,7 +150,7 @@ public class ViewLiftActivity extends AppCompatActivity implements ExerciseInput
             {
                 unspecifiedIndex = i;
             }
-            if(rpe != null && rpe.getValue() == rpe)
+            if(rpe != null && rpe.getValue() == rpeValue)
             {
                 spnRPE.setSelection(i);
                 return;
@@ -344,6 +344,13 @@ public class ViewLiftActivity extends AppCompatActivity implements ExerciseInput
         lift.setWarmup(false);
 
 
+        RPEScale rpe = (RPEScale)spnRPE.getSelectedItem();
+        if(rpe != null)
+        {
+            lift.setRPE(rpe.getValue());
+        }
+
+
         if(liftId == -1)
         {
             //insert new Lift
@@ -358,12 +365,6 @@ public class ViewLiftActivity extends AppCompatActivity implements ExerciseInput
             boolean ret =  dao.update(lift);
             lift.setModified(true);
             Log.d(LOG_TAG, "" + ret);
-        }
-        
-        RPEScale rpe = (RPEScale)spnRPE.getSelectedItem();
-        if(rpe != null)
-        {
-            lift.setRPE(rpe.getValue());
         }
 
         prevSelected = exerciseId;

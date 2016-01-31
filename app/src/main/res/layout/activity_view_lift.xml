@@ -117,6 +117,7 @@
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:layout_gravity="center"
+
         >
 
         <TextView
@@ -124,12 +125,14 @@
             android:text="RPE"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             />
 
         <Spinner
             android:id="@+id/spn_rpe"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             />
 
     </LinearLayout>

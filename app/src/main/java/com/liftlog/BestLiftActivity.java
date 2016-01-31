@@ -11,13 +11,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.liftlog.common.Util;
 import com.liftlog.data.DataAccessObject;
 import com.liftlog.models.Exercise;
 import com.liftlog.models.Lift;
+import com.liftlog.models.Session;
+
+import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -34,6 +39,9 @@ public class BestLiftActivity extends AppCompatActivity
     private EditText txtReps;
     private TextView lblResult;
     private TextView lblResultExercise;
+    private TextView lblDate;
+    private static final String SPN_SET_ANY = "Any";
+    private Spinner spnSets;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -63,6 +71,24 @@ public class BestLiftActivity extends AppCompatActivity
         txtReps = (EditText) findViewById(R.id.txt_reps_best);
         lblResult = (TextView) findViewById(R.id.lbl_result);
         lblResultExercise = (TextView) findViewById(R.id.lbl_result_exercise);
+        lblDate = (TextView) findViewById(R.id.lbl_date);
+        spnSets = (Spinner) findViewById(R.id.pck_sets);
+
+        /*
+            ArrayAdapter<Exercise> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, exerciseList);
+            adapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+            spnExercise.setAdapter(adapter);
+         */
+        ArrayList<String> spnSetItemList = new ArrayList<String>();
+        spnSetItemList.add(SPN_SET_ANY);
+        for(int i = 1; i <= 100; i++)
+        {
+            spnSetItemList.add(String.valueOf(i));
+        }
+        ArrayAdapter<String> spnSetAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, spnSetItemList);
+        spnSetAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
+        spnSets.setAdapter(spnSetAdapter);
+
 
         loadExercises();
     }
@@ -91,6 +117,10 @@ public class BestLiftActivity extends AppCompatActivity
      */
     public void doSearch(View view)
     {
+        lblResultExercise.setText("");
+        lblResult.setText("");
+        lblDate.setText("");
+
         Exercise exercise = (Exercise) spnExercise.getSelectedItem();
         if (exercise == null)
         {
@@ -108,20 +138,40 @@ public class BestLiftActivity extends AppCompatActivity
             return;
         }
 
-        Lift lift = dao.selectBestLift(exercise.getId(), reps);
+        int sets = -1;
+        /*
+            try to parse the selected sets item, and ignore the possible exception,
+            as this exception would only happen from the selected item being "Any",
+            which means sets should be set to -1 (which it already is)
+        */
+        try
+        {
+            String setsItem = (String) spnSets.getSelectedItem();
+            sets = Integer.parseInt(setsItem);
+        } catch(NumberFormatException ex) {}
+
+        Lift lift = dao.selectBestLift(exercise.getId(), reps, sets);
         String msg = "Best " + reps + " rep set: " ;
         if (lift == null)
         {
-            msg += "n/a_m";
+            lblResult.setText("No lift found");
+            return;
         }
-        else
-        {
-            double w = lift.getWeight();
-            msg += (w == Math.ceil(w) ? String.valueOf((int)w) : String.valueOf(w));
-        }
+
+        double w = lift.getWeight();
+        msg += (w == Math.ceil(w) ? String.valueOf((int)w) : String.valueOf(w));
+
 
         lblResultExercise.setText(exercise.getName());
         lblResult.setText(msg);
+
+        Session session = dao.selectSession(lift.getSessionId());
+        if(session != null)
+        {
+            String date = Util.DATE_FORMAT_SHORT.print(session.getDate());
+            lblDate.setText("Performed on " + date);
+        }
+
     }
 
     @Override
