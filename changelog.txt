@@ -1,3 +1,6 @@
+0.4.1
+ - Implement BackupAgent to backup database when app is uninstalled/re-installed
+
 0.4.0
  - Adjust Wilks calcuator layout
  - Add confirmation prompt to online help.
