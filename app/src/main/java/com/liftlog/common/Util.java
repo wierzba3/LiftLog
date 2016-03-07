@@ -1,6 +1,7 @@
 package com.liftlog.common;
 
 import android.app.AlertDialog;
+import android.app.backup.BackupManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -29,6 +30,8 @@ public class Util
     public static final DateTimeFormatter DATE_FORMAT = DateTimeFormat.forPattern("E, MMM dd yyyy");
     public static final DateTimeFormatter DATE_FORMAT_SHORT = DateTimeFormat.forPattern("MM/dd/yy");
     public static final DateTimeFormatter DATE_FORMAT_MONTH = DateTimeFormat.forPattern("MMMM, yyyy");
+
+    private static BackupManager backupManager;
 
     /**
      * Calcuate the number of days since the epoch (exclusive)
@@ -77,8 +80,14 @@ public class Util
                 .show();
     }
 
-
-
+    public static void dataChanged(Context ctx)
+    {
+        if(backupManager ==  null)
+        {
+            backupManager = new BackupManager(ctx);
+        }
+        backupManager.dataChanged();
+    }
 
 
 }

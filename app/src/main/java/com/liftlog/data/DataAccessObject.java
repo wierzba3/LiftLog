@@ -1,5 +1,6 @@
 package com.liftlog.data;
 
+import android.app.backup.BackupManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -1111,7 +1112,7 @@ public class DataAccessObject extends SQLiteOpenHelper
         values.put(SESSION_COLUMN_DELETED, session.isDeleted() ? 1 : 0);
         values.put(SESSION_COLUMN_NOTE, session.getNote() == null ? "" : session.getNote());
         long id = db.insert(SESSION_TABLE_NAME, null, values);
-        return id;
+        dataChanged();return id;
     }
     public List<Session> selectSessions(boolean includeDeleted)
     {
@@ -1649,6 +1650,10 @@ public class DataAccessObject extends SQLiteOpenHelper
         }
     }
 
+
+    private void dataChanged()
+    {
+    }
 
     //END DATABASE BACKUP METHODS
 

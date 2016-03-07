@@ -220,7 +220,7 @@ public class SessionsFragment extends Fragment implements  DateInputDialog.DateI
             Log.d(LOG_TAG, "Error inserting new session.");
             return;
         }
-
+        Util.dataChanged(super.getActivity());
         loadSessions();
     }
 
