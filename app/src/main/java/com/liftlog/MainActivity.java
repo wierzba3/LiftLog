@@ -34,6 +34,11 @@ import com.liftlog.models.Exercise;
  *
  * Implement now:
  * - remember which exercises were expanded on ViewSession when returning to the activity
+ * - Add JUnit tests, look at RenamingDelegatingContext for db (http://stackoverflow.com/questions/8499554/android-junit-test-for-sqliteopenhelper)
+ * - Remove "sets" from Lift. In database update, split up multi-set Lifts into multiple records
+ *      - change toString of Lift
+ *      - remove increment button on ViewSession lift items
+ *      - set collapse default to true on view session (because with a lift instance for each set, it will get too long)
  * - Settings activity
  *      - setting for default label (kg / lb)
  *
