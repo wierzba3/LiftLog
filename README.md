@@ -6,7 +6,7 @@ The basics:
 - Add exercises that you plan to perform (default exercises are provided)
 - Add a session and add one or more lifts to it.
 - A session represents a workout
-- A lift represents a performed exercise. (Some exercise @ some weight x some reps x some sets)
+- A lift represents a performed exercise. (Some exercise @ some weight x some reps)
 
 Available in the play store
 
