@@ -74,7 +74,7 @@ public class ViewSessionActivity extends AppCompatActivity implements  DateInput
         sessionId = intent.getLongExtra(SESSION_ID_KEY, -1l);
 
         createContents();
-        loadSession(sessionId);
+        loadSession(sessionId, false);
     }
 
     private void createContents()
@@ -109,11 +109,23 @@ public class ViewSessionActivity extends AppCompatActivity implements  DateInput
 
     }
 
-    private void loadSession(long id)
+    private void loadSession(long id, boolean oneAdded)
     {
+        int scrollPos = exListLifts.getFirstVisiblePosition();
+
+        Map<Long, Boolean> isExpanded = new HashMap<Long, Boolean>();
+        if(exListLifts.getExpandableListAdapter() != null)
+        {
+            int cnt = exListLifts.getExpandableListAdapter().getGroupCount();
+            for (int i = 0; i < exListLifts.getExpandableListAdapter().getGroupCount(); i++)
+            {
+                if (exListLifts.getItemAtPosition(i) == null) continue;
+                LiftGroupElement elem = (LiftGroupElement) exListLifts.getExpandableListAdapter().getGroup(i);
+                isExpanded.put(elem.getExercise().getId(), exListLifts.isGroupExpanded(i));
+            }
+        }
 
         Session session = dao.selectSession(sessionId);
-
         ArrayList<Lift> lifts;
         if (session == null)
         {
@@ -134,6 +146,7 @@ public class ViewSessionActivity extends AppCompatActivity implements  DateInput
         lblEmpty.setText("");
         Collections.sort(lifts);
 
+
         Map<Long, Exercise> exerciseMap = dao.selectExerciseMap(false);
 
         //dummy lift for < Add New > option
@@ -146,13 +159,21 @@ public class ViewSessionActivity extends AppCompatActivity implements  DateInput
 
         extListLiftsAdapter = new LiftExpendableListAdapter(this, lifts, exerciseMap);
         exListLifts.setAdapter(extListLiftsAdapter);
-        //TODO style selector isnt working...
-
 
         for(int i = 0; i < extListLiftsAdapter.getGroupCount(); i++)
         {
-            exListLifts.expandGroup(i);
+            LiftGroupElement elem = (LiftGroupElement) extListLiftsAdapter.getGroup(i);
+            if(elem == null) continue;
+            Boolean wasExpanded = isExpanded.get(elem.getExercise().getId());
+            if(wasExpanded == null) exListLifts.expandGroup(i);
+            else if(wasExpanded) exListLifts.expandGroup(i);
+            else exListLifts.collapseGroup(i);
+
         }
+
+        if(oneAdded) scrollPos++;
+        exListLifts.setSelection(scrollPos);
+
     }
 
     @Override
@@ -260,7 +281,7 @@ public class ViewSessionActivity extends AppCompatActivity implements  DateInput
         sessionId = intent.getLongExtra(SESSION_ID_KEY, -1l);
         if (sessionId > -1)
         {
-            loadSession(sessionId);
+            loadSession(sessionId, false);
         }
     }
 
@@ -464,11 +485,17 @@ public class ViewSessionActivity extends AppCompatActivity implements  DateInput
 
                 if(lifts == null)
                 {
-                    lifts = new ArrayList<Lift>();
+                    lifts = new ArrayList<>();
                 }
                 lifts.add(lift);
 
                 map.put(lift.getExerciseId(), lifts);
+            }
+
+            //assign sequence numbers to each list of lifts for each exercise
+            for(List<Lift> lifts : map.values())
+            {
+                Lift.assignSequenceNums(lifts);
             }
 
 			LiftGroupElement uncategorized = null;
@@ -665,15 +692,18 @@ public class ViewSessionActivity extends AppCompatActivity implements  DateInput
             final TextView lblLift = (TextView) view.findViewById(R.id.lbl_lift);
             lblLift.setText(lift.toString());
 
-            ImageButton btnIncrement = (ImageButton) view.findViewById(R.id.btn_increment);
-            btnIncrement.setOnClickListener(new View.OnClickListener()
+            ImageButton btnCopy = (ImageButton) view.findViewById(R.id.btn_copy);
+            btnCopy.setOnClickListener(new View.OnClickListener()
             {
                 @Override
                 public void onClick(View v)
                 {
-                    lift.setSets(lift.getSets() + 1);
-                    dao.update(lift);
-                    loadSession(sessionId);
+                    if(dao.insert(lift) < 0)
+                    {
+                        Toast.makeText(ViewSessionActivity.this, "Error copying lift.", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    loadSession(sessionId, true);
                 }
             });
 

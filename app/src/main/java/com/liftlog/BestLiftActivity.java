@@ -72,7 +72,7 @@ public class BestLiftActivity extends AppCompatActivity
         lblResult = (TextView) findViewById(R.id.lbl_result);
         lblResultExercise = (TextView) findViewById(R.id.lbl_result_exercise);
         lblDate = (TextView) findViewById(R.id.lbl_date);
-        spnSets = (Spinner) findViewById(R.id.pck_sets);
+        spnSets = (Spinner) findViewById(R.id.pck_sets_bestlift);
 
         /*
             ArrayAdapter<Exercise> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, exerciseList);

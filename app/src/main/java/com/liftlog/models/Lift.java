@@ -1,5 +1,6 @@
 package com.liftlog.models;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -25,7 +26,14 @@ public class Lift implements Comparable<Lift> {
     private String exerciseName;
     private double weight;
     private Unit unit;
+
+    /**
+     * 'Sets' field no longer exists, each lift object will now equal one set
+     * Code will remain for backwards compatibility
+     */
+    @Deprecated
     private int sets;
+
     private int reps;
     private double RPE;
     private boolean isWarmup;
@@ -33,6 +41,9 @@ public class Lift implements Comparable<Lift> {
     private boolean isNew;
     private boolean isModified;
     private boolean isDeleted;
+
+    /** Field to store the a value to label this Lift when it is in a list of lifts */
+    private int sequenceNum = 0;
 
     public long getSessionId()
     {
@@ -171,7 +182,18 @@ public class Lift implements Comparable<Lift> {
     {
         this.RPE = RPE;
     }
-//    public long getDate() {
+
+    public int getSequenceNum()
+    {
+        return sequenceNum;
+    }
+
+    public void setSequenceNum(int sequenceNum)
+    {
+        this.sequenceNum = sequenceNum;
+    }
+
+    //    public long getDate() {
 //        return date;
 //    }
 //
@@ -236,13 +258,31 @@ public class Lift implements Comparable<Lift> {
         return null;
     }
 
+    public static void assignSequenceNums(List<Lift> lifts)
+    {
+        if(lifts == null || lifts.size() == 0) return;
+        Collections.sort(lifts);
+        int i = 1;
+        for(Lift lift : lifts)
+        {
+            lift.setSequenceNum(i);
+            i++;
+        }
+    }
+
+
     @Override
     public String toString()
     {
-        if(id == -1) return "< Add Lift >";
+//        if(id == -1) return "< Add Lift >";
 //        Exercise exercise = DataAccessObject.exerciseMap.get(exerciseId);
 //        return (exerciseName != null ? exerciseName : "?") + " " + weight + " x " + reps + " x " + sets;
+
         String result = "";
+        if(sequenceNum > 0)
+        {
+            result += "(Set " + sequenceNum + ")\t";
+        }
         if(weight == Math.floor(weight))
         {
             result += (int)weight;
@@ -251,10 +291,15 @@ public class Lift implements Comparable<Lift> {
         {
             result += weight;
         }
-        result += " x ";
+        result += "lb x ";
         result += String.valueOf(reps) + (reps == 1 ? " rep" : " reps");
-        result += " x ";
-        result += String.valueOf(sets) + (sets == 1 ? " set" : " sets");
+//        result += " x ";
+//        result += String.valueOf(sets) + (sets == 1 ? " set" : " sets");
+        if(RPE > 0)
+        {
+            result += " @ ";
+            result += String.valueOf(RPE) + " RPE";
+        }
         return result;
     }
 

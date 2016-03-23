@@ -60,7 +60,7 @@ public class ViewLiftActivity extends AppCompatActivity implements ExerciseInput
     //    NumberPicker pckWeight;
     private EditText txtWeight;
     private NumberPicker pckReps;
-    private NumberPicker pckSets;
+//    private NumberPicker pckSets;
     private Spinner spnRPE;
 
     Button btnSave;
@@ -91,7 +91,7 @@ public class ViewLiftActivity extends AppCompatActivity implements ExerciseInput
         {
             //txtWeight.setText(String.valueOf(0));
             pckReps.setValue(5);
-            pckSets.setValue(1);
+//            pckSets.setValue(1);
             if(prevSelected > -1)
             {
                 setSelectedExercise(prevSelected);
@@ -104,7 +104,7 @@ public class ViewLiftActivity extends AppCompatActivity implements ExerciseInput
             String weightValue = (w == Math.floor(w) ? String.valueOf((int) w) : String.valueOf(w));
             txtWeight.setText(weightValue);
             pckReps.setValue(lift.getReps());
-            pckSets.setValue(lift.getSets());
+//            pckSets.setValue(lift.getSets());
 
             //find and select the exercise matching the id
             long exerciseId = lift.getExerciseId();
@@ -260,12 +260,9 @@ public class ViewLiftActivity extends AppCompatActivity implements ExerciseInput
 
         //initialize control references
         spnExercise = (Spinner) findViewById(R.id.spn_exercise);
-        pckSets = (NumberPicker) findViewById(R.id.pck_sets);
-//        rbtnWarmup = (RadioButton) findViewById(R.id.rbtn_warmup);
-//        pckWeight = (NumberPicker) findViewById(R.id.pck_weight);
+//        pckSets = (NumberPicker) findViewById(R.id.pck_sets);
         txtWeight = (EditText) findViewById(R.id.txt_weight);
         pckReps = (NumberPicker) findViewById(R.id.pck_reps);
-        pckSets = (NumberPicker) findViewById(R.id.pck_sets);
         btnSave = (Button) findViewById(R.id.btn_save);
         spnRPE = (Spinner) findViewById(R.id.spn_rpe);
 
@@ -275,9 +272,9 @@ public class ViewLiftActivity extends AppCompatActivity implements ExerciseInput
         pckReps.setMaxValue(100);
         pckReps.setWrapSelectorWheel(false);
 
-        pckSets.setMinValue(0);
-        pckSets.setMaxValue(100);
-        pckSets.setWrapSelectorWheel(false);
+//        pckSets.setMinValue(0);
+//        pckSets.setMaxValue(100);
+//        pckSets.setWrapSelectorWheel(false);
 
         spnExercise.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
@@ -327,7 +324,7 @@ public class ViewLiftActivity extends AppCompatActivity implements ExerciseInput
         }
 
         int reps = pckReps.getValue();
-        int sets = pckSets.getValue();
+//        int sets = pckSets.getValue();
 
         long exerciseId = -1;
         Exercise selectedExercise = (Exercise) spnExercise.getSelectedItem();
@@ -339,7 +336,8 @@ public class ViewLiftActivity extends AppCompatActivity implements ExerciseInput
         lift.setExerciseId(exerciseId);
         lift.setSessionId(sessionId);
         lift.setWeight(weight);
-        lift.setSets(sets);
+//        lift.setSets(sets);
+        lift.setSets(1);
         lift.setReps(reps);
         lift.setWarmup(false);
 

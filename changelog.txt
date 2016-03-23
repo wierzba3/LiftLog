@@ -1,3 +1,8 @@
+0.5.0
+ - Change the structure of the Lift object. A Lift now represents one and only one set.
+	This allows Lifts to be associated with specific data that may change set-to-set, such as RPE, speed, etc.
+	A database upgrade procedure is ran if the app detects you are upgrading from a version prior to 0.5.0 (sequence version 13)
+	
 0.4.1
  - Implement BackupAgent to backup database when app is uninstalled/re-installed
 

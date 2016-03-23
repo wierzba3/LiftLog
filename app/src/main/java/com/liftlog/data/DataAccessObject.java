@@ -186,8 +186,13 @@ public class DataAccessObject extends SQLiteOpenHelper
 
     private static final String LOG_TAG = "LiftLog";
 
+    /**
+     * The last version before the structure of a Lift object changed,
+     * where one Lift now will always represent one set
+     */
+    private static final int VERSION_LIFT_SETS = 34;
     public DataAccessObject(Context context) {
-        super(context, DB_NAME, null, 32);
+        super(context, DB_NAME, null, 35);
     }
 
     @Override
@@ -264,6 +269,10 @@ public class DataAccessObject extends SQLiteOpenHelper
                     insert(db, category);
                 }
             }
+            if(oldVersion <= VERSION_LIFT_SETS)
+            {
+                splitMultiSetLifts(db);
+            }
         } catch (Exception ex) {
             ex.printStackTrace();
             Log.d(LOG_TAG, "exception in onUpgrade: " + ex.getMessage());
@@ -297,7 +306,11 @@ public class DataAccessObject extends SQLiteOpenHelper
     public boolean update(Lift lift)
     {
         SQLiteDatabase db = this.getWritableDatabase();
-
+        return update(db, lift);
+    }
+    public boolean update(SQLiteDatabase db, Lift lift)
+    {
+//        SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(LIFT_COLUMN_WEIGHT, lift.getWeight());
         values.put(LIFT_COLUMN_REPS, lift.getReps());
@@ -509,7 +522,6 @@ public class DataAccessObject extends SQLiteOpenHelper
      * @param db The SQLiteDatabase object to read from
      * @param exerciseId The ID of the exercise
      * @param reps The number of reps
-     * @param sets The number of sets (optional, a value <= 0 signifies any
      * @return The Lift with the highest weight that matches the requested reps, and sets (if specified).
      *  Returns null if no Lift matches.
      */
@@ -1657,6 +1669,25 @@ public class DataAccessObject extends SQLiteOpenHelper
 
     //END DATABASE BACKUP METHODS
 
+
+    private boolean splitMultiSetLifts(SQLiteDatabase db)
+    {
+        List<Lift> lifts = selectLifts(db, true);
+        if(lifts == null) return false;
+        for(Lift lift : lifts)
+        {
+            if(lift == null) continue;
+            int setsToInsert = lift.getSets() - 1;
+            lift.setSets(1);
+            for(int i = 0; i < setsToInsert; i++)
+            {
+                insert(db, lift);
+            }
+            lift.setSets(1);
+            update(db, lift);
+        }
+        return true;
+    }
 
 
     public void test()

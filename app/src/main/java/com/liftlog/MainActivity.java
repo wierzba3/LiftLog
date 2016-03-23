@@ -33,14 +33,9 @@ import com.liftlog.models.Exercise;
  * xxx
  *
  * Implement now:
- * - Remove "sets" from Lift. In database update, split up multi-set Lifts into multiple records
- *      - change toString of Lift
- *      - remove increment button on ViewSession lift items
- *      - set collapse default to true on view session (because with a lift instance for each set, it will get too long)
+ * - remember which exercises were expanded on ViewSession when returning to the activity
  * - Settings activity
- * - BestLift
- *      - Add sets option
- *      - add date to result display
+ *      - setting for default label (kg / lb)
  *
  *
  * Implement in the future:
