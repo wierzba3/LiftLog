@@ -33,6 +33,7 @@ import com.liftlog.models.Exercise;
  * xxx
  *
  * Implement now:
+ * - Add JUnit tests, look at RenamingDelegatingContext for db (http://stackoverflow.com/questions/8499554/android-junit-test-for-sqliteopenhelper)
  * - Remove "sets" from Lift. In database update, split up multi-set Lifts into multiple records
  *      - change toString of Lift
  *      - remove increment button on ViewSession lift items
