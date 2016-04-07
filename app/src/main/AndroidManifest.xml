@@ -1,141 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.liftlog" >
+<manifest package="com.liftlog"
+          xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <android:versionCode>1</android:versionCode>
-    <android:versionName>0.1</android:versionName>
+    <android:versionCode>
+        1
+    </android:versionCode>
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <android:versionName>
+        0.1
+    </android:versionName>
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
     <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
-    <!--<uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />-->
-    <!--<uses-permission android:name="android.permission.GET_ACCOUNTS"/>-->
-    <!--<uses-permission android:name="android.permission.INTERNET"/>-->
-    <!--<uses-permission android:name="android.permission.READ_PHONE_STATE" />-->
+    <!-- <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" /> -->
+    <!-- <uses-permission android:name="android.permission.GET_ACCOUNTS"/> -->
+    <!-- <uses-permission android:name="android.permission.INTERNET"/> -->
+    <!-- <uses-permission android:name="android.permission.READ_PHONE_STATE" /> -->
 
-    <uses-permission android:name="android.permission.INTERNET" /> <!-- <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <!-- <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> -->
     <!-- <android:uses-permission android:name="android.permission.READ_PHONE_STATE" /> -->
     <application
         android:allowBackup="true"
+        android:backupAgent=".data.MyBackupAgent"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme"
-        android:backupAgent="com.liftlog.data.MyBackupAgent"
-        >
-        <meta-data android:name="com.google.android.backup.api_key" android:value="AEdPqrEAAAAIn7OxW7nKEKW5oJF4vfy3x-jYOVwcHse-D1YALA" />
-        <activity
-            android:name="com.liftlog.MainActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+        android:theme="@style/AppTheme">
+        <meta-data
+            android:name="com.google.android.backup.api_key"
+            android:value="AEdPqrEAAAAIn7OxW7nKEKW5oJF4vfy3x-jYOVwcHse-D1YALA"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+        <activity
+            android:name=".MainActivity"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
             android:name=".ViewSessionActivity"
-            android:label="View Session"
-            >
+            android:label="View Session">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ViewSessionActivity"
-                />
+                android:value=".ViewSessionActivity"/>
         </activity>
-        <!--android:launchMode="singleTop"-->
+        <!-- android:launchMode="singleTop" -->
         <activity
             android:name=".ViewLiftActivity"
             android:label="@string/title_activity_add_lift"
-
-            android:parentActivityName=".ViewSessionActivity" >
+            android:parentActivityName=".ViewSessionActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ViewLiftActivity"
-                />
+                android:value=".ViewLiftActivity"/>
         </activity>
-
         <activity
             android:name=".ViewHistoryActivity"
             android:label="View History"
-
-            android:parentActivityName="com.liftlog.MainActivity" >
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.liftlog.MainActivity"
-                />
+                android:value="com.liftlog.MainActivity"/>
         </activity>
-
         <activity
             android:name=".MaxCalculatorActivity"
             android:label="Max Calculator"
-
-            android:parentActivityName="com.liftlog.MainActivity" >
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.liftlog.MainActivity"
-                />
+                android:value="com.liftlog.MainActivity"/>
         </activity>
-
         <activity
-            android:name="com.liftlog.BestLiftActivity"
+            android:name=".BestLiftActivity"
             android:label="Best Lift"
-
-            android:parentActivityName="com.liftlog.MainActivity" >
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.liftlog.MainActivity"
-                />
+                android:value="com.liftlog.MainActivity"/>
         </activity>
-
         <activity
-            android:name="com.liftlog.DatabaseBackupActivity"
+            android:name=".DatabaseBackupActivity"
             android:label="Data Backup"
-
-            android:parentActivityName="com.liftlog.MainActivity" >
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.liftlog.MainActivity"
-                />
+                android:value="com.liftlog.MainActivity"/>
         </activity>
-
         <activity
-            android:name="com.liftlog.WilksCalculatorActivity"
+            android:name=".WilksCalculatorActivity"
             android:label="Wilks Calculator"
-
-            android:parentActivityName="com.liftlog.MainActivity" >
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.liftlog.MainActivity"
-                />
+                android:value="com.liftlog.MainActivity"/>
         </activity>
 
-        <service
-            android:name="com.liftlog.data.AuthenticatorService">
+        <service android:name=".data.AuthenticatorService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator"/>
             </intent-filter>
+
             <meta-data
                 android:name="android.accounts.AccountAuthenticator"
-                android:resource="@xml/authenticator" />
+                android:resource="@xml/authenticator"/>
         </service>
-
         <service
-            android:name="com.liftlog.data.SyncService"
+            android:name=".data.SyncService"
             android:exported="true"
             android:process=":sync">
             <intent-filter>
                 <action android:name="android.content.SyncAdapter"/>
             </intent-filter>
-            <meta-data android:name="android.content.SyncAdapter"
-                       android:resource="@xml/syncadapter" />
+
+            <meta-data
+                android:name="android.content.SyncAdapter"
+                android:resource="@xml/syncadapter"/>
         </service>
 
         <provider
-            android:name="com.liftlog.data.StubProvider"
+            android:name=".data.StubProvider"
             android:authorities="com.liftlog.data.provider"
             android:exported="false"
-            android:syncable="true"
-            android:label="stub provider"/>
+            android:label="stub provider"
+            android:syncable="true"/>
+
+        <activity
+            android:name=".StatisticsActivity"
+            android:label="@string/title_activity_statistics">
+        </activity>
     </application>
 
 </manifest>

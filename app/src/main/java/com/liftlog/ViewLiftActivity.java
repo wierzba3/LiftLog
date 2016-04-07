@@ -55,6 +55,8 @@ public class ViewLiftActivity extends AppCompatActivity implements ExerciseInput
     private Map<Long, Exercise> exercises;
 
     private static long prevSelected = -1;
+    private static int prevReps = -1;
+
     private Spinner spnExercise;
     //    RadioButton rbtnWarmup;
     //    NumberPicker pckWeight;
@@ -63,7 +65,7 @@ public class ViewLiftActivity extends AppCompatActivity implements ExerciseInput
 //    private NumberPicker pckSets;
     private Spinner spnRPE;
 
-    Button btnSave;
+    private Button btnSave;
 
 //    EditText txtDay;
 
@@ -95,6 +97,10 @@ public class ViewLiftActivity extends AppCompatActivity implements ExerciseInput
             if(prevSelected > -1)
             {
                 setSelectedExercise(prevSelected);
+            }
+            if(prevReps > -1)
+            {
+                pckReps.setValue(prevReps);
             }
 
         }
@@ -366,6 +372,7 @@ public class ViewLiftActivity extends AppCompatActivity implements ExerciseInput
         }
 
         prevSelected = exerciseId;
+        prevReps = reps;
         this.finish();
     }
 
