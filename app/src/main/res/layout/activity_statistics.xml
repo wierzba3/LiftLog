@@ -1,13 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.liftlog.StatisticsActivity">
+    tools:context="com.liftlog.StatisticsActivity"
+    android:orientation="vertical"
+    >
 
-</RelativeLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        >
+
+        <Spinner
+            android:id="@+id/spn_exercise"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/round_button"
+            android:textColor="@color/white"
+            android:text="Calculate"
+            android:onClick="onCalculateClick"
+            android:layout_gravity="left"
+            android:layout_weight="1"
+            android:id="@+id/btn_save"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            />
+
+    </LinearLayout>
+
+
+
+    <TableLayout
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+
+        tools:context="com.liftlog.StatisticsActivity"
+        android:id="@+id/tbl_statistics">
+
+        <TableRow>
+            <TextView
+                android:layout_column="1"
+                android:text="Open..."
+                android:padding="3dip" />
+            <TextView
+                android:text="Ctrl-O"
+                android:gravity="right"
+                android:padding="3dip" />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:layout_column="1"
+                android:text="Save..."
+                android:padding="3dip" />
+            <TextView
+                android:text="Ctrl-S"
+                android:gravity="right"
+                android:padding="3dip" />
+        </TableRow>
+
+        <TableRow>
+            <TextView
+                android:layout_column="1"
+                android:text="Save As..."
+                android:padding="3dip" />
+            <TextView
+                android:text="Ctrl-Shift-S"
+                android:gravity="right"
+                android:padding="3dip" />
+        </TableRow>
+
+
+    </TableLayout>
+
+</LinearLayout>

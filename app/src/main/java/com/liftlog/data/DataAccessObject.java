@@ -235,7 +235,11 @@ public class DataAccessObject extends SQLiteOpenHelper
             db.execSQL("DROP TABLE IF EXISTS " + CATEGORY_TABLE_NAME);
 
             onCreate(db);
-            //clear exercises table because onCreate adds some default ones
+            /*
+              since we are updating, we need to remove the default exercises
+              that were added during onCreate
+
+            */
             clearExerciseTable(db);
 
             if (sessions != null)
