@@ -7,7 +7,6 @@
               android:orientation="vertical"
               tools:context="com.liftlog.ViewLiftActivity">
 
-
     <LinearLayout
         android:orientation="horizontal"
         android:layout_height="wrap_content"
@@ -34,6 +33,32 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_weight="1"
+        android:layout_gravity="center">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/round_button"
+            android:textColor="@color/white"
+            android:text="View Exercise History"
+            android:onClick="doSave"
+            android:layout_gravity="left"
+            android:layout_weight="1"
+            android:id="@+id/btn_view_history"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            >
+
+        </Button>
 
     </LinearLayout>
 
@@ -144,7 +169,6 @@
         android:layout_gravity="center"
         >
 
-
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -190,12 +214,7 @@
             android:paddingRight="5dp"
             />
 
-
-
-
     </LinearLayout>
-
-
 
 
 </LinearLayout>

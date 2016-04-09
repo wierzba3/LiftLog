@@ -66,6 +66,7 @@ public class ViewLiftActivity extends AppCompatActivity implements ExerciseInput
     private Spinner spnRPE;
 
     private Button btnSave;
+    private Button btnViewHistory;
 
 //    EditText txtDay;
 
@@ -233,17 +234,8 @@ public class ViewLiftActivity extends AppCompatActivity implements ExerciseInput
                 finish();
                 return true;
             case R.id.action_view_history:
-                Intent intent = new Intent(this, ViewHistoryActivity.class);
-                Exercise selectedExercise = (Exercise) spnExercise.getSelectedItem();
-                if(selectedExercise == null)
-                {
-                    Toast.makeText(this, "Error loading exercise history.", Toast.LENGTH_LONG).show();
-                    return false;
-                }
-                intent.putExtra(ViewHistoryActivity.EXERCISE_ID_KEY, selectedExercise.getId());
-                super.startActivity(intent);
+                doLaunchViewHistory();
                 break;
-
             case R.id.action_about_viewlift:
                 Util.launchAboutWebsiteIntent(this);
                 break;
@@ -251,6 +243,20 @@ public class ViewLiftActivity extends AppCompatActivity implements ExerciseInput
 
         return super.onOptionsItemSelected(item);
     }
+
+    private void doLaunchViewHistory()
+    {
+        Intent intent = new Intent(this, ViewHistoryActivity.class);
+        Exercise selectedExercise = (Exercise) spnExercise.getSelectedItem();
+        if(selectedExercise == null)
+        {
+            Toast.makeText(this, "Error loading exercise history.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        intent.putExtra(ViewHistoryActivity.EXERCISE_ID_KEY, selectedExercise.getId());
+        super.startActivity(intent);
+    }
+
 
     int previousExercisePos = 0;
     private void createContents()
@@ -263,6 +269,16 @@ public class ViewLiftActivity extends AppCompatActivity implements ExerciseInput
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.show();
         }
+
+        btnViewHistory = (Button) findViewById(R.id.btn_view_history);
+        btnViewHistory.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                doLaunchViewHistory();
+            }
+        });
 
         //initialize control references
         spnExercise = (Spinner) findViewById(R.id.spn_exercise);
@@ -287,15 +303,8 @@ public class ViewLiftActivity extends AppCompatActivity implements ExerciseInput
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
             {
-//                Exercise selectedExercise = (Exercise) parent.getItemAtPosition(position);
-//
-//                if(selectedExercise == null) return;
-//                if(selectedExercise.getId() == -1)
-//                {
-//                    ViewLiftActivity.this.doNewExercise();
-//                }
-//                //remember the last actual exercise that was selected
-//                else previousExercisePos = position;
+                Exercise selectedExercise = (Exercise) parent.getItemAtPosition(position);
+                setViewHistoryButtonText(selectedExercise);
             }
 
             @Override
@@ -311,6 +320,16 @@ public class ViewLiftActivity extends AppCompatActivity implements ExerciseInput
         spnRPE.setAdapter(rpeScaleArrayAdapter);
 
     }
+
+    private void setViewHistoryButtonText(Exercise exercise)
+    {
+        if(exercise == null) return;
+        String lbl;
+        if(exercise.getName() == null) lbl = "View Exercise History";
+        else lbl = "View " + exercise.getName() + " history";
+        btnViewHistory.setText(lbl);
+    }
+
 
     /**
      * Handle Submit button onClick
