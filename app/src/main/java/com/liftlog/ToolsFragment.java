@@ -122,6 +122,16 @@ public class ToolsFragment extends Fragment
         super.startActivity(intent);
     }
 
+    /**
+     * Launch exercise statistics activity
+     */
+    private void launchStatistics()
+    {
+        Intent intent = new Intent(super.getActivity(), StatisticsActivity.class);
+        super.startActivity(intent);
+    }
+
+
 
     private void createContents(View view)
     {
@@ -182,6 +192,16 @@ public class ToolsFragment extends Fragment
             public void onClick(View view)
             {
                 launchWilksCalculator();
+            }
+        });
+
+        Button btnExerciseStats = (Button) view.findViewById(R.id.btn_statistics);
+        btnExerciseStats.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                launchStatistics();
             }
         });
     }

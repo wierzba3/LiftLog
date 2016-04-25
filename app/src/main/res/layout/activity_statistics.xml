@@ -3,85 +3,126 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.liftlog.StatisticsActivity"
     android:orientation="vertical"
     >
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
+    <GridLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        >
+        android:columnCount="2"
+        android:rowCount="1">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Statistic"
+            android:layout_gravity="center"
+            android:layout_row="0"
+            android:layout_column="0"
+        />
 
         <Spinner
-            android:id="@+id/spn_exercise"
+            android:id="@+id/spn_statistic_choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_row="0"
+            android:layout_column="1"
             />
 
-        <Button
+    </GridLayout>
+
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:columnCount="2"
+        android:rowCount="1">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Exercise"
+            android:layout_gravity="center"
+            android:layout_row="0"
+            android:layout_column="0"
+            />
+
+        <Spinner
+            android:id="@+id/spn_exercise_statistics"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:background="@drawable/round_button"
-            android:textColor="@color/white"
-            android:text="Calculate"
-            android:onClick="onCalculateClick"
-            android:layout_gravity="left"
-            android:layout_weight="1"
-            android:id="@+id/btn_save"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp"
+            android:layout_gravity="center"
+            android:layout_row="0"
+            android:layout_column="1"
             />
 
-    </LinearLayout>
+    </GridLayout>
 
+    <!--<LinearLayout-->
+        <!--android:orientation="horizontal"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:gravity="center"-->
+        <!--&gt;-->
 
+        <!--&lt;!&ndash;<TextView&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+            <!--&lt;!&ndash;android:text="Exercise"&ndash;&gt;-->
+            <!--&lt;!&ndash;/>&ndash;&gt;-->
+
+        <!--<Spinner-->
+            <!--android:id="@+id/spn_exercise_statistics"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center"-->
+            <!--/>-->
+
+    <!--</LinearLayout>-->
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/round_button"
+        android:textColor="@color/white"
+        android:text="Calculate"
+        android:onClick="onCalculateClick"
+        android:layout_gravity="center"
+        android:id="@+id/btn_save"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+
+        />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        >
 
     <TableLayout
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-
+        android:layout_gravity="center"
+        android:gravity="center_horizontal"
         tools:context="com.liftlog.StatisticsActivity"
-        android:id="@+id/tbl_statistics">
-
-        <TableRow>
-            <TextView
-                android:layout_column="1"
-                android:text="Open..."
-                android:padding="3dip" />
-            <TextView
-                android:text="Ctrl-O"
-                android:gravity="right"
-                android:padding="3dip" />
-        </TableRow>
-
-        <TableRow>
-            <TextView
-                android:layout_column="1"
-                android:text="Save..."
-                android:padding="3dip" />
-            <TextView
-                android:text="Ctrl-S"
-                android:gravity="right"
-                android:padding="3dip" />
-        </TableRow>
-
-        <TableRow>
-            <TextView
-                android:layout_column="1"
-                android:text="Save As..."
-                android:padding="3dip" />
-            <TextView
-                android:text="Ctrl-Shift-S"
-                android:gravity="right"
-                android:padding="3dip" />
-        </TableRow>
-
-
+        android:id="@+id/tbl_statistics"
+        android:stretchColumns="*"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        >
     </TableLayout>
+
+    </LinearLayout>
 
 </LinearLayout>

@@ -58,6 +58,18 @@
             />
 
         <Button
+            android:id="@+id/btn_statistics"
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:textColor="@color/white"
+            android:text="Exercise Statistics"
+            android:textSize="20dp"
+            android:background="@drawable/round_button"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            />
+
+        <Button
             android:id="@+id/btn_backup"
             android:layout_width="fill_parent"
             android:layout_height="50dp"
