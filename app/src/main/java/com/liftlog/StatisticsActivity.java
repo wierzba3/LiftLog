@@ -1,9 +1,9 @@
 package com.liftlog;
 
 import android.graphics.Typeface;
+import android.graphics.drawable.shapes.Shape;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -24,7 +24,6 @@ import org.joda.time.MutableDateTime;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +38,8 @@ public class StatisticsActivity extends AppCompatActivity
 
     private Spinner spnStatisticChoice;
     private Spinner spnExercise;
+
+    private Shape border;
 
     private enum StatisticChoice
     {
@@ -92,6 +93,8 @@ public class StatisticsActivity extends AppCompatActivity
         ArrayAdapter<StatisticChoice> adapterStatChoice = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, StatisticChoice.values());
         adapterStatChoice.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
         spnStatisticChoice.setAdapter(adapterStatChoice);
+
+
     }
 
 
@@ -126,14 +129,16 @@ public class StatisticsActivity extends AppCompatActivity
 
         TextView txtHeaderCol1 = new TextView(this);
         txtHeaderCol1.setText("Dates");
-//        txtHeaderCol1.setPadding(10, 0, 10, 0);
         txtHeaderCol1.setTypeface(null, Typeface.BOLD);
+        txtHeaderCol1.setGravity(Gravity.CENTER_HORIZONTAL);
+        txtHeaderCol1.setBackgroundResource(R.drawable.border_1dp);
         headerRow.addView(txtHeaderCol1);
 
         TextView txtHeaderCol2 = new TextView(this);
         txtHeaderCol2.setText("Total Volume");
-//        txtHeaderCol2.setPadding(10, 0, 10, 0);
         txtHeaderCol2.setTypeface(null, Typeface.BOLD);
+        txtHeaderCol2.setGravity(Gravity.CENTER_HORIZONTAL);
+        txtHeaderCol2.setBackgroundResource(R.drawable.border_1dp);
         headerRow.addView(txtHeaderCol2);
 
         tbl.addView(headerRow);
@@ -152,21 +157,22 @@ public class StatisticsActivity extends AppCompatActivity
             row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
 
             TextView txtCol1 = new TextView(this);
-//            txtCol1.setGravity(Gravity.LEFT);
             txtCol1.setText(rowItem.getItem1());
-//            txtCol1.setPadding(10, 0, 10, 0);
+            txtCol1.setBackgroundResource(R.drawable.border_1dp);
+            txtCol1.setGravity(Gravity.CENTER_HORIZONTAL);
             row.addView(txtCol1);
 
             TextView txtCol2 = new TextView(this);
-//            txtCol2.setGravity(Gravity.RIGHT);
             txtCol2.setText(rowItem.getItem2());
-//            txtCol1.setPadding(10, 0, 10, 0);
+            txtCol2.setGravity(Gravity.CENTER_HORIZONTAL);
+            txtCol2.setBackgroundResource(R.drawable.border_1dp);
             row.addView(txtCol2);
 
             tbl.addView(row);
 
             //add a new line to the TableLayout:
             final View vline = new View(this);
+
             vline.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, 2));
             //vline.setBackgroundColor(Color.BLUE);
             tbl.addView(vline);

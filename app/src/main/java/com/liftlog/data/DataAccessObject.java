@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import com.liftlog.R;
 import com.liftlog.common.Util;
@@ -1696,26 +1697,43 @@ public class DataAccessObject extends SQLiteOpenHelper
 
     public void test()
     {
-        try
-        {
-            MutableDateTime mdt = new MutableDateTime();
-            mdt.setYear(2015);
-            for(int i = 1; i <= 12; i++)
-            {
-                for(int j = 1; j <= 20; j++)
-                {
-                    mdt.setMonthOfYear(i);
-                    mdt.setDayOfMonth(j);
-                    Session session = new Session();
-                    session.setDate(mdt.getMillis());
-                    insert(session);
-                }
-            }
-        } catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-
+//        clearSessionsTable();
+//        clearLiftsTable();
+//
+//
+//        MutableDateTime dt = MutableDateTime.now();
+//        dt.addDays(-10);
+//
+//        Random random = new Random();
+//
+//        for(int i = 0; i < 500; i++)
+//        {
+//            Session session = new Session();
+//            session.setDate(dt.getMillis());
+//            long sessionId = insert(session);
+//            dt.addDays(-1);
+//
+//            List<Exercise> exercises = selectExercises(true);
+//            if(exercises == null || exercises.isEmpty())
+//            {
+//                return;
+//            }
+//
+//            long exerciseId = exercises.get(0).getId();
+//
+//            int sets = Math.abs(random.nextInt() % 10);
+//            for(int j = 0; j < sets; j++)
+//            {
+//                int weight = Math.abs(random.nextInt() % 500);
+//                int reps = Math.abs(random.nextInt() % 10);
+//                Lift lift = new Lift();
+//                lift.setWeight(weight);
+//                lift.setReps(reps);
+//                lift.setExerciseId(exerciseId);
+//                lift.setSessionId(sessionId);
+//                insert(lift);
+//            }
+//        }
     }
 
 

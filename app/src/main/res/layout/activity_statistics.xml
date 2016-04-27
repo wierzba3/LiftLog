@@ -63,29 +63,6 @@
 
     </GridLayout>
 
-    <!--<LinearLayout-->
-        <!--android:orientation="horizontal"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="center"-->
-        <!--android:gravity="center"-->
-        <!--&gt;-->
-
-        <!--&lt;!&ndash;<TextView&ndash;&gt;-->
-            <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
-            <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
-            <!--&lt;!&ndash;android:text="Exercise"&ndash;&gt;-->
-            <!--&lt;!&ndash;/>&ndash;&gt;-->
-
-        <!--<Spinner-->
-            <!--android:id="@+id/spn_exercise_statistics"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="center"-->
-            <!--/>-->
-
-    <!--</LinearLayout>-->
-
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -100,29 +77,28 @@
 
         />
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:gravity="center"
-        >
+    <!--<ScrollView-->
+        <!--android:layout_width="fill_parent"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:fillViewport="true"-->
+        <!--android:layout_weight="1"-->
+        <!--&gt;-->
 
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:gravity="center_horizontal"
-        tools:context="com.liftlog.StatisticsActivity"
-        android:id="@+id/tbl_statistics"
-        android:stretchColumns="*"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        >
-    </TableLayout>
+            <TableLayout
+                android:orientation="vertical"
+                android:fillViewport="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:id="@+id/tbl_statistics"
+                android:stretchColumns="*"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                >
+            </TableLayout>
 
-    </LinearLayout>
+    <!--</ScrollView>-->
 
 </LinearLayout>
