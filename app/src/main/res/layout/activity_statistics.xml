@@ -77,19 +77,17 @@
 
         />
 
-    <!--<ScrollView-->
-        <!--android:layout_width="fill_parent"-->
-        <!--android:layout_height="0dp"-->
-        <!--android:fillViewport="true"-->
-        <!--android:layout_weight="1"-->
-        <!--&gt;-->
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:layout_weight="1"
+        >
 
             <TableLayout
                 android:orientation="vertical"
-                android:fillViewport="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:id="@+id/tbl_statistics"
                 android:stretchColumns="*"
                 android:paddingTop="20dp"
@@ -99,6 +97,6 @@
                 >
             </TableLayout>
 
-    <!--</ScrollView>-->
+    </ScrollView>
 
 </LinearLayout>

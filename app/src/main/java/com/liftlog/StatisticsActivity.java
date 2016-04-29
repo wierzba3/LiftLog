@@ -131,14 +131,14 @@ public class StatisticsActivity extends AppCompatActivity
         txtHeaderCol1.setText("Dates");
         txtHeaderCol1.setTypeface(null, Typeface.BOLD);
         txtHeaderCol1.setGravity(Gravity.CENTER_HORIZONTAL);
-        txtHeaderCol1.setBackgroundResource(R.drawable.border_1dp);
+        txtHeaderCol1.setBackgroundResource(R.drawable.border_2dp);
         headerRow.addView(txtHeaderCol1);
 
         TextView txtHeaderCol2 = new TextView(this);
         txtHeaderCol2.setText("Total Volume");
         txtHeaderCol2.setTypeface(null, Typeface.BOLD);
         txtHeaderCol2.setGravity(Gravity.CENTER_HORIZONTAL);
-        txtHeaderCol2.setBackgroundResource(R.drawable.border_1dp);
+        txtHeaderCol2.setBackgroundResource(R.drawable.border_2dp);
         headerRow.addView(txtHeaderCol2);
 
         tbl.addView(headerRow);
@@ -146,7 +146,7 @@ public class StatisticsActivity extends AppCompatActivity
         //add new line to TableLayout:
         final View vlineHeader = new View(this);
         vlineHeader.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, 2));
-        //vline.setBackgroundColor(Color.BLUE);
+        vlineHeader.setBackgroundColor(getResources().getColor(R.color.material_blue_300));
         tbl.addView(vlineHeader);
 
         for(StatisticRowItem rowItem : rowItems)
@@ -154,7 +154,8 @@ public class StatisticsActivity extends AppCompatActivity
             //add a new row to the TableLayout
             TableRow row = new TableRow(this);
             row.setGravity(Gravity.CENTER_HORIZONTAL);
-            row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+
+            row.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT));
 
             TextView txtCol1 = new TextView(this);
             txtCol1.setText(rowItem.getItem1());
@@ -174,7 +175,7 @@ public class StatisticsActivity extends AppCompatActivity
             final View vline = new View(this);
 
             vline.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, 2));
-            //vline.setBackgroundColor(Color.BLUE);
+            vline.setBackgroundColor(getResources().getColor(R.color.material_blue_300));
             tbl.addView(vline);
         }
     }
