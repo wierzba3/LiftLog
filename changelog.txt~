@@ -1,14 +1,5 @@
-0.6.1
- - Add option in "Find Personal Best" tool to search for the best set of a given weight.
- - Add RPE 7.5 and change definition of RPE 7 to (3 more reps)
- 
-0.6.0
- - Add "Exercise Statistics" tool. Implement function on this interface to calculate total volume for given week.
- - Shift 1-rep-max text output above the keyboard
-
 0.5.1
  - Cache the "Reps" value on the Lift screen
- - Add a button to view the history of the currently selected exercise (in addition to the option in the overflow menu) 
 
 0.5.0
  - Change the structure of the Lift object. A Lift now represents one and only one set.

@@ -10,8 +10,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.NumberPicker;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,12 +39,13 @@ public class BestLiftActivity extends AppCompatActivity
     private DataAccessObject dao;
 
     private Spinner spnExercise;
-    private EditText txtReps;
+    private EditText txtInput;
     private TextView lblResult;
     private TextView lblResultExercise;
     private TextView lblDate;
+    private RadioButton rbtnWeight;
+    private RadioButton rbtnReps;
     private static final String SPN_SET_ANY = "Any";
-    private Spinner spnSets;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -68,11 +72,12 @@ public class BestLiftActivity extends AppCompatActivity
         }
 
         spnExercise = (Spinner) findViewById(R.id.spn_exercise_best);
-        txtReps = (EditText) findViewById(R.id.txt_reps_best);
+        txtInput = (EditText) findViewById(R.id.txt_input);
         lblResult = (TextView) findViewById(R.id.lbl_result);
         lblResultExercise = (TextView) findViewById(R.id.lbl_result_exercise);
         lblDate = (TextView) findViewById(R.id.lbl_date);
-        spnSets = (Spinner) findViewById(R.id.pck_sets_bestlift);
+        rbtnWeight = (RadioButton) findViewById(R.id.rbtn_weight);
+        rbtnReps = (RadioButton) findViewById(R.id.rbtn_reps);
 
         /*
             ArrayAdapter<Exercise> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, exerciseList);
@@ -87,8 +92,8 @@ public class BestLiftActivity extends AppCompatActivity
         }
         ArrayAdapter<String> spnSetAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, spnSetItemList);
         spnSetAdapter.setDropDownViewResource(android.R.layout.simple_dropdown_item_1line);
-        spnSets.setAdapter(spnSetAdapter);
 
+        rbtnWeight.setChecked(true);
 
         loadExercises();
     }
@@ -128,38 +133,45 @@ public class BestLiftActivity extends AppCompatActivity
             return;
         }
 
-        int reps;
+        int input;
         try
         {
-            reps = Integer.parseInt(txtReps.getText().toString());
+            input = Integer.parseInt(txtInput.getText().toString());
         } catch (NumberFormatException e)
         {
             Toast.makeText(this, "Invalid reps.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        int sets = -1;
-        /*
-            try to parse the selected sets item, and ignore the possible exception,
-            as this exception would only happen from the selected item being "Any",
-            which means sets should be set to -1 (which it already is)
-        */
-        try
+        Lift lift = null;
+        if(rbtnWeight.isChecked())
         {
-            String setsItem = (String) spnSets.getSelectedItem();
-            sets = Integer.parseInt(setsItem);
-        } catch(NumberFormatException ex) {}
+            lift = dao.selectBestLiftByWeight(exercise.getId(), input);
+        }
+        else if(rbtnReps.isChecked())
+        {
+            lift = dao.selectBestLiftByReps(exercise.getId(), input);
+        }
 
-        Lift lift = dao.selectBestLift(exercise.getId(), reps, sets);
-        String msg = "Best " + reps + " rep set: " ;
         if (lift == null)
         {
             lblResult.setText("No lift found");
             return;
         }
 
-        double w = lift.getWeight();
-        msg += (w == Math.ceil(w) ? String.valueOf((int)w) : String.valueOf(w));
+        String msg = "";
+        //double weight = lift.getWeight();
+        //int reps = lift.getReps();
+        if(rbtnWeight.isChecked())
+        {
+            msg = "Most reps with " + input + "lb: ";
+            msg += String.valueOf(lift.getReps()) + " reps";
+        }
+        else if(rbtnReps.isChecked())
+        {
+            msg = "Best " + input + " rep set: ";
+            msg += String.valueOf(lift.getWeight());
+        }
 
 
         lblResultExercise.setText(exercise.getName());

@@ -11,9 +11,10 @@ public enum RPEScale
     NINE("9 (1 more rep)", 9),
     EIGHT_PT_FIVE("8.5 (maybe 2 more reps)", 8.5),
     EIGHT("8 (2 more reps)", 8),
-    SEVEN("7 (easy)", 7),
+    SEVEN_PT_FIVE("7.5 (maybe 3 more reps)", 8),
+    SEVEN("7 (3 more reps)", 7),
     SIX("6 (warmup)", 6),
-    FIVE_PT_FIVE("5 (very easy)", 5.5),
+    FIVE_PT_FIVE("5 (easy)", 5.5),
     ;
 
     RPEScale(String label, double value)

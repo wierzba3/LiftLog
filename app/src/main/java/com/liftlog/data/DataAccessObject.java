@@ -511,33 +511,42 @@ public class DataAccessObject extends SQLiteOpenHelper
         return result;
     }
 
-    public Lift selectBestLift(long exerciseId, int reps)
+    public Lift selectBestLiftByReps(long exerciseId, int reps)
     {
         SQLiteDatabase db = this.getReadableDatabase();
         return selectBestLift(db, exerciseId, reps, -1);
     }
-    public Lift selectBestLift(long exerciseId, int reps, int sets)
+    public Lift selectBestLiftByWeight(long exerciseId, int weight)
     {
         SQLiteDatabase db = this.getReadableDatabase();
-        return selectBestLift(db, exerciseId, reps, sets);
+        return selectBestLift(db, exerciseId, -1, weight);
     }
+//    public Lift selectBestLift(long exerciseId, int reps)
+//    {
+//        SQLiteDatabase db = this.getReadableDatabase();
+//        return selectBestLift(db, exerciseId, reps);
+//    }
 
     /**
      *
      * @param db The SQLiteDatabase object to read from
      * @param exerciseId The ID of the exercise
-     * @param reps The number of reps
+     * @param repsArg The number of reps, -1 if not present
+     * @param weightArg The weight input, -1 if not present
      * @return The Lift with the highest weight that matches the requested reps, and sets (if specified).
      *  Returns null if no Lift matches.
      */
-    private Lift selectBestLift(SQLiteDatabase db, long exerciseId, int reps, int setsArg)
+    private Lift selectBestLift(SQLiteDatabase db, long exerciseId, int repsArg, int weightArg)
     {
         String qry = "SELECT * FROM " + LIFT_TABLE_NAME
-                + " WHERE " + LIFT_COLUMN_EXERCISE_FK + " = " + exerciseId
-                + " AND " + LIFT_COLUMN_REPS + " = " + reps;
-        if(setsArg > 0)
+                + " WHERE " + LIFT_COLUMN_EXERCISE_FK + " = " + exerciseId;
+        if(repsArg > 0)
         {
-            qry += " AND " + LIFT_COLUMN_SETS + " = " + setsArg;
+            qry += " AND " + LIFT_COLUMN_REPS + " = " + repsArg;
+        }
+        if(weightArg > 0)
+        {
+            qry += " AND " + LIFT_COLUMN_WEIGHT + " = " + weightArg;
         }
         qry += " ORDER BY " + LIFT_COLUMN_WEIGHT + " DESC LIMIT 1";
 
@@ -551,6 +560,7 @@ public class DataAccessObject extends SQLiteOpenHelper
         long id = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_PK));
         long sessionId = cursor.getLong(cursor.getColumnIndex(LIFT_COLUMN_SESSION_FK));
         double weight = cursor.getDouble(cursor.getColumnIndex(LIFT_COLUMN_WEIGHT));
+        int reps = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_REPS));
         int sets = cursor.getInt(cursor.getColumnIndex(LIFT_COLUMN_SETS));
             
         //need to verify the RPE column exists first, as this field was added to the database as an update
