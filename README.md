@@ -1,6 +1,6 @@
 http://wierzba3.github.io/LiftLog/
 
-A simple and easy to use app to keep track of your weight-lifting progress.
+An easy to use android app to keep track of your weight-lifting progress.
 
 The basics:
 - Add exercises that you plan to perform (default exercises are provided)
